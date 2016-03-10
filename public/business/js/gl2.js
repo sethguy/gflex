@@ -1,6 +1,6 @@
 var HTTPS_QUERYSTRING = "&https=1";
    // var PARSE_BASE_URL = "https://api.parse.com/1/";
-    var PARSE_BASE_URL = "http://localhost:8080/parse";
+    var PARSE_BASE_URL = "/parse";
     var PARSE_APP_ID_KEY = "X-Parse-Application-Id";
     var PARSE_APP_ID_VALUE = "l7WfvYKSprD4DnGFMFqbE1VOgfQ6096PB372J3gA";
     var PARSE_REST_API_KEY = "X-Parse-REST-API-Key";
