@@ -1,0 +1,86 @@
+.fullfade{
+background-color:grey;
+opacity:.8;
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+ filter: alpha(opacity=80);
+}
+
+
+.bfade{
+background-color:blue;
+opacity:.5;
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+ filter: alpha(opacity=50);
+}
+
+
+.gfade{
+background-color:green;
+opacity:.1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+ filter: alpha(opacity=50);
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+}
+
+.lbfade{
+background-color:lightblue;
+opacity:.7;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+ filter: alpha(opacity=70);
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+}
+
+
+.lgfade{
+background-color:lightgreen;
+opacity:.1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+ filter: alpha(opacity=80);
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+}
+
+.rfade{
+background-color:red;
+opacity:.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+ filter: alpha(opacity=50);
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+}

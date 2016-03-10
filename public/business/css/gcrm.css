@@ -1,0 +1,193 @@
+#usdiv{
+ 
+position: relative;
+top:5%;
+height:5%;
+z-index:99;
+overflow:visible;
+width:90%;
+}
+
+#usmsg{
+ 
+position: absolute;
+height:100%;
+top:0;
+left:125px;
+overflow: hidden;
+}
+
+
+
+
+
+
+
+#usdiv input{
+position: relative;
+height:100%;
+width: 300px;
+font-size: 100%;
+z-index: 20;
+  border: 0px;
+  text-align: center;
+}
+
+
+#usdiv input:focus{
+    outline: 0;
+    background-color: transparent;
+    background:transparent!important;
+    border: 0px;
+}
+
+#ustab{
+position: relative;
+height: 100%;
+overflow:visible;
+table-layout:fixed;
+}
+
+#usdiv td{
+position: relative;
+padding-left: 3px;
+overflow:visible
+}
+
+.uscon2{
+margin-top: 2%;
+position: absolute;
+
+
+width:100%;
+
+max-height: 300px;
+overflow:scroll;
+}
+
+.uscon{
+
+position: absolute;
+
+height: 100%;
+left:500px;
+top:0;
+
+}
+
+.uzult p{
+position: relative;
+margin: 0;
+}
+
+.uzult{
+	
+position: relative;
+width: 100%;
+border-bottom: 1px solid green;
+cursor:pointer;
+padding-bottom: 2%;
+
+}
+
+.uzult:hover{
+background-color: lightgreen;
+}
+
+.uzultscon{
+position: relative;
+
+width: 99%;
+
+display: none;
+
+background-color: white;
+}
+
+.usbizputcon{
+position: absolute;
+left:80px;
+height:100%;
+
+
+}
+
+#usbizSuggestBox{
+position: relative;
+height:100%;
+color:darkgreen;
+
+
+
+}
+
+.usopcon{
+position: relative;
+top:5%;
+
+height: 90%;
+width:100%;
+overflow: scroll;
+border: 1px solid darkgreen;
+z-index: 10;
+}
+
+
+
+.crmbistack{
+
+position: relative;
+height: 100%;
+width:100%;
+border-bottom: 1px solid darkgreen;
+text-align: left;
+}
+
+.bitouchintro p{
+
+position: relative;
+margin: 0px;
+cursor: pointer;
+}
+
+.usscroll{
+position: absolute;
+height:100%;
+width:100%;
+overflow: scroll;
+
+}
+
+.rowtouch{
+position: relative;
+
+table-layout:fixed;
+height: 150px !important;
+}
+
+.bigtouch {
+position: relative;
+
+height: auto !important;
+overflow: scroll;
+
+}
+
+
+
+.statlet{
+position: relative;
+height:100%;
+
+width: 100%;
+
+
+}
+
+.anb{
+position: relative;
+height:100%;
+
+width: 100%;
+}
+

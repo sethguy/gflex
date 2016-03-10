@@ -1,0 +1,180 @@
+#widgcon{
+
+width:675px;
+//background-image:url("../images/wheel.png");
+//background-repeat: no-repeat;
+//background-size: 100% 100%;
+
+overflow: auto;
+}
+
+
+#impickdiv{
+position: relative;
+height: 70%;
+width:100%;
+overflow: auto;
+}
+
+
+#linktext{
+
+position: relative;
+height:90%;
+width:90%;
+background-color: white;
+color: black;
+}
+
+.wdpktab{
+
+position: relative;
+height: 100%;
+width:100%;
+
+table-layout: fixed;
+}
+
+.wtabdiv{
+
+position: relative;
+
+width:100%;
+top:0;
+cursor:pointer;
+
+}
+
+
+.wdpkimg{
+
+position: relative;
+height: 81px;
+width:72px;
+
+}
+
+
+.scat{
+
+font-family: inherit;
+
+}
+
+.scat p{
+  position: relative;
+    color:black;
+    font-size: 125%;
+    font-family: inherit;
+
+}
+
+.slist{
+
+margin:3% 0px;
+font-family: inherit;
+}
+
+.slist p{
+  
+    font-size: 100%;
+    color:inherit;
+    margin: 16px 0px;
+    font-family: inherit;
+    cursor:pointer;
+}
+
+.scrolldiv{
+position:relative;
+z-index:10;
+font-family: inherit;
+
+}
+
+#wproud{
+font-size: 200%;
+font-family: inherit;
+
+}  
+
+
+
+
+#wdbuilder{
+left:10%;
+width:30%;
+
+}
+
+#widgetpreview{
+   // display: none;
+//left:40%;
+width:675px;
+//background-image:url("../images/wheel.png");
+//background-repeat: no-repeat;
+//background-size: 100% 100%;
+
+
+left:500px;
+overflow: auto;
+}
+
+#widgetpreview p {
+
+
+
+}
+
+
+
+
+
+ #backdiv{
+    position:relative;
+height: 672px;
+width:600px;
+
+
+background-repeat: no-repeat;
+background-size: 100% 100%;
+   }
+
+      #condiv{
+        position:relative;
+height:580px;
+width:478px;
+top:40px;
+overflow: hidden;
+    }
+#wordsdiv{
+   position:relative;
+height:100%;
+width:100%;
+
+overflow: auto;
+}
+
+#longdiv{
+
+position:relative;
+height:25px;
+width:100%;
+z-index:99;
+font-size: 80%;
+display: block;
+
+}
+
+.widgfade{
+background-color:white;
+opacity:.4;
+position:absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index:1;
+border-radius: inherit;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+ filter: alpha(opacity=40);
+}
