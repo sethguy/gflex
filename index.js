@@ -12,8 +12,8 @@ var path = require('path');
 var grid = require('gridfs-stream');
    var  ip = process.env.OPENSHIFT_NODEJS_IP ||
                          'localhost';
-        var port      = process.env.OPENSHIFT_NODEJS_PORT   ||
-                         process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+        var port   = 8000;  // = process.env.OPENSHIFT_NODEJS_PORT   ||
+                       //  process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
 
 var querystring = require('querystring');
