@@ -1,0 +1,15 @@
+{ "results": [
+	{
+        "ACL": {},
+        "accessToken": "ya29.JAHbP_kQDgq-xBCPqZcVJSACpziCf8TCtnHHX7C1VF41gGIBdLBUEZ0y2wpcc-rRvL3d0mtJ3AfXjQ",
+        "createdAt": "2015-02-04T22:32:43.192Z",
+        "googleId": "114764330661562437359",
+        "objectId": "6WzjQcNkOS",
+        "updatedAt": "2015-02-24T03:43:55.075Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "Aup1bxd3il"
+        }
+    }
+] }
