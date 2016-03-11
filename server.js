@@ -10,8 +10,7 @@ var MongoClient = Mongo.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var path = require('path');
 var grid = require('gridfs-stream');
-   var  ip = process.env.OPENSHIFT_NODEJS_IP ||
-                         'localhost';
+   var  ip = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
         var port   = process.env.OPENSHIFT_NODEJS_PORT   ||
                         process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
@@ -32,7 +31,7 @@ var url = 'http://'+ip+':'+port+''+mountPath;
 
 //var databaseUri  = 'mongodb://localhost:27017/ngreen';
 
-var databaseUri =  process.env.OPENSHIFT_MONGODB_DB_URL ;'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
+var databaseUri =  process.env.OPENSHIFT_MONGODB_DB_URL ;//'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -3927,7 +3926,7 @@ app.get('/main', function (req, res) {
 /**
  * Attach the express app to Cloud Code to process the inbound request.
  */
-app.listen();
+//app.listen();
 
 /**
  * One-time use function to create admin role and add jack as a member of Admins
