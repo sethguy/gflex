@@ -478,7 +478,6 @@ biz.saveAll( fcounts , {
 */
 
 
-  //res.send( fcounts );
   
   },
   error: function(error) {
