@@ -29,9 +29,9 @@ var mountPath = '/parse';
 
 var url = 'http://'+ip+':'+port+''+mountPath; 
 
-var databaseUri  = 'mongodb://localhost:27017/ngreen';
+//var databaseUri  = 'mongodb://localhost:27017/ngreen';
 
-//var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
+var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
 }
