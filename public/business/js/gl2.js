@@ -7,31 +7,31 @@ var HTTPS_QUERYSTRING = "&https=1";
     var PARSE_REST_API_KEY = "X-Parse-REST-API-Key";
     var PARSE_REST_API_VALUE = "g2sQMnplDFdrtrZbmxiOZndMn09752hFPBvARQ8H";
     var PARSE_SESSION_TOKEN_KEY = "X-Parse-Session-Token";
-    var GetBizByNameUrl = "https://business.greenease.co/bizsearch";
-	var GetFaByNameUrl = "https://business.greenease.co/fasearch";
-	var savebusinessurl = "https://business.greenease.co/newbiz";
-    var linkbusinessurl = "https://business.greenease.co/newuserbusiness";
-    var unlinkbusinessurl = "https://business.greenease.co/unlinkuserbusiness";
-    var getlinkedbybid = "https://business.greenease.co/getlinkedbybid";
-    var crmsearchurl = "https://business.greenease.co/crmuforemail";
-    var getlinkedurl = "https://business.greenease.co/getlinked";
-    var GetfaByNameUrl = "https://business.greenease.co/getfabyname";
-    var EditFarmUrl = "https://business.greenease.co/editfarm";
-var getbizfarmsurl =  "https://business.greenease.co/getFarms";
-var getPurchaseHistoryRecsUrl = "https://business.greenease.co/purhis";
-var SendFarmUpdateUrl = "https://business.greenease.co/sendfaupdate";
-var createPurHistRecUrl ="https://business.greenease.co/newphrecs";
-var ShowFarmsUrl = "https://business.greenease.co/showFarms";
-var widgtextUrl = "https://business.greenease.co/getwidgetlink";
+    var GetBizByNameUrl = "/bizsearch";
+	var GetFaByNameUrl = "/fasearch";
+	var savebusinessurl = "/newbiz";
+    var linkbusinessurl = "/newuserbusiness";
+    var unlinkbusinessurl = "/unlinkuserbusiness";
+    var getlinkedbybid = "/getlinkedbybid";
+    var crmsearchurl = "/crmuforemail";
+    var getlinkedurl = "/getlinked";
+    var GetfaByNameUrl = "/getfabyname";
+    var EditFarmUrl = "/editfarm";
+var getbizfarmsurl =  "/getFarms";
+var getPurchaseHistoryRecsUrl = "/purhis";
+var SendFarmUpdateUrl = "/sendfaupdate";
+var createPurHistRecUrl ="/newphrecs";
+var ShowFarmsUrl = "/showFarms";
+var widgtextUrl = "/getwidgetlink";
 var sendreqacemailUrl = "functions/sendRequestAccessEmail";
 var sendforgotemailUrl = "functions/sendSetPasswordEmail";
 var sendsignupUrl = "functions/usersignup";
 var logoutUrl = "functions/logout";
 var buserfarmsugUrl = "functions/sendAdminEmail";
-var ckforuserurl = "https://business.greenease.co/ckforUser";
-var toggleprivateUrl = "https://business.greenease.co/setfarmvis";
-var getbisugurl = "https://business.greenease.co/getbisugs";
-var setbisugtoverifiedurl = "https://business.greenease.co/setbisugtoverified";
+var ckforuserurl = "/ckforUser";
+var toggleprivateUrl = "/setfarmvis";
+var getbisugurl = "/getbisugs";
+var setbisugtoverifiedurl = "/setbisugtoverified";
 
 var BigCal = null;
 buysfromlist=null;
@@ -196,14 +196,16 @@ https://api.parse.com/1/users/me
 */
 
 user =  JSON.parse( getCookie('user') );
-
+console.log(getCookie('user') +"at set cookii user e" );
 if(user){
+
+
 
 var ses = user.sessionToken;
 id = user.objectId;
 
 if(ses){
-var urlstring = "https://business.greenease.co/ckses"+"/"+ses+"/"+id;
+var urlstring = "/ckses"+"/"+ses+"/"+id;
 
 console.log(urlstring);
 
@@ -329,6 +331,7 @@ function getwithkeys(url,callback,extra){
 	    
 		  var back = xmlhttp.responseText;
 		  var nson = JSON.parse(back);
+			
 			callback(nson,extra);
 	   
 	    }// ready state = 4

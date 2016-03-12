@@ -5,7 +5,7 @@ return user.isadmin;
 
  function loginbsuser(user){
 
-
+console.log(JSON.stringify(user)+" loginbsuser ");
 getlinkedbusiness(user,function(stuff){
 
 

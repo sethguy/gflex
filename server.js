@@ -13,7 +13,7 @@ var grid = require('gridfs-stream');
    var  ip = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
         var port   = process.env.OPENSHIFT_NODEJS_PORT   ||
                         process.env.OPENSHIFT_INTERNAL_PORT || 8080;
-
+var bcrypt = require('bcrypt');
 
 var querystring = require('querystring');
 var _ = require('underscore');
@@ -29,15 +29,26 @@ var mountPath = '/parse';
 
 var url = 'http://'+ip+':'+port+''+mountPath; 
 
-//var databaseUri  = 'mongodb://localhost:27017/ngreen';
+var databaseUri  = 'mongodb://localhost:27017/ngreen';
 
-var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
+//var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
 }
 
 
+var mongogetdb = function( calli ){
+// Use connect method to connect to the Server
+  MongoClient.connect( databaseUri , function(err, db) {
+  if(err) throw err;
+  //console.log("Connected correctly to server");
 
+    calli( db );//insert method
+
+  });//mongo connect
+
+
+};
 
 var api = new ParseServer({
   databaseURI: databaseUri ,
@@ -65,6 +76,58 @@ app.get('/', function(req, res) {
        res.setHeader('Content-Type', 'text/html');
   res.status(200).send(fs.readFileSync('./index.html'));
 });
+
+             var inmany = function( colname , ray, calli ) {
+
+                     return function(db){
+
+                       var col = db.collection( colname );
+                         
+                         col.insertMany( ray , function(err, r) {
+
+                        if(err)console.log(err );
+                       
+                        console.log( r );
+
+                        calli( r );
+
+                     });// collection insert
+
+                     }// ret
+
+                 } //in   many
+
+
+   app.get('/userdo', function(req, res) {
+
+                    var data = JSON.parse(fs.readFileSync('./gdata/_User.json', "utf8"));
+                                    
+                    console.log(JSON.stringify(data.results[0]));
+                    //var name = files[i].replace('.json', '');
+                    console.log('');
+                   // console.log( name );
+                    console.log('');
+
+                    var sertray = data.results; 
+
+
+
+
+                    mongogetdb(
+
+                      inmany(
+                      
+                        'User',
+
+                        sertray,
+
+                        function( i ){  
+
+                          res.send(JSON.stringify( i ))}));   
+
+
+  });//readngoo
+
 
 
    app.get('/readngo', function(req, res) {
@@ -715,6 +778,119 @@ Business.save(biob, {
 });
 
 });//get newbiz
+
+
+app.get('/apeazzy', function ( req, res) {
+
+            res.set('Content-Type', 'text/html');
+
+            res.send(    fs.readFileSync('./apeazzy.html')  );
+
+});
+
+
+app.get('/getlogin/:user', function ( req, res) {
+
+var user = JSON.parse( req.param('user') );
+
+console.log(req.param('user') +"  user  ");
+
+var getby = function(table, terms,ops, calli) {
+
+        return function(db) {
+
+            db.collection(table).find(terms ).toArray(function(err, docs) {
+
+                calli(docs, err);
+
+            });
+
+        }
+
+    } //getby
+
+mongogetdb(
+
+    getby('User',{username:user.username},  { bcryptPassword: 0 } ,function(docs, err) {
+
+        if (docs.length > 0) {
+
+            bcrypt.compare( user.password, docs[0]['bcryptPassword'], function(err, bres) {
+
+                if (bres) {
+
+                    res.json({
+
+                        user: docs[0],
+                        err: err
+
+                    });
+
+                } else {
+
+                    res.json({
+
+                        msg: 'wrong password',
+                        err: err
+
+                    });
+
+                }
+
+            });
+
+        } else {
+
+            res.json({
+
+                msg: 'no user with that email',
+                err: err
+
+            });
+
+        }
+
+    })
+
+);
+
+
+/*
+
+var Biz = Parse.Object.extend("Business");
+
+var Business = new Biz();
+
+biob.hours_json = JSON.stringify( biob.hours_json );
+console.log(biob.geo+" this is geo ");
+var prelo = biob.geo ;
+
+biob.geo = new Parse.GeoPoint(
+
+  {latitude: parseFloat( prelo.lat ), longitude: parseFloat( prelo.lng ) }
+
+  );
+
+Business.save(biob, {
+  success: function(Business) {
+    // Execute any logic that should take place after the object is saved.
+    
+
+    alert('New object created with objectId: ' + Business.id);
+  res.json(Business);
+  },
+  error: function(Business, error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    alert('Failed to create new object, with error code: ' + error.message);
+  }
+});
+
+
+
+*/
+
+});//getlogin
 
 
 
@@ -2537,13 +2713,11 @@ query.limit(100);
 query.find({
   success: function(placesObjects) {
 
-
-
-
     res.json(placesObjects);
-  },error: function(user, error) {
-   res.json("no log");
 
+  },error: function(user, error) {
+  
+   res.json("no log");
     // The login failed. Check error to see why.
   }
 });
@@ -2573,7 +2747,8 @@ res.json(upay );
     // Do stuff after successful login.
   },
   error: function(user, error) {
-   res.json("no log");
+
+   res.json("no log"+JSON.stringify(error));
 
     // The login failed. Check error to see why.
   }
@@ -3082,15 +3257,90 @@ var  ses = req.params.ses;
 
 var id = req.params.id;
 
+var mongoget = function(table, terms,ops, calli) {
+
+        return function(db) {
+
+            db.collection(table).find(terms ).toArray(function(err, docs) {
+
+                calli(docs, err);
+
+            });
+
+        }
+
+    } //getby
+
+
+mongogetdb( mongoget('User', { sessionToken: ses, objectId: id } , { bcryptPassword: 0 } , function( docs , err ){
+
+var fnduser = docs[0];
+
+
+   var fuses = fnduser.sessionToken;
+
+console.log(fuses+"this iss ese");
+console.log(fuses);
+console.log(ses);
+console.log(fuses+"this iss ese");
+
+//
+if(fuses  &&  fuses===ses  ){
+
+fnduser.sessionToken =fuses;
+ res.json( fnduser );
+  
+  }else{
+
+res.json({'msg':'no match'});
+
+  }
+
+
+
+} ) );
+
+
+
 console.log("next:"+JSON.stringify(req.params ) );
 
  Parse.Cloud.useMasterKey();
-var User = Parse.Object.extend("User");
 
-var query = new Parse.Query(User);
+
+
+/*
+
+              var fuses = fnduser.getSessionToken();
+
+console.log(fuses+"this iss ese");
+console.log(fuses);
+console.log(ses);
+console.log(fuses+"this iss ese");
+
+//
+if(fuses  &&  fuses===ses  ){
+
+fnduser.sessionToken =fuses;
+ res.json( fnduser );
+  
+  }else{
+
+res.json({'msg':'no match'});
+
+  }
+
+     
+
+*/
+
+
+
+/*
 
 query.get(id, {
   success: function(fnduser) {
+        
+
               var fuses = fnduser.getSessionToken();
 
 console.log(fuses+"this iss ese");
@@ -3122,6 +3372,8 @@ res.json({'msg':'no match'});
     // error is a Parse.Error with an error code and message.
   }
     });
+
+*/
 
 });
 
