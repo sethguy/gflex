@@ -198,7 +198,6 @@ var sense = function(table, terms, ops, calli) {
     } //getby
 
 
-
 app.get('/mailtest/:toemail', function(req, res) {
 
     var toemail = req.params.toemail
@@ -229,8 +228,6 @@ app.get('/mailtest/:toemail', function(req, res) {
     });
 
 });
-
-
 
 
 app.get('/side/:terms', function(req, res) {
@@ -894,7 +891,6 @@ var saveSpecial = function(special, callback) {
 
         var specialParseObj = new SPEC();
         console.log('save time')
-
 
 
         specialParseObj.save(special, {
@@ -5235,22 +5231,21 @@ app.get('/ckforUser/:email', function(req, res) {
 }); // ckforUser 
 
 
-
 app.get('/ckforUser2/:email', function(req, res) {
     // get user relations base on uid
-                Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
+    Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
 
-                    success: function(sendres) {
-                        // ratings should be 4.5
+        success: function(sendres) {
+            // ratings should be 4.5
 
-                        res.json(sendres);
+            res.json(sendres);
 
-                    },
-                    error: function(error) {
-                        res.send(JSON.stringify(error));
+        },
+        error: function(error) {
+            res.send(JSON.stringify(error));
 
-                    }
-                });
+        }
+    });
 
 }); // ckforUser 
 
@@ -5264,6 +5259,48 @@ Parse.Cloud.define('sendintro', function(request, response) {
         //  var uemail = currentUser.get("email");
 
         if (true /*uemail=="vanessa@greenease.co" ||  uemail=="isethguy@gmail.com"*/ ) {
+
+
+            var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + ToEmail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
+
+            +"\n" + "\n" + "Thank you for buying local and being part of our community."
+
+            + "\n" + "\n" + "Locally yours,"
+
+            + "\n" + "\n" + "The Greenease Team",
+
+
+            var toemail = req.params.toemail
+                // create reusable transporter object using the default SMTP transport
+            var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+            // setup e-mail data with unicode symbols
+
+            var mailOptions = {
+                from: '" Greenease " <info@greenease.co>', // sender address
+                to: toemail, // list of receivers
+                subject: 'Welcome to Greenease Business', // Subject line
+
+
+                text: text, // plaintext body
+
+
+                html: '<b>Hello world </b>' + '<p style = "color:red" >lets get it</p>' + '<a href="http://www.w3schools.com/html/">Visit our HTML tutorial</a>' // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    res.send(error);
+
+                    return console.log(error);
+                }
+                console.log('Message sent: ' + info.response);
+
+                res.send(info);
+
+            });
+/*
 
             Parse.Cloud.useMasterKey();
             console.log("inthere");
@@ -5305,7 +5342,7 @@ Parse.Cloud.define('sendintro', function(request, response) {
                 }
             });
 
-
+*/
         } // if admin
 
 
