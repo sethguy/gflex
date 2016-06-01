@@ -5267,7 +5267,7 @@ Parse.Cloud.define('sendintro', function(request, response) {
 
             + "\n" + "\n" + "Locally yours,"
 
-            + "\n" + "\n" + "The Greenease Team",
+            + "\n" + "\n" + "The Greenease Team";
 
 
             var toemail = req.params.toemail
