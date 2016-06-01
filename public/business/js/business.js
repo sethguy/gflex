@@ -134,7 +134,7 @@ console.log(stuff);
 
 function getfarms(bi,calli){
 
-var urlstring = getbizfarmsurl+"?bid="+bi.objectId;
+var urlstring = getbizfarmsurl+"/"+bi.objectId;
 
 grabstuff(urlstring,function(stuff){
 

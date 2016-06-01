@@ -16,8 +16,8 @@
     <link type="text/css" rel="stylesheet" href="business/css/gcrm.css">
     <link type="text/css" rel="stylesheet" href="business/css/touchtab.css">
     <link type="text/css" rel="stylesheet" href="business/css/linkedusers.css">
-        <link type="text/css" rel="stylesheet" href="business/css/suggestions.css">
-
+    <link type="text/css" rel="stylesheet" href="business/css/suggestions.css">
+    <link type="text/css" rel="stylesheet" href="business/css/specials.css">
     <link href='https://fonts.googleapis.com/css?family=Cabin|Muli|Cabin+Condensed|Cabin+Sketch|Poiret+One|Josefin+Sans|Shadows+Into+Light|Shadows+Into+Light+Two' rel='stylesheet' type='text/css'>
     <link type="text/css" rel="stylesheet" href="business/css/adiv.css">
     <link type="text/css" rel="stylesheet" href="business/css/farmtable.css">
@@ -40,11 +40,11 @@
     <script type="text/javascript" src="business/js/gs2.js"></script>
     <script type="text/javascript" src="business/js/navbuttons.js"></script>
     <script type="text/javascript" src="business/js/suggestions.js"></script>
+    <script type="text/javascript" src="business/js/specials.js"></script>
 
-
-<script type="text/javascript" src="business/js/prototype.js"></script>
-<link rel="stylesheet" type="text/css" href="business/css/calendarview.css" />
-<script type="text/javascript" src="business/js/calendarview.js"></script>
+    <script type="text/javascript" src="business/js/prototype.js"></script>
+    <link rel="stylesheet" type="text/css" href="business/css/calendarview.css" />
+    <script type="text/javascript" src="business/js/calendarview.js"></script>
 
     <!---
 font-family: 'Cabin', sans-serif;
@@ -65,17 +65,17 @@ font-family: 'Shadows Into Light Two', cursive;
             window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
     </script>
 -->
-  
+
     <meta name="gwt:property" content="locale=en_US">
 
     <style>
-        input:-webkit-autofill {
-            background-color: transparent !important;
-        }
-        
-        input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0px 1000px #669933 inset;
-        }
+    input:-webkit-autofill {
+        background-color: transparent !important;
+    }
+    
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #669933 inset;
+    }
     </style>
 
 
@@ -108,19 +108,19 @@ font-family: 'Shadows Into Light Two', cursive;
             <div id="admsg"> Select a business before you do ANYTHING!</div>
             <div>
 
-                <div  class="asearchcon">
+                <div class="asearchcon">
 
                     <div class="gfade"></div>
 
                     <input onkeyup="searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="BisSuggestBox" type="text">
 
                     <div class="asearchcon2">
-                      
+
                         <div id="bizultscon" class="bizultscon">
 
 
                         </div>
-                   
+
                     </div>
 
                 </div>
@@ -140,6 +140,7 @@ font-family: 'Shadows Into Light Two', cursive;
                 <tr>
                     <td id="nww" onmousedown="showwidgetview()">WEB WIDGETS</td>
                     <td id="nph" onmousedown="showpurchasehistory()">PURCHASE HISTORY</td>
+                    <td id="nlg" onmousedown="showspecialmodal()"> add special</td>
                     <td id="nlg" onmousedown="logout()">LOG OUT</td>
                 </tr>
             </table>
@@ -151,7 +152,7 @@ font-family: 'Shadows Into Light Two', cursive;
         <div id="ForgotForm">
 
             <div id="fo3" class="four">
-                <div  onmousedown = "foback()" id="foback" class="bdiv">
+                <div onmousedown="foback()" id="foback" class="bdiv">
                     <p>BACK </p>
                     <div class="gfade"></div>
                 </div>
@@ -205,7 +206,7 @@ font-family: 'Shadows Into Light Two', cursive;
                 <div class="four">
                     <input id="rafarm" class="tput" placeholder="One Farm you purchase from" autocomplete="off">
                 </div>
-                <div  onmousedown = "rasend()" style="border-bottom: 0px " id="rasend" class="four">
+                <div onmousedown="rasend()" style="border-bottom: 0px " id="rasend" class="four">
                     <div class="bdiv">
                         <p>SEND </p>
                         <div class="gfade"></div>
@@ -266,7 +267,7 @@ font-family: 'Shadows Into Light Two', cursive;
 
                         <!------Paybox---->
 
-              <form id="payform" method="post" action="https://www.paypal.com/cgi-bin/webscr" class="paypal-button" target="_blank">
+                        <form id="payform" method="post" action="https://www.paypal.com/cgi-bin/webscr" class="paypal-button" target="_blank">
                             <div class="hide" id="errorBox"></div>
                             <input type="hidden" name="src" value="1">
                             <input type="hidden" name="button" value="subscribe">
@@ -293,7 +294,7 @@ font-family: 'Shadows Into Light Two', cursive;
                     <p>Copy and paste web widget code into your web site (Right click and choose 'Copy' or Ctrl + C on your keyboard)</p>
                     <div id="linkbox" align="center">
 
-<textarea id="linktext"></textarea>
+                        <textarea id="linktext"></textarea>
 
                     </div>
                     <div class="fullfade"></div>
@@ -305,8 +306,8 @@ font-family: 'Shadows Into Light Two', cursive;
             </style>
 
             <div class="wpdiv" id="FarmInfodiv">
-<div class="datepop"  id="datepop" ></div>
-             
+                <div class="datepop" id="datepop"></div>
+
 
                 <div class="lgfadebig"></div>
 
@@ -335,7 +336,7 @@ font-family: 'Shadows Into Light Two', cursive;
                                 <p style="font-size:100%;margin:0px;padding:0px" id="emailfainfo" class="farminfo"></p>
                                 <a target="_blank" style="font-size:100%;margin:0px;padding:0px" id="websitefainfo" class="farminfo"></a>
                             </div>
-                          
+
                             <!----
 
 
@@ -383,7 +384,7 @@ font-family: 'Shadows Into Light Two', cursive;
 
                     </div>
                     <div class="wblet" id="poplet">
-<p id = "popwords">Click the checkboxes above to update the agricultural goods you purchase from this farm.</p>
+                        <p id="popwords">Click the checkboxes above to update the agricultural goods you purchase from this farm.</p>
 
                         <div class="gfade"></div>
                     </div>
@@ -395,28 +396,19 @@ font-family: 'Shadows Into Light Two', cursive;
                             <div id="dateput"></div>
 
 
-<script type="text/javascript">
+                            <script type="text/javascript">
+                            var date = new Date();
+
+                            get('dateput').inn(date.toDateString());
+                            </script>
 
 
-var date = new Date();
-
-get('dateput').inn(date.toDateString());
-
-
-</script>
-
-
-<script type="text/javascript">
-
-
-  bigcal = Calendar.setup({
-      //  parentElement: 'datepop',        
-          dateField: 'dateput'
-        });
-
-
-
-</script>
+                            <script type="text/javascript">
+                            bigcal = Calendar.setup({
+                                //  parentElement: 'datepop',        
+                                dateField: 'dateput'
+                            });
+                            </script>
                         </div>
                     </div>
 
@@ -434,9 +426,9 @@ get('dateput').inn(date.toDateString());
                             <div class="fullfade"></div>
                             <p>SAVE</p>
                         </div>
-                        
-                       
-                       
+
+
+
                         <div id="fiup"></div>
                         <!----
     <div id = "fiup"  class="fcat"  style="left:55%" ><div class="fullfade"></div><p>UPDATE</p></div>
@@ -446,13 +438,13 @@ get('dateput').inn(date.toDateString());
                             <p>CLOSE</p>
                         </div>
 
-                            <div onmousedown="makefarmprivate()" id="fimake" class="fcat" style="left:50%;width:40%">
+                        <div onmousedown="makefarmprivate()" id="fimake" class="fcat" style="left:50%;width:40%">
                             <div class="fullfade"></div>
-                            <p id="makemsg" >MAKE PRIVATE</p>
+                            <p id="makemsg">MAKE PRIVATE</p>
                         </div>
 
 
-                   
+
                     </div>
 
                 </div>
@@ -529,10 +521,7 @@ We're proud to buy from local and sustainable farms
                                 <div class="scat">
                                     <p id="mcl"><b>Meats</b></p>
                                 </div>
-                                <div id="category_meatlist" 
-
-
-                                class="slist">
+                                <div id="category_meatlist" class="slist">
 
                                 </div>
 
@@ -542,10 +531,7 @@ We're proud to buy from local and sustainable farms
                                 <div class="scat">
                                     <p id="pcl"><b>Produce</b></p>
                                 </div>
-                                <div id="category_producelist" 
-
-
-                                class="slist">
+                                <div id="category_producelist" class="slist">
 
                                 </div>
 
@@ -555,10 +541,7 @@ We're proud to buy from local and sustainable farms
                                 <div class="scat">
                                     <p id="dcl"><b>Dairy</b></p>
                                 </div>
-                                <div id="category_dairylist" 
-
-
-                                class="slist">
+                                <div id="category_dairylist" class="slist">
 
                                 </div>
 
@@ -569,10 +552,7 @@ We're proud to buy from local and sustainable farms
                                 <div class="scat">
                                     <p id="scl"><b>Seafood</b></p>
                                 </div>
-                                <div id="category_seafoodlist" 
-
-
-                                class="slist">
+                                <div id="category_seafoodlist" class="slist">
 
                                 </div>
 
@@ -600,14 +580,12 @@ We're proud to buy from local and sustainable farms
 
 
 
-
-
         <!----------------------------FARMTABLE SPACE---------------------------->
 
 
 
         <div id="farmtablediv" align="center">
-          <!----------
+            <!----------
             <img src="business/images/soon.png" style="position:absolute;top:50px;left:830px"></img>
           ---------->
 
@@ -619,14 +597,14 @@ We're proud to buy from local and sustainable farms
                     <div class="ftc" id="fth0">
 
                         <div class="nth">
-                            <p onmousedown ="sortby(this)">DATE</p>
+                            <p onmousedown="sortby(this)">DATE</p>
                         </div>
 
                     </div>
                     <div class="ftc" id="fth1">
 
                         <div class="nth">
-                            <p onmousedown ="sortby(this)">FARM NAME</p>
+                            <p onmousedown="sortby(this)">FARM NAME</p>
                         </div>
 
                     </div>
@@ -634,14 +612,14 @@ We're proud to buy from local and sustainable farms
                     <div class="ftc" id="fth2">
 
                         <div class="nth">
-                            <p onmousedown ="sortby(this)">CATEGORY</p>
+                            <p onmousedown="sortby(this)">CATEGORY</p>
                         </div>
 
                     </div>
 
                     <div class="ftc" id="fth3">
                         <div class="nth">
-                            <p >NOTES</p>
+                            <p>NOTES</p>
                         </div>
                     </div>
 
@@ -679,10 +657,7 @@ We're proud to buy from local and sustainable farms
 
 
 
-
                     </div>
-
-
 
 
 
@@ -804,39 +779,38 @@ We're proud to buy from local and sustainable farms
 
                 <div id="usdiv">
 
-                    <div class="usbizputcon" id="usbizputcon"> 
+                    <div class="usbizputcon" id="usbizputcon">
 
-<div class="gfade"></div>
+                        <div class="gfade"></div>
 
-         <input onkeyup="usbizsearch(this)" placeholder="Type in a Business Name" id="usbizSuggestBox" type="text">
+                        <input onkeyup="usbizsearch(this)" placeholder="Type in a Business Name" id="usbizSuggestBox" type="text">
 
                     </div>
-                    
-                        <div class="uscon">
 
-                            <div class="gfade"></div>
+                    <div class="uscon">
 
-                            <input onkeyup="usearchbyemail(this)" placeholder="Type in a User Email" id="usSuggestBox" type="text">
+                        <div class="gfade"></div>
 
-                            <div class="uscon2">
-                                <div id="uzultscon" class="uzultscon">
+                        <input onkeyup="usearchbyemail(this)" placeholder="Type in a User Email" id="usSuggestBox" type="text">
+
+                        <div class="uscon2">
+                            <div id="uzultscon" class="uzultscon">
 
 
-                                </div>
                             </div>
-
                         </div>
 
                     </div>
 
-                
+                </div>
 
 
-<div id = "crmdiv" class="usopcon">
-    
 
-    
-</div>
+                <div id="crmdiv" class="usopcon">
+
+
+
+                </div>
 
 
             </div>
@@ -866,7 +840,7 @@ We're proud to buy from local and sustainable farms
                     </div>
 
                 </div>
-                
+
                 <div id="bedicon" class="bedicon">
 
                 </div>
@@ -874,38 +848,38 @@ We're proud to buy from local and sustainable farms
             </div>
 
             <div id="adfview" class="subadview">
-  <div class="adfarmsearchcon">
+                <div class="adfarmsearchcon">
 
-                        <div class="gfade"></div>
+                    <div class="gfade"></div>
 
-<input onkeyup="adsearchfarmsbyname(this)" placeholder="Type name of farm" id="adFarmselinput" type="text" autocomplete="off">
+                    <input onkeyup="adsearchfarmsbyname(this)" placeholder="Type name of farm" id="adFarmselinput" type="text" autocomplete="off">
 
-                        <div class="farmsearchcon2">
-                            <div id="adfazultscon" class="fazultcon">
+                    <div class="farmsearchcon2">
+                        <div id="adfazultscon" class="fazultcon">
 
 
-                            </div>
                         </div>
-
                     </div>
-                  
-<div onmousedown="showfarmfields(this)" class="adnewfarmbt">
-    <div class="gfade"></div>
-<p> Add New Farm </p>
-</div>
 
-<div onmousedown="savefarm()"  id = "savefabt" class="adnewfarmbt">
-    <div class="gfade"></div>
-<p> Save </p>
-</div>
+                </div>
 
-<div id="adfarmcon">
+                <div onmousedown="showfarmfields(this)" class="adnewfarmbt">
+                    <div class="gfade"></div>
+                    <p> Add New Farm </p>
+                </div>
 
-<div class = "adfarmsubcon" id="adeditfarm"></div>
+                <div onmousedown="savefarm()" id="savefabt" class="adnewfarmbt">
+                    <div class="gfade"></div>
+                    <p> Save </p>
+                </div>
 
-<div class = "adfarmsubcon" id="adnewfarm"></div>
-    
-</div>
+                <div id="adfarmcon">
+
+                    <div class="adfarmsubcon" id="adeditfarm"></div>
+
+                    <div class="adfarmsubcon" id="adnewfarm"></div>
+
+                </div>
 
             </div>
 
@@ -966,7 +940,72 @@ We're proud to buy from local and sustainable farms
             </tr>
         </table>
 
+
+        <div id="specialModal">
+
+
+            <div class="spec_nav-con">
+
+
+                <span onmousedown="closeSpecialsModals()" class="spec_nav">Close</span>
+                <span onmousedown="sendSpecial()" class="spec_nav">Publish</span>
+                <span onmousedown="sendSpecial()" class="spec_nav">Save</span>
+
+
+            </div>
+
+
+            <div id="sp-scroll">
+
+
+                <div id="specialbisearch" class="specialbisearch">
+
+                    <!----input placeholder="Type in a business name" id="sp-bi-put"---->
+
+                    <div id="spec_asearchcon" class="asearchcon">
+
+
+
+                        <input onkeyup="spec_searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="sp-bi-put" type="text">
+
+                        <div class="asearchcon2">
+
+                            <div id="spec_bizultscon" class="bizultscon" style="display: none;"></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <p class="sp-bi-name" id="sp-bi-name"> </p>
+
+                <p class="sp-bi-address" id="sp-bi-address"> </p>
+
+                <input placeholder="Enter Title" id="sp-bi-title">
+                <br>
+                <p> Terms: </p>
+                <textarea id="sp-terms"></textarea>
+                <br>
+                <table id="sp-image-select">
+                    <tr>
+                        <td>
+                            <img src="">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="">
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
     </div>
+    <!--  bcent div --->
     <img src="business/images/powered2.png" alt="" id="poweredby">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo&libraries=places&callback=initgMap"></script>
 

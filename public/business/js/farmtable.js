@@ -74,6 +74,8 @@ row5.clear0();
         for (var i = 0; i < stuff.length; i++) {
 
 var thefarm = stuff[i].farm;
+if(thefarm){
+
 
             /* PurchaseHistoryRecord*/
             var rec = new PurchaseHistoryRecord(stuff[i].rec);
@@ -103,10 +105,6 @@ ment = el('img').prop('src','business/images/farmersweb_logo.jpg').cl('farmersim
 }
 placetd = farmweb(5,url,ment);
 
-
-
-
-
             var td = [
                 datecol( rec.actionEffectiveDate, rec.actionCode),
                 gettd(2, thefarm.name),
@@ -122,8 +120,8 @@ placetd = farmweb(5,url,ment);
             row3.appendChild(td[2]);
             row4.appendChild(td[3]);
             row5.appendChild(td[4]);
-
-        }
+}//if farm
+        }//loop
 
         row1.appendChild(gettd(0, ""));
         row2.appendChild(gettd(0, ""));

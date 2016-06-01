@@ -32,7 +32,7 @@ var ckforuserurl = "/ckforUser";
 var toggleprivateUrl = "/setfarmvis";
 var getbisugurl = "/getbisugs";
 var setbisugtoverifiedurl = "/setbisugtoverified";
-
+var sendSpecialUrl = "/specialMachine";
 var BigCal = null;
 buysfromlist=null;
 

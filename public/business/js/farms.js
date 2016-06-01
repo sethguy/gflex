@@ -309,6 +309,8 @@ get('popwords').inn('Click the checkboxes above to update the agricultural goods
 
 function fillfarminfo(fa){
 //place regular farm fileds
+
+
 get('notearea').value="";
 
 if(BigCal){
@@ -470,6 +472,8 @@ if(farm[fp.qstring])pros.push( proput );
 console.log( "  firts loop "+JSON.stringify( proput ) );
 
 };// fpro loop
+
+console.log('farnbiz'+JSON.stringify(farm));
 
 var bid = biz.objectId;
 var fid = farm.objectId;
@@ -642,8 +646,10 @@ var sfa = buys.farm;
 var theFarm = buys.ob;
 
 if(theFarm.name===fa.name){
+console.log("this is buys 7 "+JSON.stringify( buys ) );
 
-	makebt.stprop('display','block');
+makebt.buysfrom = buys;
+	//makebt.stprop('display','block');
 
 setckboxes(buys);
 console.log(JSON.stringify(buys));
@@ -1092,11 +1098,9 @@ var biz = farmInfodiv.biz;
 
 var makebt = get('fimake');
 
-
-
-
 var value = makebt.value;
 
+console.log(value +" value 1");
 
 if(value===true){
 
@@ -1107,11 +1111,13 @@ value = false;
 value = true;
 
 }
+console.log(value +" value 2");
+var  fimakebuyid = get('fimake').buysfrom.buys.objectId
+//var urlstring = toggleprivateUrl+"/"+farm.objectId+"/"+biz.objectId+"/"+value;
 
+console.log(fimakebuyid+"  fimake ")
 
-
-
-var urlstring = toggleprivateUrl+"/"+farm.objectId+"/"+biz.objectId+"/"+value;
+var urlstring = toggleprivateUrl+"/"+fimakebuyid+"/"+value;
 
 console.log(urlstring+"  stefarmvis");
 
@@ -1125,10 +1131,7 @@ refeshbusiness(biz,farm);
 
 alert(msg)
 
-
-
 }else{
-
 
 alert('error')
 

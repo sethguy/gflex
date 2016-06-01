@@ -46,7 +46,29 @@ dio.stprop= function(name,obj){
 	return dio;
 }; 
 
+    dio.pendprop = function( key , el ) {
+            dio.appendChild(el);
+            dio[key] = el;
+            return dio;
+        } ////flava
 
+    dio.pendif = function(con, el) {
+        if (con) dio.appendChild(el);
+        return dio;
+    }
+
+   dio.pendray = function(ray,el,key) {
+        
+for (var i = 0; i < ray.length; i++) {
+
+        dio.appendChild( el( ray[i] ) );
+
+};// ray lopp
+        
+        dio[key] = ray;
+
+        return dio;
+    };
 
 dio.clear0 = function(){
 	
