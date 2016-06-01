@@ -20,6 +20,7 @@ var querystring = require('querystring');
 var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
 
+var Signupurl = "http://business.greenease.co/?signup";
 
 var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
@@ -5255,13 +5256,15 @@ Parse.Cloud.define('sendintro', function(request, response) {
     // var email =  request.params.email;
     //console.log("sendintro"+email);
 
+    var toemail = request.params.email
+
     if (true /*currentUser*/ ) {
         //  var uemail = currentUser.get("email");
 
         if (true /*uemail=="vanessa@greenease.co" ||  uemail=="isethguy@gmail.com"*/ ) {
 
 
-            var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + ToEmail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
+            var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + toemail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
 
             +"\n" + "\n" + "Thank you for buying local and being part of our community."
 
@@ -5270,7 +5273,7 @@ Parse.Cloud.define('sendintro', function(request, response) {
             + "\n" + "\n" + "The Greenease Team";
 
 
-            var toemail = req.params.toemail
+        
                 // create reusable transporter object using the default SMTP transport
             var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
@@ -5284,20 +5287,18 @@ Parse.Cloud.define('sendintro', function(request, response) {
 
                 text: text, // plaintext body
 
-
-                html: '<b>Hello world </b>' + '<p style = "color:red" >lets get it</p>' + '<a href="http://www.w3schools.com/html/">Visit our HTML tutorial</a>' // html body
             };
 
             // send mail with defined transport object
             transporter.sendMail(mailOptions, function(error, info) {
                 if (error) {
-                    res.send(error);
+                    response.success(error);
 
                     return console.log(error);
                 }
                 console.log('Message sent: ' + info.response);
 
-                res.send(info);
+                response.success(info);
 
             });
 /*
