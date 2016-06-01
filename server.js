@@ -230,6 +230,9 @@ app.get('/mailtest/:toemail', function(req, res) {
 
 });
 
+
+
+
 app.get('/side/:terms', function(req, res) {
 
     console.log(req.param('terms'));
@@ -5231,6 +5234,25 @@ app.get('/ckforUser/:email', function(req, res) {
 
 }); // ckforUser 
 
+
+
+app.get('/ckforUser2/:email', function(req, res) {
+    // get user relations base on uid
+                Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
+
+                    success: function(sendres) {
+                        // ratings should be 4.5
+
+                        res.json(sendres);
+
+                    },
+                    error: function(error) {
+                        res.send(JSON.stringify(error));
+
+                    }
+                });
+
+}); // ckforUser 
 
 Parse.Cloud.define('sendintro', function(request, response) {
     var currentUser = Parse.User.current();
