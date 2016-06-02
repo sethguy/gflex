@@ -5234,6 +5234,10 @@ app.get('/ckforUser/:email', function(req, res) {
 
 app.get('/ckforUser2/:email', function(req, res) {
     // get user relations base on uid
+    
+   res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    
     Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
 
         success: function(sendres) {
