@@ -13,7 +13,7 @@ var path = require('path');
 var grid = require('gridfs-stream');
 var ip = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
-    process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+    process.env.OPENSHIFT_INTERNAL_PORT || 8000;
 var bcrypt = require('bcrypt');
 
 var querystring = require('querystring');
@@ -32,9 +32,9 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-var databaseUri = 'mongodb://localhost:27017/ngreen';
+//var databaseUri = 'mongodb://localhost:27017/ngreen';
 
-//var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
+var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -229,6 +229,22 @@ app.get('/mailtest/:toemail', function(req, res) {
     });
 
 });
+
+
+app.get('/flight', function(req, res) {
+
+
+
+
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.send("");
+
+
+
+
+});
+
+
 
 
 app.get('/side/:terms', function(req, res) {
@@ -5237,7 +5253,7 @@ app.get('/ckforUser2/:email', function(req, res) {
     
    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    
+
     Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
 
         success: function(sendres) {
@@ -5253,6 +5269,49 @@ app.get('/ckforUser2/:email', function(req, res) {
     });
 
 }); // ckforUser 
+
+
+
+
+app.get('/emailUserUpdate/:update', function(req, res) {
+    // get user relations base on uid
+    
+   res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+var update = JSON.parse(req.params.update);
+            var text = JSON.parse(req.params.update).msg
+   
+                // create reusable transporter object using the default SMTP transport
+            var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+            // setup e-mail data with unicode symbols
+
+            var mailOptions = {
+                from: '" Greenease " <info@greenease.co>', // sender address
+                to: 'isethguy@gmail.com', // list of receivers
+                subject: update.bid, // Subject line
+
+
+                text: text, // plaintext body
+
+            };
+
+            // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            res.json(error);
+
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+
+            res.json(info);
+
+    });
+
+}); // ckforUser 
+
+
 
 Parse.Cloud.define('sendintro', function(request, response) {
     var currentUser = Parse.User.current();
