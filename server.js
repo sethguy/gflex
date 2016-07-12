@@ -11,7 +11,7 @@ var MongoClient = Mongo.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var path = require('path');
 var grid = require('gridfs-stream');
-var ip = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
+var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
     process.env.OPENSHIFT_INTERNAL_PORT || 8000;
 var bcrypt = require('bcrypt');
@@ -32,9 +32,12 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-//var databaseUri = 'mongodb://localhost:27017/ngreen';
+//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+//db.auth('admin','SLIQk4Kja2Tn');
 
-var databaseUri =  'mongodb://admin:SLIQk4Kja2Tn@127.4.226.2:27017/gflex';
+
+
+var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -529,6 +532,7 @@ app.get('/readngo', function(req, res) {
 
         MongoClient.connect(databaseUri, function(err, db) {
 
+if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
 
                 var data = JSON.parse(fs.readFileSync('./gdata/' + files[i], "utf8"));
