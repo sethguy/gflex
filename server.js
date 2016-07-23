@@ -35,8 +35,6 @@ var url = 'http://' + ip + ':' + port + '' + mountPath;
 //var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 //db.auth('admin','SLIQk4Kja2Tn');
 
-
-
 var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
@@ -205,7 +203,7 @@ var sense = function(table, terms, ops, calli) {
 app.get('/mailtest/:toemail', function(req, res) {
 
     var toemail = req.params.toemail
-        // create reusable transporter object using the default SMTP transport
+
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
     // setup e-mail data with unicode symbols
