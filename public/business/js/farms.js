@@ -1,1142 +1,1111 @@
-var fpros = [
-{
-'name':'Meats',
-'qstring':"category_meat",
-'img':'chicken.png',
-'short':'meat'
-},
-{
-'name':'Produce',
-'qstring':"category_produce",
-'img':'apple.png',
-'short':'produce'
-},
-{
-'name':'Seafood',
-'qstring':"category_seafood",
-'img':'fish.png',
-'short':'seafood'
-},
-{
+var fpros = [{
+        'name': 'Meats',
+        'qstring': "category_meat",
+        'img': 'chicken.png',
+        'short': 'meat'
+    }, {
+        'name': 'Produce',
+        'qstring': "category_produce",
+        'img': 'apple.png',
+        'short': 'produce'
+    }, {
+        'name': 'Seafood',
+        'qstring': "category_seafood",
+        'img': 'fish.png',
+        'short': 'seafood'
+    }, {
 
-'name':'Dairy',
-'qstring':"category_dairy",
-'img':'cheese.png',
-'short':'dairy'
-},
+        'name': 'Dairy',
+        'qstring': "category_dairy",
+        'img': 'cheese.png',
+        'short': 'dairy'
+    },
 
 ];
 
 
-var fcats =[
+var fcats = [
 
-{
+    {
 
-'name':'Free Range',
-'imgoff':'freerange@2x.png',
-'imgon':'freerange_highlighted@2x.png',
-'qstring':'free_range'
-},
-
-
-{
-
-'name':'Grass Fed',
-'imgoff':'grassfed@2x.png',
-'imgon':'grassfed_highlighted@2x.png',
-'qstring':'grass_fed'
-},
+        'name': 'Free Range',
+        'imgoff': 'freerange@2x.png',
+        'imgon': 'freerange_highlighted@2x.png',
+        'qstring': 'free_range'
+    },
 
 
+    {
 
-{
+        'name': 'Grass Fed',
+        'imgoff': 'grassfed@2x.png',
+        'imgon': 'grassfed_highlighted@2x.png',
+        'qstring': 'grass_fed'
+    },
 
-'name':'Drug Free Meats',
-'imgoff':'hormonefree@2x.png',
-'imgon':'hormonefree_highlighted@2X.png',
-'qstring':'drug_free'
-},
 
-{
+    {
 
-'name':'Organic',
-'imgoff':'organic@2x.png',
-'imgon':'organic_highlighted@2x.png',
-'qstring':'organic'
-},
+        'name': 'Drug Free Meats',
+        'imgoff': 'hormonefree@2x.png',
+        'imgon': 'hormonefree_highlighted@2X.png',
+        'qstring': 'drug_free'
+    },
 
-{
+    {
 
-'name':'Sustainable Seafood',
-'imgoff':'seafood@2x.png',
-'imgon':'seafood_highlighted@2x.png',
-'qstring':"sustainable_seafood"
-},
+        'name': 'Organic',
+        'imgoff': 'organic@2x.png',
+        'imgon': 'organic_highlighted@2x.png',
+        'qstring': 'organic'
+    },
+
+    {
+
+        'name': 'Sustainable Seafood',
+        'imgoff': 'seafood@2x.png',
+        'imgon': 'seafood_highlighted@2x.png',
+        'qstring': "sustainable_seafood"
+    },
 
 
 ];
 
 
-var bfarmfields = [ 
+var bfarmfields = [
 
-{'name':'name','title': 'Name'},
-{'name':'address','title':'Addresss'},
-{'name':'email','title':'Email'},
-{'name':'phone','title':'Phone'},
-{'name':'farmer_first_name','title':'Farmer Name'}, 
-{'name':'products','title':'Products'} ,
-{'name':'state','title':'State'}, 
-{'name':'state_code','title':'State Code'}, 
-{'name':'website','title':'Website'}, 
+    { 'name': 'name', 'title': 'Name' },
+    { 'name': 'address', 'title': 'Addresss' },
+    { 'name': 'email', 'title': 'Email' },
+    { 'name': 'phone', 'title': 'Phone' },
+    { 'name': 'farmer_first_name', 'title': 'Farmer Name' },
+    { 'name': 'products', 'title': 'Products' },
+    { 'name': 'state', 'title': 'State' },
+    { 'name': 'state_code', 'title': 'State Code' },
+    { 'name': 'website', 'title': 'Website' },
 
 ];
-
 
 
 var fillmod0 = new fillmod();
 
-function searchfarmsbyname(ele){
-var wb3 = get('wb3');
+function searchfarmsbyname(ele) {
+    var wb3 = get('wb3');
 
-wb3.stprop('visibility','hidden').stprop('height', '0%');
+    wb3.stprop('visibility', 'hidden').stprop('height', '0%');
 
-var word = ele.value;
-var rcon = get('fazultscon').stprop('display','block');//.inn("");
+    var word = ele.value;
+    var rcon = get('fazultscon').stprop('display', 'block'); //.inn("");
 
-if(word.length>0){
+    if (word.length > 0) {
 
-	var lowterm = ele.value.toLowerCase();
+        var lowterm = ele.value.toLowerCase();
 
-var urlstring = GetFaByNameUrl+"/"+word;
+        var urlstring = GetFaByNameUrl + "/" + word;
 
-grabstuff(urlstring,function(stuff){
+        grabstuff(urlstring, function(stuff) {
 
-wb3.stprop('visibility','hidden').stprop('height', '0%');
+                wb3.stprop('visibility', 'hidden').stprop('height', '0%');
 
-if(stuff.length==0 && ele.value.length>0){
+                if (stuff.length == 0 && ele.value.length > 0) {
 
-var text = ele.value+" is not in our database. Click here and we will verify and add it. ";
+                    var text = ele.value + " is not in our database. Click here and we will verify and add it. ";
 
-wb3.stprop('visibility','visible').stprop('height', '10%').prop('onmousedown',function(){
+                    wb3.stprop('visibility', 'visible').stprop('height', '10%').prop('onmousedown', function() {
 
-var urlstring =  PARSE_BASE_URL+buserfarmsugUrl;
+                        var urlstring = PARSE_BASE_URL + buserfarmsugUrl;
 
-var load = {};
+                        var load = {};
 
-var user =  JSON.parse( getCookie('user') );
+                        var user = JSON.parse(getCookie('user'));
 
-postwithkeys(urlstring,function(stuff){
+                        postwithkeys(urlstring, function(stuff) {
 
-if(stuff.result)alert(stuff.result)
+                            if (stuff.result) alert(stuff.result)
 
-},JSON.stringify(  {farmName: ele.value , mail: user.username, userId: user.objectId }  ));
+                        }, JSON.stringify({ farmName: ele.value, mail: user.username, userId: user.objectId }));
 
 
-});
+                    });
 
-get('wb3p').inn(text);
+                    get('wb3p').inn(text);
 
-}else{
+                } else {
 
-wb3.stprop('visibility','hidden').stprop('height', '0%');
+                    wb3.stprop('visibility', 'hidden').stprop('height', '0%');
 
-}
+                }
 
-console.log(word+"  word n term   "+ele.value);
+                console.log(word + "  word n term   " + ele.value);
 
-if(word!==ele.value){
+                if (word !== ele.value) {
 
-console.log('caugth');
+                    console.log('caugth');
 
-}
+                }
 
 
-if(word===ele.value){
-console.log('all clear');
-get('fazultscon').inn("");
+                if (word === ele.value) {
+                    console.log('all clear');
+                    get('fazultscon').inn("");
 
-for (var i = 0; i < stuff.length; i++) {
-	var fa = stuff[i];
-//fa.name.toLowerCase().indexOf(ele.value.toLowerCase() )>-1  && 
-//fa.loname.indexOf(lowterm)>-1 && 
-if(  ele.value.length>0 ){
+                    for (var i = 0; i < stuff.length; i++) {
+                        var fa = stuff[i];
+                        //fa.name.toLowerCase().indexOf(ele.value.toLowerCase() )>-1  && 
+                        //fa.loname.indexOf(lowterm)>-1 && 
+                        if (ele.value.length > 0) {
 
-	rcon.pend(
+                            rcon.pend(
 
-		fazult(fa)
+                                fazult(fa)
 
-		);
+                            );
 
-}// q ck
+                        } // q ck
 
-}//fazults loop
+                    } //fazults loop
 
-}
+                }
 
-})//request
+            }) //request
 
-}else{
+    } else {
 
-get('fazultscon').stprop('display','none').inn("");
-   wb3.stprop('visibility','hidden').stprop('height', '0%');
+        get('fazultscon').stprop('display', 'none').inn("");
+        wb3.stprop('visibility', 'hidden').stprop('height', '0%');
 
-    
 
-}//length ck
+    } //length ck
 
 
+} //searchfarmsbyname
 
-}//searchfarmsbyname
 
+function displayfazults(fazults) {
 
 
-function displayfazults(fazults){
+} //displayfazults
 
 
-}//displayfazults
+function fazult(fa) {
 
+    var fz = div().cl('fazult').pend(
 
-function fazult(fa){
+        el('p').inn(fa.name + " - " + fa.state_code)
 
-var fz = div().cl('fazult').pend(
+    ).prop('onmousedown', function() {
 
-			el('p').inn( fa.name+" - "+fa.state_code )
+        if (buysfromlist != null) firefarmselection(fa);
 
-			).prop('onmousedown',function(){
+        get('Farmselinput').value = "";
 
-if(buysfromlist!=null)firefarmselection(fa);
+        get('fazultscon').stprop('display', 'none').inn("");
 
-get('Farmselinput').value ="";
+    });
 
-get('fazultscon').stprop('display','none').inn("");
+    return fz;
+} //bizult
 
-			});
 
-	return fz;
-}//bizult
+function adfazult(fa) {
 
+    var fz = div().cl('fazult').pend(
 
-function adfazult(fa){
+        el('p').inn(fa.name)
 
-var fz = div().cl('fazult').pend(
+    ).prop('onmousedown', function() {
 
-			el('p').inn(fa.name)
 
-			).prop('onmousedown',function(){
+        adfirefarmselection(fa);
 
+        get('adFarmselinput').value = "";
 
-adfirefarmselection(fa);
+        get('adfazultscon').stprop('display', 'none').inn("");
 
-get('adFarmselinput').value ="";
+    });
 
-get('adfazultscon').stprop('display','none').inn("");
+    return fz;
+} //bizult
 
-			});
 
-	return fz;
-}//bizult
+function newfarm(fa) {
 
+    grabstuff("http://business.greenease.co/newfarm/" + JSON.stringify(fa), function(stuff) {
 
-function newfarm(fa){
+        console.log(stuff);
 
-grabstuff("http://business.greenease.co/newfarm/"+JSON.stringify(fa),function(stuff){
+    });
 
-console.log(stuff);
+} //newfarm
 
-});
 
-}//newfarm
+function adfirefarmselection(fa) {
+    console.log(JSON.stringify(fa));
+    showfarmfields();
+    adselecedFarm = fa;
+    fillfarmfields(fa);
+} //adfirefarmselection
 
 
-function adfirefarmselection(fa){
-	console.log(JSON.stringify(fa));
-showfarmfields();
-adselecedFarm=fa;
-fillfarmfields(fa);
-}//adfirefarmselection
+function firefarmselection(fa) {
 
+    get("wpcontainer").appendChild(get('FarmInfodiv'));
 
-function firefarmselection(fa){
+    console.log(JSON.stringify(fa));
 
-    get("wpcontainer").appendChild( get('FarmInfodiv') );
+    //selecedFarm=fa;
+    get("widgetpreview").stprop('display', 'none');
 
-console.log(JSON.stringify(fa));
+    showfarminfo(fa);
 
-//selecedFarm=fa;
-get("widgetpreview").stprop('display','none');
+    fillfarminfo(fa);
 
-showfarminfo(fa);
+    setbuysfrom(fa);
 
-fillfarminfo(fa);
 
-setbuysfrom(fa);
+} //firebizselection
 
+function phfirefarmselection(fa) {
 
+    get('farmtable').stprop('zIndex', "-1").stprop('opacity', .3);
 
-}//firebizselection
+    showfarminfo(fa);
 
-function phfirefarmselection(fa){
+    fillfarminfo(fa);
 
-get('farmtable').stprop('zIndex',"-1").stprop('opacity',.3);
+    setbuysfrom(fa);
 
-showfarminfo(fa);
 
-fillfarminfo(fa);
+} //firebizselection
 
-setbuysfrom(fa);
+function closefarminfo() {
 
+    get("FarmInfodiv").stprop('display', 'none');
+    get('farmtable').stprop('zIndex', "10").stprop('opacity', 1);
+    get("widgetpreview").stprop('display', 'block');
 
-}//firebizselection
 
-function closefarminfo(){
+} //close farminfo
 
-get("FarmInfodiv").stprop('display','none');
-get('farmtable').stprop('zIndex',"10").stprop('opacity',1);
-get("widgetpreview").stprop('display','block');
+function showfarminfo(fa) {
 
+    get("FarmInfodiv").stprop('display', 'block').prop('farm', fa);
 
+    get('popwords').inn('Click the checkboxes above to update the agricultural goods you purchase from this farm.');
 
-	
-}//close farminfo
+} //showfarminfo
 
-function showfarminfo(fa){
+function fillfarminfo(fa) {
+    //place regular farm fileds
 
-get("FarmInfodiv").stprop('display','block').prop('farm',fa);
 
-get('popwords').inn('Click the checkboxes above to update the agricultural goods you purchase from this farm.');
+    get('notearea').value = "";
 
-}//showfarminfo
+    if (BigCal) {
+        BigCal.update(new Date());
+        BigCal.dateField.innerHTML = BigCal.date.print(BigCal.dateFormat);
+    }
 
-function fillfarminfo(fa){
-//place regular farm fileds
+    for (var i = 0; i < bfarmfields.length; i++) {
 
+        var fi = bfarmfields[i];
 
-get('notearea').value="";
+        var fn = fi.name;
 
-if(BigCal){
-	BigCal.update(new Date());
-    BigCal.dateField.innerHTML = BigCal.date.print(BigCal.dateFormat);
-}
+        if (fn === "farmer_last_name") {
 
-for (var i = 0; i < bfarmfields.length; i++) {
 
-	var fi = bfarmfields[i];
+        } else if (fn === "website") {
 
-console.log(fi.name+"  fill info "+fa[fi.name]);
+            var link = "";
 
-var fn = fi.name;
+            if (fa[fn]) link = fa[fn];
 
-if(fn==="farmer_last_name"){
+            if (!get(fn + "fainfo").body) get(fn + "fainfo").inn('Website').prop('href', link);
 
 
-}else if(fn==="website"){
+        } else {
 
-var link = "";
+            var show = "";
 
-if( fa[ fn ] ) link = fa[ fn ];
+            if (fa[fn]) show = fa[fn];
 
-	if(get( fn+"fainfo")!== null )get( fn +"fainfo").inn('Website').prop('href', link );
+            if (!get(fn + "fainfo").body) get(fn + "fainfo").inn(show);
 
-}else{
-	
-	var show = "";
+        }
 
-	if( fa[ fn ] ) show = fa[ fn ];
 
-		if( get( fn+"fainfo")!== null )get(fn+"fainfo").inn( show );
+    }; // farm mond loop
 
-}
+    // place certs/ cats
 
+    var cd = get('certlet').inn("");
 
+    for (var i = 0; i < fcats.length; i++) {
 
-};// farm mond loop
+        var cat = fcats[i];
 
-// place certs/ cats
+        if (fa[cat.qstring]) {
 
-var cd = get('certlet').inn("");
+            cd.pend(
 
-for (var i = 0; i < fcats.length; i++) {
-	
-	var cat = fcats[i];
+                div().cl('certbox').pend(
 
-if( fa[ cat.qstring ] ){
+                    el('img').prop('src', 'business/images/' + cat.imgon).cl('certimg')
 
-cd.pend(
+                ).pend(
 
-div().cl('certbox').pend(
+                    div().cl("certname").inn(cat.name)
 
-el('img').prop('src','business/images/'+cat.imgon).cl('certimg')
+                )
 
-	).pend(
+            );
 
-div().cl("certname").inn(cat.name)
+        } // place a cert if farm has it
 
-	)
 
-);
+    }; // farm mond loop
 
-}// place a cert if farm has it
 
+    //add space to bottom
 
-};// farm mond loop
+    cd.pend(div().cl('certspace'));
 
 
-//add space to bottom
+    //PLACE PRODUCT CK BOXES
+    var plct = 0;
 
-cd.pend(div().cl('certspace'));
+    for (var i = 0; i < fpros.length; i++) {
 
+        var fi = fpros[i];
 
-//PLACE PRODUCT CK BOXES
-var plct = 0;
+        if (fa[fi.qstring]) {
 
-for (var i = 0; i < fpros.length; i++) {
-	
-	var fi = fpros[i];
+            var xpos = (25 * plct) + "%";
 
-if( fa[fi.qstring] ){
+            get(fi.short + 'chobox').stprop('left', xpos).style.display = "block";
 
-var xpos = (25*plct)+"%";
 
-get(fi.short+'chobox').stprop('left',xpos).style.display="block";
+            plct++;
 
+        } else {
+            get(fi.short + 'chobox').style.display = "none";
+        } // should the box be places and where 
 
 
-plct++;
+    }; // farm fpro loop for box ck placment loop
 
-}else{
-get(fi.short+'chobox').style.display="none";
-}// should the box be places and where 
 
+} //fillfarminfo
 
+function savefarmupdate() {
 
-};// farm fpro loop for box ck placment loop
+    var pros = [];
 
+    var biz = get("FarmInfodiv").biz;
 
-}//fillfarminfo
+    var farm = get("FarmInfodiv").farm;
 
-function savefarmupdate(){
+    var note = get('notearea').value;
 
-var pros = [];
+    var date = get('dateput').innerHTML;
 
-var biz = get("FarmInfodiv").biz;
+    var nd = new Date(date);
 
-var farm = get("FarmInfodiv").farm;
+    var d = new Date();
+    var n = d.getTime();
 
-var note = get('notearea').value;
+    nd.setHours(d.getHours());
+    nd.setMinutes(d.getMinutes());
+    nd.setSeconds(d.getSeconds());
+    nd.setMilliseconds(d.getMilliseconds());
+    var time = nd.getTime();
 
-var date = get('dateput').innerHTML;
+    var noteupdate = false;
 
-var nd = new Date(date);
+    if (note) {
 
-var d = new Date();
-var n = d.getTime();
+        if (note.length > 0) {
 
-nd.setHours( d.getHours() );
-nd.setMinutes( d.getMinutes() );
-nd.setSeconds( d.getSeconds() );
-nd.setMilliseconds( d.getMilliseconds() );
-var time = nd.getTime();
+            noteupdate = true;
 
-var noteupdate = false;
+        } else {
 
-if(note){
+            note = "NA";
 
-if(note.length>0){
+        }
 
-noteupdate  = true;
+    } else {
 
-}else{
+        note = "NA";
 
-note = "NA";
+    }
 
-}
+    for (var i = 0; i < fpros.length; i++) {
 
-}else{
+        var fp = fpros[i];
 
-note = "NA";
+        var fpck = get('cho' + fp.short);
 
-}
+        var vl = fpck.value;
 
-for (var i = 0; i < fpros.length; i++) {
-	
-	var fp = fpros[i];
+        var proput = { 'name': fp.short, 'value': vl };
 
-var fpck = get('cho'+fp.short);
+        if (farm[fp.qstring]) pros.push(proput);
 
-var vl = fpck.value;
+        console.log("  firts loop " + JSON.stringify(proput));
 
-var proput = {'name':fp.short,'value':vl} ;
+    }; // fpro loop
 
-if(farm[fp.qstring])pros.push( proput );
+    console.log('farnbiz' + JSON.stringify(farm));
 
-console.log( "  firts loop "+JSON.stringify( proput ) );
+    var bid = biz.objectId || biz._id;
+    var fid = farm.objectId || farm._id;
 
-};// fpro loop
+    if (window.Prototype) {
+        delete Object.prototype.toJSON;
+        delete Array.prototype.toJSON;
+        delete Hash.prototype.toJSON;
+        delete String.prototype.toJSON;
+    }
 
-console.log('farnbiz'+JSON.stringify(farm));
+    var sendray = JSON.stringify(pros);
+    console.log(sendray);
 
-var bid = biz.objectId;
-var fid = farm.objectId;
+    var urlstring = SendFarmUpdateUrl + "/" + bid + "/" + fid + "/" + sendray;
 
-if(window.Prototype) {
-    delete Object.prototype.toJSON;
-    delete Array.prototype.toJSON;
-    delete Hash.prototype.toJSON;
-    delete String.prototype.toJSON;
-}
+    console.log(urlstring);
 
-var sendray = JSON.stringify(pros);
-console.log(sendray);
+    //  build list of purchase history recs
+    // to make base on whether this update reflecs a change
 
-var urlstring = SendFarmUpdateUrl+"/"+bid+"/"+fid+"/"+sendray;
+    var newprolist = [];
 
-console.log(urlstring);
+    var hadfarm = false;
 
-//  build list of purchase history recs
-// to make base on whether this update reflecs a change
+    for (var i = 0; i < buysfromlist.length; i++) {
+        var buy = buysfromlist[i];
 
-var newprolist =[];
+        var bfarm = buy.ob;
 
-var hadfarm = false;
+        if (bfarm.objectId === farm.objectId) {
+            hadfarm = true;
+            for (var j = 0; j < pros.length; j++) {
+                var pro = pros[j];
 
-for (var i = 0; i < buysfromlist.length; i++) {
-	var buy = buysfromlist[i];
+                if ((buy[pro.name] && pro.value) || (!buy[pro.name] && !pro.value)) {
 
-var bfarm = buy.ob;
 
-if(bfarm.objectId===farm.objectId){
-hadfarm = true;
-for (var j = 0; j < pros.length; j++) {
-	var pro = pros[j];
+                } else {
 
-if( ( buy[pro.name] &&  pro.value )  || ( !buy[pro.name] && !pro.value ) ){
+                    newprolist.push(pro);
 
+                }
 
-}else{
 
-newprolist.push(pro);
+            }; //loop
 
-}
+        }
 
 
-};//loop
+    }; // purhis ck  loop
 
-}
 
+    if (buysfromlist.length === 0 || newprolist.length > 0 || noteupdate || !hadfarm) {
 
-};// purhis ck  loop
+        if (newprolist.length == 0) {
 
+            for (var i = 0; i < fpros.length; i++) {
+                var fp = fpros[i];
 
-if( buysfromlist.length === 0 || newprolist.length>0 || noteupdate  || !hadfarm ){
+                if (farm[fp.qstring]) {
 
-if(newprolist.length==0){
+                    var fpck = get('cho' + fp.short);
 
-for (var i = 0; i < fpros.length; i++) {
-	var fp = fpros[i];
+                    var vl = fpck.value;
 
-if(farm[fp.qstring]){
+                    var proput = { 'name': fp.short, 'value': vl };
 
-var fpck = get('cho'+fp.short);
+                    newprolist.push(proput);
 
-var vl = fpck.value;
+                } // if farm provides 
 
-var proput = {'name':fp.short,'value':vl} ;
+            } // fpros loop
 
-newprolist.push(proput);
 
-}// if farm provides 
+        } // new note / no buysfrom change catcher
 
-}// fpros loop
+        createPurHistRec(bid, fid, newprolist, note, time, function() {
 
+            grabstuff(urlstring, function(stuff) {
 
-}// new note / no buysfrom change catcher
+                refeshbusiness(biz, farm);
 
-createPurHistRec(bid,fid,newprolist,note,time,function(){
+                console.log(stuff);
 
-grabstuff( urlstring ,function(stuff){
 
-refeshbusiness( biz , farm );
+                if (stuff.msg) alert(stuff.msg);
 
-console.log( stuff );
 
+            }); // send update request 
 
-if(stuff.msg)alert(stuff.msg);
 
+        }); // create purchase history first 
 
 
-});// send update request 
+    } else {
 
 
-});// create purchase history first 
+        //refeshbusiness( biz , farm );
 
 
-}else{
+    } //ck to see if newprolist was made
 
 
-//refeshbusiness( biz , farm );
+} //savefarmupdateinfo
 
 
-}//ck to see if newprolist was made
+function ckchobox(box) {
 
+    var vl = box.value;
+    var not = "";
 
+    if (vl === true) {
 
+        box.innerHTML = "";
+        box.value = false;
+        not = " not";
+    } else {
 
+        box.appendChild(
 
+            el('img').cl('ckimg').prop('src', "business/images/blackck.png")
 
-}//savefarmupdateinfo
+        );
 
+        box.value = true;
 
+    }
 
+    get('popwords').inn("You've indicated that you are" + not + " purchasing " + box.id.replace('cho', '') + " from " + get("FarmInfodiv").farm.name + "<br><br>" +
+        "Greenease helps you track when you start and stop buying from farms to help you track your seasonal purchased. Click SAVE and then CLOSE.");
 
 
+} //ckchobox
 
-function ckchobox(box){
-	
-var vl = box.value;
-var not ="";
+function setbuysfrom(fa) {
 
-if(vl===true){
 
-box.innerHTML="";
-box.value=false;
-not=" not";
-}else{
+    var makebt = get('fimake');
+    //makebt.stprop('display','none');
 
-box.appendChild(
+    var makemsg = get('makemsg');
+    makemsg.inn("Make farm private");
+    makebt.value = false;
 
-el('img').cl('ckimg').prop('src',"business/images/blackck.png")
+    for (var i = 0; i < fpros.length; i++) {
+        var fp = fpros[i];
 
-	);
+        var box = get("cho" + fp.short).inn("").prop('value', false);
 
-box.value=true;
+    }; //fpros loop
 
-}
+    console.log("setbuys from");
 
-get('popwords').inn("You've indicated that you are"+not+" purchasing "+box.id.replace('cho','')+" from "+get("FarmInfodiv").farm.name+"<br><br>"+
-"Greenease helps you track when you start and stop buying from farms to help you track your seasonal purchased. Click SAVE and then CLOSE.");
+    if (buysfromlist) {
+        for (var i = 0; i < buysfromlist.length; i++) {
+            var buys = buysfromlist[i];
 
+            var sfa = buys.farm;
 
-}//ckchobox
+            var theFarm = buys.ob;
 
-function setbuysfrom(fa){
+            if (theFarm.name === fa.name) {
+                console.log("this is buys 7 " + JSON.stringify(buys));
 
+                makebt.buysfrom = buys;
+                //makebt.stprop('display','block');
 
-var makebt = get('fimake');
-	//makebt.stprop('display','none');
+                setckboxes(buys);
+                console.log(JSON.stringify(buys));
 
-var makemsg = get('makemsg');
-makemsg.inn("Make farm private");
-makebt.value = false;
+                console.log(buys.buys.hide + "  thisishide" + fa.name);
 
-for (var i = 0; i < fpros.length; i++) {
-	var fp = fpros[i];
+                if (buys.buys.hide) {
 
-var box = get("cho"+fp.short).inn("").prop('value',false);
+                    makebt.value = buys.buys.hide;
 
-};//fpros loop
+                    makemsg.inn("Make farm public");
 
-console.log("setbuys from");
+                } else {
 
-if(buysfromlist){
-for (var i = 0; i < buysfromlist.length; i++) {
-	var buys = buysfromlist[i];
+                    makebt.value = false;
 
-var sfa = buys.farm;
+                    makemsg.inn("Make farm private");
 
-var theFarm = buys.ob;
+                } // hide ck
 
-if(theFarm.name===fa.name){
-console.log("this is buys 7 "+JSON.stringify( buys ) );
 
-makebt.buysfrom = buys;
-	//makebt.stprop('display','block');
+            } // if farm in buys from
 
-setckboxes(buys);
-console.log(JSON.stringify(buys));
+        }; // buysfrom loop for farm name to set ckboxes
 
-console.log(buys.buys.hide+"  thisishide"+fa.name);
+    } //if buyfrom list is there
 
-if(buys.buys.hide){
+} //setbuysfrom
 
-makebt.value = buys.buys.hide;
+function ckfarmprobox(fp) {
 
-makemsg.inn("Make farm public");
+    var n = fp.short;
 
-}else{
+    var box = get("cho" + fp.short);
 
-makebt.value = false;
+    console.log("  at  " + box.value);
 
-makemsg.inn("Make farm private");
+    if (!box.value) {
 
-}// hide ck
+        box.pend(
 
+            el('img').prop('src', 'business/images/blackck.png').cl('ckimg')
 
-}// if farm in buys from
+        ).prop('value', true);
 
-};// buysfrom loop for farm name to set ckboxes
+    }
 
-}//if buyfrom list is there
 
-}//setbuysfrom
+} //ckfarmprobox
 
-function ckfarmprobox(fp){
+function setckboxes(buys) {
+    console.log("at set ckboxes   buys" + JSON.stringify(buys));
+    for (var i = 0; i < fpros.length; i++) {
+        var fp = fpros[i];
 
-var n = fp.short;
+        if (buys[fp.short]) {
 
-var box = get("cho"+fp.short);
+            ckfarmprobox(fp);
 
-console.log("  at  "+box.value);
+        } // if true reppin a buys from ck off
 
-if(!box.value){
+    }; //fpros loop
 
-box.pend(
 
-el('img').prop('src','business/images/blackck.png').cl('ckimg')
+} //setckboxes
 
-	).prop('value',true);
+function getfarmfromfields() {
 
-}
+    var adfafdlist = [
 
+        { 'name': "category_meat" },
+        { 'name': "category_produce" },
+        { 'name': "category_seafood" },
+        { 'name': "category_dairy" },
+        { 'name': 'name' },
+        { 'name': 'email' },
+        { 'name': 'address' },
+        { 'name': 'phone' },
+        { 'name': 'farmer_first_name' },
+        { 'name': 'products' },
+        { 'name': 'state' },
+        { 'name': 'state_code' },
+        { 'name': 'website' },
+        { 'name': 'free_range' },
+        { 'name': 'grass_fed' },
+        { 'name': 'drug_free' },
+        { 'name': 'organic' },
+        { 'name': 'sustainable_seafood' }
 
+    ];
 
-}//ckfarmprobox
 
-function setckboxes(buys){
-console.log("at set ckboxes   buys"+JSON.stringify(buys));
-for (var i = 0; i < fpros.length; i++) {
-	var fp = fpros[i];
+    var fa = {};
 
-if(buys[fp.short]){
+    for (var i = 0; i < adfafdlist.length; i++) {
 
-ckfarmprobox(fp);
+        var fd = adfafdlist[i];
 
-}// if true reppin a buys from ck off
+        var fdob = get('edfa' + fd.name);
 
-};//fpros loop
+        var value = fdob.value;
+        console.log(fd.name + "  ::  " + value);
+        fa[fd.name] = fdob.value;
 
+    }; //feild loop
 
-}//setckboxes
+    if (adselecedFarm) {
+        fa.objectId = adselecedFarm.objectId;
+    }
 
-function getfarmfromfields(){
+    return fa;
+} //getfarmfrom fields
 
-var adfafdlist  = [
+function showfarmfields(bt) {
 
-{'name':"category_meat"},
-{'name':"category_produce"},
-{'name':"category_seafood"},
-{'name':"category_dairy"},
-{'name':'name'},
-{'name':'email'},
-{'name':'address'},
-{'name':'phone'},
-{'name':'farmer_first_name'},
-{'name':'products'},
-{'name':'state'},
-{'name':'state_code'},
-{'name':'website'},
-{'name':'free_range'},
-{'name':'grass_fed'},
-{'name':'drug_free'},
-{'name':'organic'},
-{'name':'sustainable_seafood'}
 
-];
+    if (bt) {
+        adselecedFarm = null;
+    }
+    var fieldstage = get('adnewfarm');
 
+    fieldstage.inn("");
 
-var fa = {};
+    fieldstage.pend(showfbfields());
+    fieldstage.pend(showfpros());
+    fieldstage.pend(showfcats());
 
-for (var i = 0; i < adfafdlist.length; i++) {
+} //showfarmfileds
 
-	var fd = adfafdlist[i];
 
-var fdob = get('edfa'+fd.name);
+function showfpros() {
+    var procon = div().cl('faprocon');
+    var protab = el('table').cl('faprotab');
 
-var value = fdob.value;
-console.log( fd.name + "  ::  " + value );
-fa[fd.name] = fdob.value;
+    var tr = el('tr');
 
-};//feild loop
+    for (var i = 0; i < fpros.length; i++) {
+        var pro = fpros[i];
+        var td = el('td');
 
-if(adselecedFarm){
-fa.objectId = adselecedFarm.objectId;
-}
+        tr.pend(
 
-return fa;
-}//getfarmfrom fields
+            td.pend(
 
-function showfarmfields(bt){
+                div().cl('faprotdiv').prop('align', 'center').pend(
 
+                    el('img').prop('src', 'business/images/' + pro.img).cl("proimg")
 
-if(bt){
-	adselecedFarm=null;
-}
-var fieldstage = get('adnewfarm');
+                ).pend(
 
-fieldstage.inn("");
+                    el('p').inn(pro.name)
 
-fieldstage.pend( showfbfields() );
-fieldstage.pend( showfpros() );
-fieldstage.pend( showfcats() );
+                ).pend(
 
-}//showfarmfileds
+                    facatckbox(pro)
 
+                )
 
+            )
 
-function showfpros(){
-var procon = div().cl('faprocon');
-var protab = el('table').cl('faprotab');
+        );
 
-var tr = el('tr');
 
-for (var i = 0; i < fpros.length; i++) {
-	 var pro = fpros[i];
-var td = el('td');
+    }; //fpro loop
 
-tr.pend(
 
-td.pend(
+    protab.pend(tr);
 
-div().cl('faprotdiv').prop('align','center').pend(
+    procon.pend(protab);
+    return procon;
+} //showfpros
 
-el('img').prop('src','business/images/'+pro.img).cl("proimg")
+function facatckbox(pro) {
 
-	).pend(
+    var catck = div().prop('onmousedown', function() {
 
-el('p').inn(pro.name)
+        var box = get("edfa" + pro.qstring);
 
-	).pend(
+        if (!box.value) {
 
-facatckbox(pro)
+            box.pend(
 
-	)
+                el('img').cl('ckimg').prop("src", "business/images/blackck.png")
 
-)
+            );
+            box.value = true;
+        } else {
 
-);
+            box.inn("");
+            box.value = false;
 
+        }
 
-};//fpro loop
+    }).cl('catck').prop("id", "edfa" + pro.qstring).prop('value', false);
 
+    return catck;
+} //facatckbo
 
-protab.pend(tr);
+function showfbfields() {
+    var bfc = div().cl('bfarmfieldcon');
 
-procon.pend(protab);
-return procon;
-}//showfpros
+    for (var i = 0; i < bfarmfields.length; i++) {
 
-function facatckbox(pro){
+        var bfield = bfarmfields[i];
 
-var catck = div().prop('onmousedown',function(){
+        bfc.pend(
 
-var box = get("edfa"+pro.qstring);
+            el('p').inn(bfield.title + ":").cl("bfafieldt")
 
-if(!box.value){
+        ).pend(
 
-box.pend(
+            el('input').cl('adnewfarmput').prop('placeholder', bfield.title).prop('id', "edfa" + bfield.name)
 
-	el('img').cl('ckimg').prop("src","business/images/blackck.png")
-	
-	);
-box.value =true;
-}else{
+        );
 
-box.inn("");
-box.value=false;
+    }; //bfields loop
 
-}
+    return bfc;
+} //showfbfields
 
-}).cl('catck').prop("id","edfa"+pro.qstring).prop('value',false);
+function showfcats() {
 
-return catck;
-}//facatckbo
+    //console.log(JSON.stringify(fa));
 
-function showfbfields(){
-var bfc = div().cl('bfarmfieldcon');
+    var cv = div().cl('adcatview').stprop('height', '60%');
 
-for (var i = 0; i < bfarmfields.length; i++) {
+    var ct = el('table').cl('adcattab');
 
-var bfield = bfarmfields[i];
+    var tr = el('tr');
 
-bfc.pend(
+    for (var i = 0; i < fcats.length; i++) {
 
-	el('p').inn(bfield.title+":").cl("bfafieldt")
-	
-	).pend(
+        var cat = fcats[i];
 
-	el('input').cl('adnewfarmput').prop('placeholder', bfield.title ).prop('id',"edfa"+bfield.name)
-	
-	);
+        //console.log( cat.qstring.name+"   "+fa[cat.qstring.name]+" cat name");
 
-};//bfields loop
-	
-return bfc;
-}//showfbfields
+        var bival = false; //fa[cat.qstring.name];
+        var imgpk = 'imgoff';
 
-function showfcats(){
+        //if(bival)imgpk = 'imgon';
 
-//console.log(JSON.stringify(fa));
+        var td = el('td');
 
-var cv = div().cl('adcatview').stprop('height','60%');
+        td.pend(
 
-var ct = el('table').cl('adcattab');
+            facatpart(cat, imgpk, bival)
 
-var tr = el('tr');
+        );
+        tr.pend(td);
 
-for (var i = 0; i < fcats.length; i++) {
+        if (i % 3 == 2) {
 
-var  cat = fcats[i];
+            ct.pend(tr);
 
-//console.log( cat.qstring.name+"   "+fa[cat.qstring.name]+" cat name");
+            tr = el('tr');
+        }
 
-var bival = false;//fa[cat.qstring.name];
-var imgpk = 'imgoff';
+    }; //rayloop
 
-//if(bival)imgpk = 'imgon';
+    if ((fcats.length % 3) !== 0) ct.pend(tr);
 
-var td = el('td');
+    cv.pend(ct);
+    return cv;
 
-td.pend(
 
-facatpart(cat,imgpk,bival)
+} //showfcats
 
-	);
-	tr.pend(td);
 
-if(i%3==2){
+function facatpart(cat, imgpk, bival) {
 
-ct.pend(tr);
+    var cp = div().cl('adcattdiv').pend(
 
-tr = el('tr');
-}
+        el('p').inn(cat.name)
 
-};//rayloop
+    ).pend(
 
-if( ( fcats.length%3 ) !== 0)ct.pend(tr);
+        el('img').prop('rayob', cat).prop(
+            'src', 'business/images/' + cat[imgpk]).cl('adcatimg').prop(
+            "id", "edfa" + cat.qstring).prop(
+            'value', bival)
 
-cv.pend(ct);
-return cv;
+    ).prop('onmousedown', function() {
 
+        var part = get("edfa" + cat.qstring);
 
-}//showfcats
+        var v = part.value;
 
+        if (v) {
 
-function facatpart(cat,imgpk,bival){
+            part.src = 'business/images/' + cat.imgoff;
+            part.value = false;
 
-var cp = div().cl('adcattdiv').pend(
+        } else {
 
-el('p').inn(cat.name)
+            part.src = 'business/images/' + cat.imgon;
+            part.value = true;
 
-		).pend(
+        }
 
-el('img').prop('rayob' , cat ).prop(
-	'src','business/images/'+cat[imgpk]).cl('adcatimg').prop(
-	"id","edfa"+cat.qstring).prop(
-	'value',bival)
+    });
 
-		).prop('onmousedown',function(){
+    return cp;
+} //catpart
 
-	var part = get("edfa"+cat.qstring);
+function savefarm() {
 
-	var v = part.value;
+    var name = get('edfaname');
 
-if(v){
 
-part.src = 'business/images/'+cat.imgoff;
-part.value = false;
+    if (name !== null) {
 
-}else{
+        nava = name.value;
 
-part.src = 'business/images/'+cat.imgon;
-part.value = true;
+        if (nava != null) {
 
-}
+            if (nava.length > 0) {
+                var fa = getfarmfromfields();
 
-		});
+                fa.loname = fa.name.toLowerCase();
 
-return cp;
-}//catpart
+                console.log(JSON.stringify(fa));
 
-function savefarm(){
+                var urlstring = EditFarmUrl + "/" + encodeURIComponent(JSON.stringify(fa));
+                grabstuff(urlstring, function(stuff) {
 
-var name = get('edfaname');
 
+                    if (stuff.msg) {
 
-if(name!==null){
 
- nava = name.value;
+                        alert(stuff.msg)
 
-if(nava!=null ){
+                    }
 
-if(nava.length>0){
-var fa = getfarmfromfields();
 
-fa.loname = fa.name.toLowerCase();
+                });
 
-console.log(JSON.stringify(fa));
 
-var urlstring = EditFarmUrl+"/"+encodeURIComponent( JSON.stringify(fa) );
-grabstuff(urlstring,function(stuff){
+                return;
+            }
 
 
+        } else {
 
-if(stuff.msg){
 
+        }
 
-alert(stuff.msg)
 
-}
+    } //is name 
 
+    alert("No Farm To Save!")
 
-});
+} //savefarm
 
+function fillmod() {
 
+    this.catdown = function(fd, value) {
+            var name = fd.name;
+            var fdob = get('edfa' + fd.name);
 
-return;
-}
+            if (value) fdob.src = "business/images/" + fdob.rayob.imgon;
 
+        } //catdown
 
+    this.prodown = function(fd, value) {
 
-}else{
+            var name = fd.name
 
+            var fdob = get('edfa' + fd.name);
 
+            if (value) {
 
-}
 
+                fdob.pend(
 
-}//is name 
+                    el('img').cl('ckimg').prop("src", "business/images/blackck.png")
 
-alert("No Farm To Save!")
+                );
+            }
+        } //prodown
 
-}//savefarm
+} //fillmod
 
-function fillmod(){
 
-this.catdown = function(fd,value){
-var name = fd.name;
-var fdob = get('edfa'+fd.name);
+function fillfarmfields(fa) {
 
-if(value)fdob.src="business/images/"+fdob.rayob.imgon;
+    var adfafdlist = [
+        { 'name': "category_meat", 'set': 'prodown' },
+        { 'name': "category_produce", 'set': 'prodown' },
+        { 'name': "category_seafood", 'set': 'prodown' },
+        { 'name': "category_dairy", 'set': 'prodown' },
+        { 'name': 'name' },
+        { 'name': 'email' },
+        { 'name': 'address' },
+        { 'name': 'phone' },
+        { 'name': 'farmer_first_name' },
+        { 'name': 'products' },
+        { 'name': 'state' },
+        { 'name': 'state_code' },
+        { 'name': 'website' },
+        { 'name': 'free_range', 'set': 'catdown' },
+        { 'name': 'grass_fed', 'set': 'catdown' },
+        { 'name': 'drug_free', 'set': 'catdown' },
+        { 'name': 'organic', 'set': 'catdown' },
+        { 'name': 'sustainable_seafood', 'set': 'catdown' },
 
-}//catdown
+    ];
 
-this.prodown = function(fd,value){
 
-var name = fd.name
+    for (var i = 0; i < adfafdlist.length; i++) {
 
-var fdob = get('edfa'+fd.name);
+        var fd = adfafdlist[i];
 
-if(value){
+        var fdob = get('edfa' + fd.name);
 
+        var value = fdob.value;
 
-fdob.pend(
+        console.log(fd.name + "  ::  " + fa[fd.name]);
+        fdob.value = fa[fd.name];
 
-	el('img').cl('ckimg').prop("src","business/images/blackck.png")
+        if (fd.set) {
 
-	);
-}
-}//prodown
+            fillmod0[fd.set](fd, fa[fd.name]);
 
-}//fillmod
+        } // fillmod0
 
 
-function fillfarmfields(fa){
+    }; //feild loop
 
-var adfafdlist  = [
-{'name':"category_meat",'set':'prodown'},
-{'name':"category_produce",'set':'prodown'},
-{'name':"category_seafood",'set':'prodown'},
-{'name':"category_dairy",'set':'prodown'},
-{'name':'name'},
-{'name':'email'},
-{'name':'address'},
-{'name':'phone'},
-{'name':'farmer_first_name'},
-{'name':'products'},
-{'name':'state'},
-{'name':'state_code'},
-{'name':'website'},
-{'name':'free_range','set':'catdown'},
-{'name':'grass_fed','set':'catdown'},
-{'name':'drug_free','set':'catdown'},
-{'name':'organic','set':'catdown'},
-{'name':'sustainable_seafood','set':'catdown'},
 
-];
+} //fillfarmfields
 
 
-for (var i = 0; i < adfafdlist.length; i++) {
+function makefarmprivate() {
 
-	var fd = adfafdlist[i];
+    var farmInfodiv = get('FarmInfodiv');
 
-var fdob = get('edfa'+fd.name);
+    var farm = farmInfodiv.farm;
 
-var value = fdob.value;
+    var biz = farmInfodiv.biz;
 
-console.log( fd.name + "  ::  " + fa[fd.name] );
- fdob.value = fa[fd.name];
+    var makebt = get('fimake');
 
-if(fd.set){
+    var value = makebt.value;
 
-fillmod0[fd.set]( fd , fa[fd.name] );
+    console.log(value + " value 1");
 
-}// fillmod0
+    if (value === true) {
 
+        value = false;
 
-};//feild loop
+    } else {
 
+        value = true;
 
-}//fillfarmfields
+    }
+    console.log(value + " value 2");
+    var fimakebuyid = get('fimake').buysfrom.buys.objectId
+        //var urlstring = toggleprivateUrl+"/"+farm.objectId+"/"+biz.objectId+"/"+value;
 
+    console.log(fimakebuyid + "  fimake ")
 
-function makefarmprivate(){
+    var urlstring = toggleprivateUrl + "/" + fimakebuyid + "/" + value;
 
-var farmInfodiv = get('FarmInfodiv');
+    console.log(urlstring + "  stefarmvis");
 
-var farm = farmInfodiv.farm;
+    grabstuff(urlstring, function(stuff) {
 
-var biz = farmInfodiv.biz;
+        var msg = stuff.msg;
 
-var makebt = get('fimake');
+        if (msg) {
 
-var value = makebt.value;
+            refeshbusiness(biz, farm);
 
-console.log(value +" value 1");
+            alert(msg)
 
-if(value===true){
+        } else {
 
-value = false;
+            alert('error')
 
-}else{
+        }
 
-value = true;
+    });
 
-}
-console.log(value +" value 2");
-var  fimakebuyid = get('fimake').buysfrom.buys.objectId
-//var urlstring = toggleprivateUrl+"/"+farm.objectId+"/"+biz.objectId+"/"+value;
-
-console.log(fimakebuyid+"  fimake ")
-
-var urlstring = toggleprivateUrl+"/"+fimakebuyid+"/"+value;
-
-console.log(urlstring+"  stefarmvis");
-
-grabstuff( urlstring , function( stuff ){
-
-var msg = stuff.msg;
-
-if(msg){
-
-refeshbusiness(biz,farm);
-
-alert(msg)
-
-}else{
-
-alert('error')
-
-}
-
-});
-
-}// makefarmprivate()
+} // makefarmprivate()

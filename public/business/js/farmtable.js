@@ -8,46 +8,44 @@ var farmtabcols = [{
     'title': 'NOTES'
 }, {
     'title': 'PLACE NEW ORDER'
-} ];
+}];
 
 var sortbys = {
-'DATE':{'name':'actionEffectiveDate','state':null},
-'FARM NAME':{'name':'farmname','state':null},
-'CATEGORY':{'name':'category','state':null},
+    'DATE': { 'name': 'actionEffectiveDate', 'state': null },
+    'FARM NAME': { 'name': 'farmname', 'state': null },
+    'CATEGORY': { 'name': 'category', 'state': null },
 };
 
 
 function farmtable() {
 
 
-
 } //farmtable
 
 
 function writefarmtable(bi) {
-get('farmtablediv').biz=bi;
+    get('farmtablediv').biz = bi;
     console.log(JSON.stringify(bi) + " at write farm tab ");
 
-fillfarmtable(bi);
+    fillfarmtable(bi);
 
 } //writefarmtable
 
 
+function showfarmtable(bi) {
 
-function showfarmtable(bi){
-
-    get('farmtablediv').stprop('display','block');
+    get('farmtablediv').stprop('display', 'block');
 
 
-get('wpcontainer').stprop('display','none');
+    get('wpcontainer').stprop('display', 'none');
 
-writefarmtable(bi);
+    writefarmtable(bi);
 
-}//show farm table
+} //show farm table
 
-function fillfarmtable(bi,sort) {
-if(!sort)sort = JSON.stringify({'by':'actionEffectiveDate','di':1} );
-   
+function fillfarmtable(bi, sort) {
+    if (!sort) sort = JSON.stringify({ 'by': 'actionEffectiveDate', 'di': 1 });
+
     get("farmtable").stprop('opacity', 1);
     get("farmtable").stprop('zIndex', 10);
 
@@ -58,14 +56,14 @@ if(!sort)sort = JSON.stringify({'by':'actionEffectiveDate','di':1} );
     var row3 = get("ftc2");
     var row4 = get("ftc3");
     var row5 = get("ftc4");
-    
-row1.clear0();
-row2.clear0();
-row3.clear0();
-row4.clear0();
-row5.clear0();
-    
-    var urlstring = getPurchaseHistoryRecsUrl + "/" + bi.objectId+"/"+sort;
+
+    row1.clear0();
+    row2.clear0();
+    row3.clear0();
+    row4.clear0();
+    row5.clear0();
+
+    var urlstring = getPurchaseHistoryRecsUrl + "/" + bi.objectId + "/" + sort;
 
     console.log(urlstring + "  go purchaseHistoryRecords ");
 
@@ -73,55 +71,71 @@ row5.clear0();
 
         for (var i = 0; i < stuff.length; i++) {
 
-var thefarm = stuff[i].farm;
-if(thefarm){
+            if (stuff[i].farm) {
+
+                var fid = stuff[i].farm.id;
+
+                //var thefarm = stuff[i].farm;
+
+                /* PurchaseHistoryRecord*/
+                var rec = new PurchaseHistoryRecord(stuff[i].rec);
+
+                //console.log("got rec "+JSON.stringify(rec));
+
+                //  purchaseHistoryRecords.add( rec );
 
 
-            /* PurchaseHistoryRecord*/
-            var rec = new PurchaseHistoryRecord(stuff[i].rec);
+                var placetd = gettd(5, "  ");
+                /*
+                var place = thefarm.reorder;
+                var url = "";
 
-//console.log("got rec "+JSON.stringify(rec));
+                var ment = el('a').inn('Go to Website').stprop('margin','0px');
 
-            //  purchaseHistoryRecords.add( rec );
+                if(place){
 
-var place = thefarm.reorder;
+                    url = place;
 
-var placetd = gettd(5, "  ");
+                ment = el('img').prop('src','business/images/farmersweb_logo.jpg').cl('farmersimg');
 
-var url = "";
+                }else if(thefarm.website){
 
-var ment = el('a').inn('Go to Website').stprop('margin','0px');
+                     url = thefarm.website;
 
-if(place){
+                }
+                */
+                //placetd = farmweb(5,url,ment);
 
-    url = place;
 
-ment = el('img').prop('src','business/images/farmersweb_logo.jpg').cl('farmersimg');
+                var farmstuff = gettd(2, "").Adrop("FarmtableGetFarm", function(res) {
 
-}else if(thefarm.website){
+                    console.log(res);
+                    this.inn("farm")
 
-     url = thefarm.website;
+                }).async({
+                    con: get("farmtablediv").style.display == "block",
+                    id: "FarmtableGetFarm",
+                    url: getfarmUrl+""+fid
+                });
 
-}
-placetd = farmweb(5,url,ment);
+                var td = [
+                    datecol(rec.actionEffectiveDate, rec.actionCode),
+                    farmstuff,
+                    gettd(3, rec.category),
+                    gettd(4, rec.note),
+                     placetd ,
+                ];
 
-            var td = [
-                datecol( rec.actionEffectiveDate, rec.actionCode),
-                gettd(2, thefarm.name),
-                gettd(3, rec.category),
-                gettd(4, rec.note),
-                placetd ,
-            ];
+                rowtime(td, stuff[i].farm);
 
-            rowtime(td, stuff[i].farm);
+                row1.appendChild(td[0]);
+                row2.appendChild(td[1]);
+                row3.appendChild(td[2]);
+                row4.appendChild(td[3]);
+                row5.appendChild(td[4]);
+            } //if farm
 
-            row1.appendChild(td[0]);
-            row2.appendChild(td[1]);
-            row3.appendChild(td[2]);
-            row4.appendChild(td[3]);
-            row5.appendChild(td[4]);
-}//if farm
-        }//loop
+        } //loop
 
         row1.appendChild(gettd(0, ""));
         row2.appendChild(gettd(0, ""));
@@ -135,21 +149,21 @@ placetd = farmweb(5,url,ment);
 } //fill farm table
 
 
-function farmweb(tn,url,ment){
-var l =0;
+function farmweb(tn, url, ment) {
+    var l = 0;
 
-if(url)l=url.length;
+    if (url) l = url.length;
 
-var td = div().cl("fts").pend( ment.prop('href',url).prop('onmousedown',function(){
+    var td = div().cl("fts").pend(ment.prop('href', url).prop('onmousedown', function() {
 
-window.open(url);
+            window.open(url);
 
-}) 
+        })
 
-);
+    );
 
-return td;
-}//farmweb
+    return td;
+} //farmweb
 
 
 function PurchaseHistoryRecord(rec) {
@@ -158,26 +172,24 @@ function PurchaseHistoryRecord(rec) {
 } //PurchaseHistoryRecord
 
 
-
-
 function rowtime(group, farm) {
 
     for (var i = 0; i < group.length; i++) {
 
         var ele = group[i];
 
-if(i<group.length-1){
-        ele.onmousedown = function() {
+        if (i < group.length - 1) {
+            ele.onmousedown = function() {
 
-                //  NEED THIS !!!!!! FarmInfodiv.removeFromParent();
+                    //  NEED THIS !!!!!! FarmInfodiv.removeFromParent();
 
-                get('FarmInfodiv').stprop('backgroundImage', "url(\"business/images/mainBackground.png\")");
-                get('farmtablediv').appendChild( get('FarmInfodiv') );
-            
-                phfirefarmselection(farm);
-            
-            } // ele onmousedown
-}// don listen on last row
+                    get('FarmInfodiv').stprop('backgroundImage', "url(\"business/images/mainBackground.png\")");
+                    get('farmtablediv').appendChild(get('FarmInfodiv'));
+
+                    phfirefarmselection(farm);
+
+                } // ele onmousedown
+        } // don listen on last row
 
 
         ele.onmouseout = function() {
@@ -195,8 +207,6 @@ if(i<group.length-1){
     } // group loop
 
 } //rowtime
-
-
 
 
 function overrow(group) {
@@ -241,10 +251,10 @@ function datecol(date, acode) {
     var ds = div();
     ds.cl("datespace");
 
-  //  var d = Date.parse("2015-05-24T04:00:00.000Z");
+    //  var d = Date.parse("2015-05-24T04:00:00.000Z");
 
-var da = new Date(  );
-da.setTime(Date.parse(date.iso));
+    var da = new Date();
+    da.setTime(Date.parse(date.iso));
 
     ds.innerHTML = da.toDateString();
 
@@ -253,7 +263,7 @@ da.setTime(Date.parse(date.iso));
 
     var sp = div();
 
-    //  	console.log(" get value code   "+acode.getCodeValue() );
+    //      console.log(" get value code   "+acode.getCodeValue() );
 
     if (acode == 1) {
 
@@ -276,7 +286,7 @@ function gettd(tn, stuff) {
     var td = div();
 
     // if (stuff.length()==0) stuff ="N/A";
-   // console.log(stuff + "  intd  ");
+    // console.log(stuff + "  intd  ");
 
     td.innerHTML = stuff;
     td.cl("fts");
@@ -286,49 +296,45 @@ function gettd(tn, stuff) {
 }
 
 
-function sortby(ele){
+function sortby(ele) {
 
-var inn = ele.innerHTML;
+    var inn = ele.innerHTML;
 
-var state = sortbys[inn].state;
+    var state = sortbys[inn].state;
 
-if(state===null){
+    if (state === null) {
 
-    sortbys[inn].state = 1;
-    fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
-return;
+        sortbys[inn].state = 1;
+        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
+        return;
+    }
+
+    if (state === 1) {
+
+        sortbys[inn].state = 0;
+        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
+        return;
+    }
+    if (state === 0) {
+
+        sortbys[inn].state = 1;
+        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
+        return;
+    }
+
+
 }
 
-if(state===1){
+function createPurHistRec(bid, fid, newphlist, note, milli, calli) {
 
-    sortbys[inn].state = 0;
-fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
-return;
-}
-if(state===0){
+    var urlstring = createPurHistRecUrl + "/" + bid + "/" + fid + "/" + JSON.stringify(newphlist) + "/" + encodeURIComponent(note) + "/" + milli;
 
-    sortbys[inn].state = 1;
-    fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
-return;
-}
+    console.log(urlstring + "   new purchaseHistoryRecords ");
 
+    grabstuff(urlstring, function(stuff) {
 
-}
+        calli(stuff);
 
-function createPurHistRec(bid,fid,newphlist,note,milli,calli){
+    });
 
-var urlstring = createPurHistRecUrl+"/"+bid+"/"+fid+"/"+JSON.stringify(newphlist)+"/"+encodeURIComponent(note)+"/"+milli;
-
-console.log(urlstring+"   new purchaseHistoryRecords ");
-
-grabstuff(urlstring,function(stuff){
-
-calli( stuff );
-
-});
-
-}//createPurHistRec
-
-
-
-
+} //createPurHistRec

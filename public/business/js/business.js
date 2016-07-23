@@ -132,11 +132,11 @@ console.log(stuff);
 
 }//newbiz
 
-function getfarms(bi,calli){
+function getfarms( bi , calli ){
 
 var urlstring = getbizfarmsurl+"/"+bi.objectId;
 
-grabstuff(urlstring,function(stuff){
+grabstuff( urlstring , function( stuff ){
 
 displaywidgpreview(stuff);
 

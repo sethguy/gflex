@@ -32,10 +32,11 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
-var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
+
+//var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -50,7 +51,6 @@ var mongogetdb = function(calli) {
         calli(db); //insert method
 
     }); //mongo connect
-
 
 };
 
@@ -203,7 +203,7 @@ var sense = function(table, terms, ops, calli) {
 app.get('/mailtest/:toemail', function(req, res) {
 
     var toemail = req.params.toemail
-
+        // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
     // setup e-mail data with unicode symbols
@@ -235,17 +235,11 @@ app.get('/mailtest/:toemail', function(req, res) {
 app.get('/flight', function(req, res) {
 
 
-
-
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.send("");
-
-
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send("");
 
 
 });
-
-
 
 
 app.get('/side/:terms', function(req, res) {
@@ -275,6 +269,119 @@ app.get('/side/:terms', function(req, res) {
 
 
 });
+
+
+app.get('/MigrateFixpurhis', function(req, res) {
+
+    var terms = {};
+
+    mongoMsg(function(msg) {
+
+        var findnfix = function(purhis) {
+
+                // var buys = msg.docs[i];
+
+                var farm = purhis.farm;
+                var biz = purhis.business;
+                // console.log( "" ); 
+                // console.log( biz.objectId+"  and  "+farm.objectId  ); 
+                // msg.rpt = {
+                var start = {
+                        buysid: purhis._id,
+                        bizid: biz.objectId,
+                        farmid: farm.objectId
+                    }
+                    //}
+                var bizterms = {
+
+                    objectId: biz.objectId
+
+                }
+
+                var farmterms = {
+
+                    objectId: farm.objectId
+
+                }
+
+                findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
+
+                        var bi = docs[0];
+                        if (bi) {
+                            bi_id = bi._id.valueOf() + '';
+                            console.log("at bi farm id" + bi_id)
+                            purhis.business._id = bi_id;
+                        }
+
+                        findby(msg.db, 'Farm', farmterms, {}, function(docs, err) {
+                                var farm = docs[0];
+                                if (farm) {
+                                    fa_id = farm._id.valueOf() + "";
+                                    console.log("at flat farm id" + bi_id)
+
+                                    purhis.farm._id = fa_id;
+
+                                    console.log(JSON.stringify(purhis))
+
+                                }
+                                var id = purhis._id
+                                delete purhis._id;
+                                updateDocumentbyid(msg.db, 'PurchaseHistory', id, purhis, function(result, err) {
+                                    /*
+                                                                        console.log("")
+
+                                                                        console.log( JSON.stringify(start) );
+                                                                        console.log("")
+                                                                       if(farm) fa_id= farm._id.valueOf();
+
+
+
+
+                                                                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
+                                                                        console.log("")
+
+                                                                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
+                                                                        console.log("")
+
+                                                                        //console.log(result)
+                                    */
+                                });
+
+                            }) // farm quiery
+                    }) //bussiness query
+
+            } //findnfix
+
+        findby(msg.db, 'PurchaseHistory', {}, {}, function(docs, err) {
+
+                console.log(docs.length + "all docs length");
+                //console.log(msg.docs +"all docs");
+
+                for (var i = 0; i < docs.length; i++) {
+
+                    //var str = JSON.stringify( msg.docs[ i ] );
+                    findnfix(docs[i])
+
+                }; // buys loop
+
+                senddone({
+
+                    l: docs.length
+
+                });
+
+            }) // buysfrom query
+    });
+
+    var senddone = function(obj) {
+
+        res.status(200).send(obj);
+
+    }
+
+
+});
+
 
 app.get('/MigrateFixBuysFrom', function(req, res) {
 
@@ -403,6 +510,7 @@ app.get('/getFarms/:bid', function(req, res) {
             var fa = buys[i].farm;
 
             //farm_id_ray.push( new ObjectId( fa._id )  );
+
             farm_id_ray.push(fa.objectId);
 
         };
@@ -530,7 +638,7 @@ app.get('/readngo', function(req, res) {
 
         MongoClient.connect(databaseUri, function(err, db) {
 
-if (err) console.log(err);
+            if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
 
                 var data = JSON.parse(fs.readFileSync('./gdata/' + files[i], "utf8"));
@@ -5252,8 +5360,8 @@ app.get('/ckforUser/:email', function(req, res) {
 
 app.get('/ckforUser2/:email', function(req, res) {
     // get user relations base on uid
-    
-   res.header("Access-Control-Allow-Origin", "*");
+
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
@@ -5273,32 +5381,30 @@ app.get('/ckforUser2/:email', function(req, res) {
 }); // ckforUser 
 
 
-
-
 app.get('/emailUserUpdate/:update', function(req, res) {
     // get user relations base on uid
-    
-   res.header("Access-Control-Allow-Origin", "*");
+
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-var update = JSON.parse(req.params.update);
-            var text = JSON.parse(req.params.update).msg
-   
-                // create reusable transporter object using the default SMTP transport
-            var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+    var update = JSON.parse(req.params.update);
+    var text = JSON.parse(req.params.update).msg
 
-            // setup e-mail data with unicode symbols
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
-            var mailOptions = {
-                from: '" Greenease " <info@greenease.co>', // sender address
-                to: 'isethguy@gmail.com', // list of receivers
-                subject: update.bid, // Subject line
+    // setup e-mail data with unicode symbols
+
+    var mailOptions = {
+        from: '" Greenease " <info@greenease.co>', // sender address
+        to: 'isethguy@gmail.com', // list of receivers
+        subject: update.bid, // Subject line
 
 
-                text: text, // plaintext body
+        text: text, // plaintext body
 
-            };
+    };
 
-            // send mail with defined transport object
+    // send mail with defined transport object
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
             res.json(error);
@@ -5307,12 +5413,11 @@ var update = JSON.parse(req.params.update);
         }
         console.log('Message sent: ' + info.response);
 
-            res.json(info);
+        res.json(info);
 
     });
 
 }); // ckforUser 
-
 
 
 Parse.Cloud.define('sendintro', function(request, response) {
@@ -5338,8 +5443,7 @@ Parse.Cloud.define('sendintro', function(request, response) {
             + "\n" + "\n" + "The Greenease Team";
 
 
-        
-                // create reusable transporter object using the default SMTP transport
+            // create reusable transporter object using the default SMTP transport
             var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
             // setup e-mail data with unicode symbols
@@ -5366,49 +5470,49 @@ Parse.Cloud.define('sendintro', function(request, response) {
                 response.success(info);
 
             });
-/*
+            /*
 
-            Parse.Cloud.useMasterKey();
-            console.log("inthere");
+                        Parse.Cloud.useMasterKey();
+                        console.log("inthere");
 
-            var ToEmail = request.params.email;
+                        var ToEmail = request.params.email;
 
-            console.log("Params are: " + ToEmail);
+                        console.log("Params are: " + ToEmail);
 
-            var Mandrill = require('mandrill');
-            // TODO: don't save API key in source control
-            Mandrill.initialize(mandrillApiKey);
-            Mandrill.sendEmail({
-                message: {
-                    text: "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + ToEmail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
+                        var Mandrill = require('mandrill');
+                        // TODO: don't save API key in source control
+                        Mandrill.initialize(mandrillApiKey);
+                        Mandrill.sendEmail({
+                            message: {
+                                text: "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + ToEmail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
 
-                        + "\n" + "\n" + "Thank you for buying local and being part of our community."
+                                    + "\n" + "\n" + "Thank you for buying local and being part of our community."
 
-                        + "\n" + "\n" + "Locally yours,"
+                                    + "\n" + "\n" + "Locally yours,"
 
-                        + "\n" + "\n" + "The Greenease Team",
+                                    + "\n" + "\n" + "The Greenease Team",
 
-                    subject: "Welcome to Greenease Business",
-                    from_email: "info@greenease.co",
-                    from_name: "Greenease",
-                    to: [{
-                        email: ToEmail,
-                    }]
-                },
-                async: true
-            }, {
-                success: function(httpResponse) {
-                    console.log(httpResponse);
-                    console.log("email went to " + ToEmail);
-                    response.success("Email sent!");
-                },
-                error: function(httpResponse) {
-                    console.error(httpResponse);
-                    response.error("Uh oh, something went wrong");
-                }
-            });
+                                subject: "Welcome to Greenease Business",
+                                from_email: "info@greenease.co",
+                                from_name: "Greenease",
+                                to: [{
+                                    email: ToEmail,
+                                }]
+                            },
+                            async: true
+                        }, {
+                            success: function(httpResponse) {
+                                console.log(httpResponse);
+                                console.log("email went to " + ToEmail);
+                                response.success("Email sent!");
+                            },
+                            error: function(httpResponse) {
+                                console.error(httpResponse);
+                                response.error("Uh oh, something went wrong");
+                            }
+                        });
 
-*/
+            */
         } // if admin
 
 
@@ -5530,6 +5634,95 @@ Parse.Cloud.define('addPurchaseRecord', function(request, response) {
 /**
  * Update a buying relationship (categories)
  */
+//mongogetdb
+
+
+app.get('/getFarmById/:fid', function(req, res) {
+
+    MongoClient.connect(databaseUri, function(err, db) {
+        // Get the collection
+        if (err) res.json(err);
+
+        findby(db, "PurchaseHistory", {}, {}, function(docs, err) {
+
+            res.json({
+                err: err,
+                docs: docs
+            });
+
+        })
+
+    });
+
+}); // getFarmById
+
+app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
+    var newphray = [ ];
+
+    console.log("Adding purchase histroy record with data:");
+    console.log(res.params);
+
+    var newphs = JSON.parse(req.param('pros'));
+
+    var PurHis = "PurchaseHistory";
+
+    for (var i = 0; i < newphs.length; i++) {
+
+        var phr = newphs[i];
+
+        var newrec = {};
+
+        newrec["business"] = {
+            _id: req.param('bid')
+        };
+
+        newrec["farm"] = {
+            _id: req.param('bid')
+        };
+
+        console.log("at rec creation   ::  " + phr.name + "   " + phr.value + "  :  ac  :  " + actioncode(phr.value));
+
+        newrec["actionCode"] = actioncode(phr.value);
+        newrec["category"] = phr.name;
+        newrec["note"] = req.param('note');
+
+        var effectiveDate = new Date();
+
+        effectiveDate.setTime(parseFloat(req.param('milli')));
+
+        console.log("effective date is");
+        console.log(effectiveDate);
+        newrec["actionEffectiveDate"] = effectiveDate;
+        // save all    
+        newphray.push(newrec);
+
+    }; // new purhis rec loop
+
+    MongoClient.connect(databaseUri, function(err, db) {
+        // Get the collection
+
+        if (err) res.json(err);
+        var col = db.collection('PurchaseHistory');
+
+        col.insertMany(newphray, function(err, r) {
+            //test.equal(null, err);
+            //test.equal(2, r.insertedCount);
+
+            result.err = err;
+
+            result.r = r;
+
+            res.json({
+                err: err,
+                r: r
+            });
+
+            // Finish up test
+            db.close();
+        });
+    });
+
+}); // add new purhis rec
 
 
 app.get('/newphrecs/:bid/:fid/:pros/:note/:milli', function(req, res) {
@@ -5558,13 +5751,16 @@ app.get('/newphrecs/:bid/:fid/:pros/:note/:milli', function(req, res) {
         newrec.set("business", {
             __type: "Pointer",
             className: "Business",
-            objectId: req.param('bid')
+            objectId: req.param('bid'),
+            _id: req.param('bid')
         });
 
         newrec.set("farm", {
             __type: "Pointer",
             className: "Farm",
-            objectId: req.param('fid')
+            objectId: req.param('fid'),
+            _id: req.param('bid')
+
         });
 
         console.log("at rec creation   ::  " + phr.name + "   " + phr.value + "  :  ac  :  " + actioncode(phr.value));

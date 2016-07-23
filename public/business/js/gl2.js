@@ -33,6 +33,7 @@ var toggleprivateUrl = "/setfarmvis";
 var getbisugurl = "/getbisugs";
 var setbisugtoverifiedurl = "/setbisugtoverified";
 var sendSpecialUrl = "/specialMachine";
+var getfarmUrl = "/getFarmById/"
 var BigCal = null;
 buysfromlist=null;
 
@@ -198,9 +199,7 @@ https://api.parse.com/1/users/me
 user =  JSON.parse( getCookie('user') );
 console.log(getCookie('user') +"at set cookii user e" );
 if(user){
-
-
-
+	
 var ses = user.sessionToken;
 id = user.objectId;
 
@@ -241,13 +240,7 @@ loginwithuser(user);
 
 }
 
-
-
 }//gl2go
-
-
-
-
 
 function setbigcal(cal){
 
@@ -262,12 +255,12 @@ setwidgetpktab();
 }//readyviews
 
 function showadminviews(user){
+
 var adiv = get('adiv').stprop('display','block');
+
 var adbt = get('adminbutton').stprop('display','block');
 
 }
-
-
 
 
 function getuserws(url,callback,extra){
