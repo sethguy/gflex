@@ -99,7 +99,9 @@ buysfromlist = stuff.result;
 
 for (var i = 0; i < stuff.result.length; i++) {
 	var fsult = stuff.result[i];
+
 var sfa = fsult.farm;
+
 var theFarm = fsult.ob;
 
 var hide = fsult.buys.hide;

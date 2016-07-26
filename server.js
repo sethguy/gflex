@@ -146,6 +146,26 @@ var getby = function(table, terms, ops, calli) {
     } //getby
 
 
+var getbySort = function(table, terms, ops, sort, calli) {
+
+        return function(msg) {
+
+            msg.db.collection(table).find(terms).sort(sort).toArray(function(err, docs) {
+
+                msg.docs = docs;
+
+                msg.err = err;
+
+                calli(msg);
+
+            });
+
+
+        }
+
+    } //getby
+
+
 var findby = function(db, table, terms, ops, calli) {
 
         db.collection(table).find(terms).toArray(function(err, docs) {
@@ -497,7 +517,7 @@ app.get('/getFarms/:bid', function(req, res) {
 
     //console.log(req.params.bid+" getfarms/:bid . bid");
 
-    var terms = { 'business.objectId': req.params.bid };
+    var terms = { 'business._id': req.params.bid };
 
     mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
@@ -511,13 +531,13 @@ app.get('/getFarms/:bid', function(req, res) {
 
             //farm_id_ray.push( new ObjectId( fa._id )  );
 
-            farm_id_ray.push(fa.objectId);
+            farm_id_ray.push( new ObjectId(fa._id) );
 
         };
 
-        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
+//        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
 
-        var farmterms = { 'objectId': { $in: farm_id_ray } };
+        var farmterms = { '_id': { $in: farm_id_ray } };
 
         getby('Farm', farmterms, {}, function(msg) {
 
@@ -3442,56 +3462,30 @@ app.get('/setgeo', function(req, res) {
 
 app.get('/fasearch/:term', function(req, res) {
 
-    var myclass = Parse.Object.extend("Farm");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
+    var farmTerms = { 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
 
-    var term = req.param('term');
+    console.log("@farmTerms :: " + JSON.stringify(farmTerms))
 
-    query.contains('loname', term.toLowerCase());
-    query.limit(300);
-    query.find({
-        success: function(results) {
+    mongoMsg(getby('Farm', farmTerms, {}, function(msg) {
 
-            res.json(results);
+        res.json(msg.docs);
 
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-    console.log(query.toJSON());
+    })); // getby
 
 }); //fasearch"
 
 
 app.get('/bizsearch/:term', function(req, res) {
 
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
+    var bizTerms = { 'business': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
 
-    var term = req.param('term');
+    console.log("@bizsearch :: " + JSON.stringify(bizTerms))
 
-    query.limit(300);
-    query.contains('loname', term.toLowerCase());
+    mongoMsg(getby('Business', bizTerms, {}, function(msg) {
 
-    query.notEqualTo('removed', true);
-    query.find({
-        success: function(results) {
+        res.json(msg.docs);
 
-            console.log("leng" + results.length);
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-    console.log(query.toJSON());
+    })); // getby
 
 }); //"/bizsearch"
 
@@ -4293,91 +4287,75 @@ app.get('/getFarms2', function(req, res) {
 }); // app.'getfarms'2
 
 
-app.get('/purhis/:bid/:sort', function(req, res) {
+app.get('/purhis2/:bid/:sort', function(req, res) {
     //alert(req.query.bid);
 
-    var bid = req.param('bid');
+    var bid = req.params.bid;
 
-    var sort = JSON.parse(req.param('sort'));
+    var sorter = JSON.parse(req.params.sort);
 
-    var PurchaseHistory = Parse.Object.extend("PurchaseHistory");
-
-    // Create a new instance of that class.
-
-    var Business = Parse.Object.extend("Business");
-
-    // Create a new instance of that class.
-    var business = new Business();
-    business.set("objectId", bid);
-
-    var purhisq = new Parse.Query(PurchaseHistory);
-    purhisq.equalTo("business.objectId", bid);
-    //purhisq.include("farm");
-
-    if (sort.di === 0) purhisq.ascending(sort.by);
-
-    if (sort.di === 1) purhisq.descending(sort.by);
-
-    purhisq.limit(100);
-    purhisq.find({
-        success: function(purhisrecs) {
-            //console.log(purhisrecs);           
-            var phres = [];
-
-            var farm_id_ray = [];
-
-            for (var i = 0; i < purhisrecs.length; i++) {
-
-                var rec = purhisrecs[i];
-
-                var rayrec = { 'rec': purhisrecs[i], 'farm': purhisrecs[i].get('farm') };
-
-                phres.push(rayrec);
-
-                farm_id_ray.push(purhisrecs[i].get('farm').id);
-
-                //console.log( purhisrecs[i].get('farm').id  );
-            }; //rec loop
-
-            var farmterms = { 'objectId': { $in: farm_id_ray } };
-
-            mongoMsg(getby('Farm', farmterms, {}, function(msg) {
-
-                    //console.log(JSON.stringify(msg.docs)+"at purhis/:bid farms")
-
-                    var farms = msg.docs;
-
-                    for (var i = 0; i < phres.length; i++) {
-                        // This does not require a network access.
-
-                        //var theFarm = farms[i];
-
-                        for (var j = 0; j < farms.length; j++) {
+    var terms = {};
+    terms[sorter.by] = sorter.di == 0 ? 1 : -1
 
 
-                            if (farms[j].objectId == phres[i].farm.id) {
+    var purhisTerms = { 'business._id': bid };
 
-                                phres[i].farm = farms[j];
+    mongoMsg(getbySort('PurchaseHistory', purhisTerms, {}, terms, function(msg) {
 
-                            }
+        //console.log("PurchaseHistory docs", msg.docs);
+
+        var purhisrecs = msg.docs;
+
+        var phres = [];
+
+        var farm_id_ray = [];
+
+        for (var i = 0; i < purhisrecs.length; i++) {
+
+            var rec = purhisrecs[i];
+
+            var rayrec = { 'rec': purhisrecs[i], 'farm': purhisrecs[i]['farm'] };
+
+            phres.push(rayrec);
+
+            farm_id_ray.push(new ObjectId(purhisrecs[i]['farm']._id));
+
+            //console.log( purhisrecs[i].get('farm').id  );
+        }; //rec loop
+
+        var farmterms = { '_id': { $in: farm_id_ray } };
+
+        mongoMsg(getby('Farm', farmterms, {}, function(msg) {
+
+                //console.log(JSON.stringify(msg.docs)+"at purhis/:bid farms")
+
+                var farms = msg.docs;
+
+                for (var i = 0; i < phres.length; i++) {
+                    // This does not require a network access.
+
+                    //var theFarm = farms[i];
+
+                    for (var j = 0; j < farms.length; j++) {
+
+
+                        if (farms[j]._id == phres[i].farm._id) {
+
+                            phres[i].farm = farms[j];
 
                         }
 
-                        // console.log(post);
                     }
 
-                    res.json(phres);
+                    // console.log(post);
+                }
 
-                }) // getby
+                res.json(phres);
 
-            ); //mongomsg
+            })) // getby
 
-            //response.success(purhisrecs);
-        },
-        error: function(error) {
-            res.error(error.message);
-        }
-    });
+    })); //mongomsg
+
 
 }); // purhis table pull
 
@@ -5639,25 +5617,33 @@ Parse.Cloud.define('addPurchaseRecord', function(request, response) {
 
 app.get('/getFarmById/:fid', function(req, res) {
 
+    var fid = req.params.fid;
+
+    // console.log("getFarmById  ::   " + fid)
+
+
     MongoClient.connect(databaseUri, function(err, db) {
         // Get the collection
         if (err) res.json(err);
 
-        findby(db, "PurchaseHistory", {}, {}, function(docs, err) {
+        if (db) {
 
-            res.json({
-                err: err,
-                docs: docs
-            });
+            findby(db, "Farm", { _id: new ObjectId(fid) }, {}, function(docs, err) {
 
-        })
+                res.json({
+                    err: err,
+                    docs: docs
+                });
 
+            })
+        }
     });
+
 
 }); // getFarmById
 
 app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
-    var newphray = [ ];
+    var newphray = [];
 
     console.log("Adding purchase histroy record with data:");
     console.log(res.params);
@@ -5677,7 +5663,7 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
         };
 
         newrec["farm"] = {
-            _id: req.param('bid')
+            _id: req.param('fid')
         };
 
         console.log("at rec creation   ::  " + phr.name + "   " + phr.value + "  :  ac  :  " + actioncode(phr.value));
@@ -5686,13 +5672,11 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
         newrec["category"] = phr.name;
         newrec["note"] = req.param('note');
 
-        var effectiveDate = new Date();
-
-        effectiveDate.setTime(parseFloat(req.param('milli')));
+        var effectiveDate = new Date(parseFloat(req.param('milli'))).toISOString();
 
         console.log("effective date is");
         console.log(effectiveDate);
-        newrec["actionEffectiveDate"] = effectiveDate;
+        newrec["actionEffectiveDate"] = { "__type": "Date", "iso": effectiveDate };
         // save all    
         newphray.push(newrec);
 
@@ -5707,10 +5691,6 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
         col.insertMany(newphray, function(err, r) {
             //test.equal(null, err);
             //test.equal(2, r.insertedCount);
-
-            result.err = err;
-
-            result.r = r;
 
             res.json({
                 err: err,
@@ -5812,10 +5792,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
     console.log(req.param('bid') + "   prolist  " + req.param('fid'));
 
-
-    var terms = { 'business.objectId': req.params.bid, 'farm.objectId': req.params.fid };
-
-    //var terms = { 'business._id' : new ObjectId( req.params.bid)  , 'farm._id' : new ObjectId( req.params.fid ) };
+    var terms = { 'business._id' :  req.params.bid , 'farm._id' : req.params.fid  };
 
     mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
@@ -5836,7 +5813,6 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
                     //found.set(pro.name,pro.value);
                 found[pro.name] = pro.value;
 
-
             }; //pro loop
 
             var fndbuys_id = found._id;
@@ -5854,7 +5830,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
         else {
             console.log("No existing purchase record found - add one");
             // TODO: verify user is adding a purchase record for a farm he/she owns - right now this is handled on the client
-            var BuysFrom = Parse.Object.extend("BuysFrom");
+           
             //var parseACL = new Parse.ACL();
             //parseACL.setPublicReadAccess(true);
             // parseACL.setPublicWriteAccess(true);
@@ -5864,18 +5840,11 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
             // buysFrom['ACL'] = parseACL
             buysFrom["business"] = {
-                __type: "Pointer",
-                className: "Business",
-                objectId: req.param('bid')
-
+                _id:req.param('bid')
             };
 
             buysFrom["farm"] = {
-                __type: "Pointer",
-                className: "Farm",
-                objectId: req.param('fid')
-
-
+                _id: req.param('fid')
             };
 
 
@@ -5892,20 +5861,6 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
                 res.json({ 'msg': 'Farm updated', 'rel': msg.result });
 
             })(msg); // sert obj
-
-            /*
-                                buysFrom.save(null, {
-                                    success: function (relation) {
-
-
-                                        res.json({'msg':'Farm updated','rel':relation});
-                                    },
-                                    error: function (relation, error) {
-                                        res.error(error.message);
-                                    }
-                                });
-                    */
-
 
         } //else
 

@@ -1,218 +1,213 @@
-function business(bi){
+function business(bi) {
 
 
-}//business
+} //business
 
 
+function searchbibyname(ev, ele) {
+    console.log("key code :" + ev.keyCode);
+    var kc = ev.keyCode;
+    /*
+    if( kc===38 || kc ===40 ){
 
-function searchbibyname(ev,ele){
-console.log("key code :"+ev.keyCode);
-var kc = ev.keyCode;
-/*
-if( kc===38 || kc ===40 ){
 
+    return;
+    }
+    */
+    var word = ele.value;
+    var rcon = get('bizultscon').stprop('display', 'block'); //.inn("");
 
-return;
-}
-*/
-var word = ele.value;
-var rcon = get('bizultscon').stprop('display','block');//.inn("");
+    if (word.length > 0) {
+        var lowterm = ele.value.toLowerCase();
+        if (!get('adiv').bizlist) {
 
-if(word.length>0){
-var lowterm = ele.value.toLowerCase();
-if(!get('adiv').bizlist){
+            var urlstring = GetBizByNameUrl + "/" + word;
 
-var urlstring = GetBizByNameUrl+"/"+word;
+            grabstuff(urlstring, function(stuff) {
 
-grabstuff(urlstring,function(stuff){
+                    //console.log(JSON.stringify(stuff));
 
-//console.log(JSON.stringify(stuff));
+                    //var matches = stuff.matches;
+                    //var term = 
 
-//var matches = stuff.matches;
-//var term = 
+                    console.log(word + "  word n term   " + ele.value);
 
-console.log(word+"  word n term   "+ele.value);
+                    if (word !== ele.value) {
 
-if(word!==ele.value){
 
+                        console.log('caugth');
 
-console.log('caugth');
+                    }
 
-}
+                    if (word === ele.value) {
+                        console.log('all clear');
+                        get('bizultscon').inn("");
 
-if(word===ele.value){
-console.log('all clear');
-get('bizultscon').inn("");
+                        for (var i = 0; i < stuff.length; i++) {
+                            var bi = stuff[i];
 
-for (var i = 0; i < stuff.length; i++) {
-	var bi = stuff[i];
 
+                            if (ele.value.length > 0) {
 
-if( ele.value.length>0 ){
+                                rcon.pend(
 
-	rcon.pend(
+                                    bizult(bi).prop("id", 'bzult' + i)
 
-		bizult(bi).prop("id",'bzult'+i)
+                                );
 
-		);
+                            } // q ck
 
-}// q ck
 
+                        };
 
 
-};
+                    } //if word ===term
 
 
-}//if word ===term
+                }) //request
 
+        } else {
 
-})//request
+            var list = get('adiv').bizlist;
 
-}else{
+            get('bizultscon').inn("");
+            for (var i = 0; i < list.length; i++) {
+                var bi = list[i].bi;
 
-var list = get('adiv').bizlist;
+                if (bi.loname.indexOf(lowterm) > -1 && ele.value.length > 0) {
 
-get('bizultscon').inn("");
-for (var i = 0; i < list.length; i++) {
-	var bi = list[i].bi;
+                    rcon.pend(
 
-if(  bi.loname.indexOf( lowterm ) > -1 && ele.value.length > 0 ){
+                        bizult(bi)
 
-	rcon.pend(
+                    );
 
-		bizult(bi)
+                } // q ck
 
-		);
+            };
 
-}// q ck
 
-};
+        } // check for a bizlist to pull from
 
+    } else {
 
+        get('bizultscon').stprop('display', 'none').inn("");
 
-}// check for a bizlist to pull from
+    } //length ck
 
-}else{
 
-get('bizultscon').stprop('display','none').inn("");
+} //searchbibyname
 
-}//length ck
 
+function bizult(bi) {
 
-}//searchbibyname
+    var bz = div().cl('bizult').pend(
 
+        el('p').inn(bi.business)
 
-function bizult(bi){
+    ).prop('onmousedown', function() {
 
-var bz = div().cl('bizult').pend(
+        firebizselection(bi);
 
-			el('p').inn(bi.business)
+        get('BisSuggestBox').value = bi.business;
 
-			).prop('onmousedown',function(){
+        get('bizultscon').stprop('display', 'none').inn("");
 
-firebizselection(bi);
+    });
 
-get('BisSuggestBox').value = bi.business;
+    return bz;
+} //bizult
 
-get('bizultscon').stprop('display','none').inn("");
 
-			});
+function newbiz(bi) {
 
-	return bz;
-}//bizult
+    grabstuff("http://business.greenease.co/newbiz/" + JSON.stringify(bi), function(stuff) {
 
+        console.log(stuff);
 
-function newbiz(bi){
+    });
 
-grabstuff("http://business.greenease.co/newbiz/"+JSON.stringify(bi),function(stuff){
+} //newbiz
 
-console.log(stuff);
+function getfarms(bi, calli) {
 
-});
+    var urlstring = getbizfarmsurl + "/" + bi._id;
 
-}//newbiz
+    grabstuff(urlstring, function(stuff) {
 
-function getfarms( bi , calli ){
+        displaywidgpreview(stuff);
 
-var urlstring = getbizfarmsurl+"/"+bi.objectId;
+        if (calli) calli(stuff);
 
-grabstuff( urlstring , function( stuff ){
+    }); //request
 
-displaywidgpreview(stuff);
 
-if(calli)calli(stuff);
+} // getfarms
 
-});//request
 
+function refeshbusiness(bi, fa) {
 
-}// getfarms
+    writefarmtable(bi);
 
+    fillfarminfo(fa);
 
-function refeshbusiness(bi,fa){
+    getfarms(bi, function(stuff) {
 
-writefarmtable(bi);
+        setbuysfrom(fa);
 
-fillfarminfo(fa);
+    });
 
-getfarms(bi,function(stuff){
+    console.log("refeshbusiness");
+} //refresh
 
-setbuysfrom(fa);
+function getwidglink() {
+    var biz = get('linkbox').biz;
+    var user = get('linkbox').user;
+    var pic = get('linkbox').pic;
+    //alert(JSON.stringify(user))
 
-});
+    if (!pic) pic = 'cafe';
 
-console.log("refeshbusiness");
-}//refresh
+    var urlstring = widgtextUrl + "/" + user.email + "/" + biz.objectId + "/" + pic;
 
-function getwidglink(){
-	var biz = get('linkbox').biz;
-var user = get('linkbox').user;
-var pic = get('linkbox').pic;
-//alert(JSON.stringify(user))
+    grabtext(urlstring, function(stuff) {
+        //alert(stuff)
+        var lt = get('linktext').value = stuff;
 
-if(!pic)pic ='cafe';
+    });
 
-var urlstring =  widgtextUrl+"/"+user.email+"/"+biz.objectId+"/"+pic;
 
-grabtext(urlstring,function(stuff){
-//alert(stuff)
-var lt = get('linktext').value = stuff;
+} //getwidglink
 
-});
+function firebizselection(bi) {
 
+    console.log(JSON.stringify(bi) + "  fire biz");
 
-}//getwidglink
+    var lb = get('linkbox').prop('biz', bi);
+    getwidglink();
 
-function firebizselection(bi){
+    buysfromlist = null;
 
-console.log(JSON.stringify(bi)+"  fire biz");
+    get('farmtablediv').stprop('display', 'none');
 
-var lb = get('linkbox').prop('biz' , bi );
-getwidglink();
+    get("FarmInfodiv").biz = null;
 
-buysfromlist=null;
-  
-get('farmtablediv').stprop('display','none');
+    get("FarmInfodiv").stprop('display', 'none');
 
-get("FarmInfodiv").biz = null;
+    get("topcut").stprop('position', 'relative').stprop('height', '10%');
 
-get("FarmInfodiv").stprop('display','none');
+    get('navhead').stprop('display', 'block');
 
-get("topcut").stprop('position','relative').stprop('height','10%');
+    get("widgetpreview").stprop('display', 'block');
 
-get('navhead').stprop('display','block');
+    get("wpcontainer").stprop('display', 'block').prop('biz', bi);
 
-get("widgetpreview").stprop('display','block');
+    getfarms(bi);
 
-get("wpcontainer").stprop('display','block').prop('biz',bi);
+    get("FarmInfodiv").biz = bi;
 
-getfarms(bi);
+    writefarmtable(bi);
 
-get("FarmInfodiv").biz = bi;
+    setpreback({ 'name': 'cf', 'title': 'Cafe', 'img': 'business/images/cafe.png', 'short': 'cafe' });
 
-writefarmtable(bi);
-
-setpreback( {'name':'cf','title':'Cafe','img':'business/images/cafe.png','short':'cafe'} );
-
-}//firebizselection
-
-
+} //firebizselection

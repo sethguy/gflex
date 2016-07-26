@@ -36,16 +36,15 @@ function showfarmtable(bi) {
 
     get('farmtablediv').stprop('display', 'block');
 
-
     get('wpcontainer').stprop('display', 'none');
 
     writefarmtable(bi);
 
 } //show farm table
 
-function fillfarmtable(bi, sort) {
-    if (!sort) sort = JSON.stringify({ 'by': 'actionEffectiveDate', 'di': 1 });
-
+function fillfarmtable(bi,sort) {
+if(!sort)sort = JSON.stringify({'by':'actionEffectiveDate','di':1} );
+   
     get("farmtable").stprop('opacity', 1);
     get("farmtable").stprop('zIndex', 10);
 
@@ -56,14 +55,14 @@ function fillfarmtable(bi, sort) {
     var row3 = get("ftc2");
     var row4 = get("ftc3");
     var row5 = get("ftc4");
-
-    row1.clear0();
-    row2.clear0();
-    row3.clear0();
-    row4.clear0();
-    row5.clear0();
-
-    var urlstring = getPurchaseHistoryRecsUrl + "/" + bi.objectId + "/" + sort;
+    
+row1.clear0();
+row2.clear0();
+row3.clear0();
+row4.clear0();
+row5.clear0();
+    
+    var urlstring = getPurchaseHistoryRecsUrl + "/" + bi._id+"/"+sort;
 
     console.log(urlstring + "  go purchaseHistoryRecords ");
 
@@ -71,71 +70,53 @@ function fillfarmtable(bi, sort) {
 
         for (var i = 0; i < stuff.length; i++) {
 
-            if (stuff[i].farm) {
+             var thefarm = stuff[i].farm;
 
-                var fid = stuff[i].farm.id;
+            /* PurchaseHistoryRecord*/
+            var rec = new PurchaseHistoryRecord(stuff[i].rec);
 
-                //var thefarm = stuff[i].farm;
+//console.log("got rec "+JSON.stringify(rec));
 
-                /* PurchaseHistoryRecord*/
-                var rec = new PurchaseHistoryRecord(stuff[i].rec);
+            //  purchaseHistoryRecords.add( rec );
 
-                //console.log("got rec "+JSON.stringify(rec));
+var place = thefarm.reorder;
 
-                //  purchaseHistoryRecords.add( rec );
+var placetd = gettd( 5 , "  ");
 
+var url = "";
 
-                var placetd = gettd(5, "  ");
-                /*
-                var place = thefarm.reorder;
-                var url = "";
+var ment = el('a').inn('Go to Website').stprop('margin','0px');
 
-                var ment = el('a').inn('Go to Website').stprop('margin','0px');
+if(place){
 
-                if(place){
+    url = place;
 
-                    url = place;
+ment = el('img').prop('src','images/farmersweb_logo.jpg').cl('farmersimg');
 
-                ment = el('img').prop('src','business/images/farmersweb_logo.jpg').cl('farmersimg');
+}else if(thefarm.website){
 
-                }else if(thefarm.website){
+     url = thefarm.website;
 
-                     url = thefarm.website;
+}
+placetd = farmweb(5,url,ment);
 
-                }
-                */
-                //placetd = farmweb(5,url,ment);
+            var td = [
+                datecol( rec.actionEffectiveDate, rec.actionCode),
+                gettd(2, thefarm.name),
+                gettd(3, rec.category),
+                gettd(4, rec.note),
+                placetd ,
+            ];
 
+            rowtime(td, stuff[i].farm);
 
-                var farmstuff = gettd(2, "").Adrop("FarmtableGetFarm", function(res) {
+            row1.appendChild(td[0]);
+            row2.appendChild(td[1]);
+            row3.appendChild(td[2]);
+            row4.appendChild(td[3]);
+            row5.appendChild(td[4]);
 
-                    console.log(res);
-                    this.inn("farm")
-
-                }).async({
-                    con: get("farmtablediv").style.display == "block",
-                    id: "FarmtableGetFarm",
-                    url: getfarmUrl+""+fid
-                });
-
-                var td = [
-                    datecol(rec.actionEffectiveDate, rec.actionCode),
-                    farmstuff,
-                    gettd(3, rec.category),
-                    gettd(4, rec.note),
-                     placetd ,
-                ];
-
-                rowtime(td, stuff[i].farm);
-
-                row1.appendChild(td[0]);
-                row2.appendChild(td[1]);
-                row3.appendChild(td[2]);
-                row4.appendChild(td[3]);
-                row5.appendChild(td[4]);
-            } //if farm
-
-        } //loop
+        }
 
         row1.appendChild(gettd(0, ""));
         row2.appendChild(gettd(0, ""));
@@ -147,6 +128,10 @@ function fillfarmtable(bi, sort) {
     }); // grab stuff
 
 } //fill farm table
+
+
+
+
 
 
 function farmweb(tn, url, ment) {

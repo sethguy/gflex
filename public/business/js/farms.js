@@ -459,8 +459,8 @@ function savefarmupdate() {
 
     console.log('farnbiz' + JSON.stringify(farm));
 
-    var bid = biz.objectId || biz._id;
-    var fid = farm.objectId || farm._id;
+    var bid = biz._id;
+    var fid = farm._id;
 
     if (window.Prototype) {
         delete Object.prototype.toJSON;
@@ -495,18 +495,15 @@ function savefarmupdate() {
 
                 if ((buy[pro.name] && pro.value) || (!buy[pro.name] && !pro.value)) {
 
-
                 } else {
 
                     newprolist.push(pro);
 
                 }
 
-
             }; //loop
 
         }
-
 
     }; // purhis ck  loop
 
