@@ -38,7 +38,7 @@ var widgPageUrl = relLink + "widgPage";
 //db.auth('admin','SLIQk4Kja2Tn');
 
 
-var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
+var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -4134,6 +4134,8 @@ app.post('/gipnl2', function(req, res) {
         if (word === "VERIFIED") {
 
             mongoMsg(getby('User', { verified: { _id: new ObjectId(uid) } }, {}, function(msg) {
+
+                fnduser = msg.docs[0];
 
                 fnduser["paiddate"] = new Date();
 
