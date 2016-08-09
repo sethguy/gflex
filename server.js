@@ -4133,7 +4133,7 @@ app.post('/gipnl2', function(req, res) {
 
         if (word === "VERIFIED") {
 
-            mongoMsg(getby('User', { verified: { _id: new ObjectId(uid) } }, {}, function(msg) {
+            mongoMsg(getby('User',  { _id: new ObjectId(uid) } , {}, function(msg) {
 
                 fnduser = msg.docs[0];
 
