@@ -4147,11 +4147,11 @@ app.post('/gipnl2', function(req, res) {
 
                 delete fnduser._id;
 
-                updateDocumentbyid(msg.db, '', idToPlace, fnduser, function() {
+                updateDocumentbyid(msg.db, 'User', idToPlace, fnduser, function() {
 
-                    //res.end("");
+                    res.end("");
 
-                    res.json('VERIFIED');
+                   // res.json('VERIFIED');
 
                 });
 
