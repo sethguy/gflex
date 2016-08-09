@@ -1,5 +1,4 @@
-#specialModal{
-	
+#specialModal {
     position: absolute;
     height: 80%;
     width: 80%;
@@ -9,8 +8,8 @@
     border: 5px solid darkgreen;
     background-color: white;
     color: black;
-    z-index: 99;
-    background-image: url("../images/mainBackground.png");
+    z-index: 100;
+    background-image: url("/business/images/mainBackground.png");
     background-repeat: no-repeat;
     background-size: cover;
     padding: 10px;
@@ -18,190 +17,347 @@
     font-family: 'Oxygen', sans-serif;
 }
 
-
-#sp-scroll{
-
-position: relative;
-overflow: scroll;
-height: 100%;
-width:100%;
-z-index: 5;
- font-family: inherit;
-
-
+#sp-scroll {
+    position: relative;
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    font-family: inherit;
 }
 
-#specialbisearch{
-position: relative;
-	
-
-
- font-family: inherit;
-
-
+.sp-scroll {
+    position: relative;
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    font-family: inherit;
 }
 
+#specialbisearch {
+    position: relative;
+    font-family: inherit;
+}
 
-#spec_asearchcon{ 
-
-   z-index: 10;
+#spec_asearchcon {
+    z-index: 10;
     position: relative;
     margin: 3% 0;
-    left:0;
+    left: 0;
     width: 300px;
-     font-family: inherit;
-
+    font-family: inherit;
 }
 
-#sp-bi-put{
-position: relative;
-border: 1px solid black;	
-
-height:30px;
-width:300px;
- font-family: inherit;
-
-
+#sp-bi-put {
+    position: relative;
+    border: 1px solid black;
+    height: 30px;
+    width: 300px;
+    font-family: inherit;
 }
 
-#sp-bi-address{
-position: relative;
-
-
- font-family: inherit;
-
-
-
+#sp-bi-address {
+    position: relative;
+    font-family: inherit;
 }
 
-#sp-bi-name{
-position: relative;
- font-family: inherit;
-
-
+#sp-bi-name {
+    position: relative;
+    font-family: inherit;
 }
 
-#sp-bi-title{
-position: relative;
-
-
-height:30px;
-width:300px;
-margin: 1% 0;
- font-family: inherit;
-
-
+#sp-bi-title {
+    position: relative;
+    height: 30px;
+    width: 300px;
+    margin: 1% 0;
+    font-family: inherit;
 }
 
-#sp-terms{
-position: relative;
-border: 1px solid black;	
-
-height:20%;
-width:500px;
-resize: none;
-background-color: transparent;
-margin: 1% 0;
-
- font-family: inherit;
-
+.catTitle {
+    position: relative;
+    top: 25px;
 }
 
-#sp-image-select{
-position: relative;
-border: 1px solid black;	
-height:20%;
-width:80%;
-margin: 1% 0;
-
- font-family: inherit;
-
+.spcatimg {
+    top: 10px;
+    left: 2px;
+    position: relative;
 }
 
+#catPreBox {
+    position: relative;
+    height: 100%;
+}
 
-.spec_nav{
+#catPreBox .spcatimg {
+    position: relative;
+    top: 15px;
+    left: 1px;
+}
 
+.spCatTd {
+    background-image: url('../business/images/specials/GreenFlag.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.spCatBox {
+    position: relative;
+    height: 20%;
+    width: 400px;
+    resize: none;
+    background-color: transparent;
+    margin: 1% 0;
+    font-family: inherit;
+}
+
+.spcattab {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#sp-terms {
+    position: relative;
+    border: 1px solid black;
+    height: 20%;
+    width: 500px;
+    resize: none;
+    background-color: transparent;
+    margin: 1% 0;
+    font-family: inherit;
+}
+
+#sp-image-select {
+    position: relative;
+    border: 1px solid black;
+    height: 20%;
+    width: 90%;
+    margin: 1% 0;
+    font-family: inherit;
+}
+
+.spec_nav {
     position: relative;
     padding: 5%;
     background-color: green;
     color: white;
     margin: 5% 0%;
     cursor: pointer;
-
-
- font-family: inherit;
-
+    font-family: inherit;
 }
 
-
-.spec_nav-con{
-
+.spec_nav-con {
     position: absolute;
-    width: 200px;
+    width: 350px;
     text-align: left;
     top: 5%;
-    left: 5%;
+    left: 1%;
     z-index: 10;
+    height: 0;
+    font-family: inherit;
+}
+
+.sptd {
+    position: relative;
+    width: 33%;
+    height: 100%;
+    padding: 5% 0%;
+    font-family: inherit;
+}
+
+.speImg {
+    position: relative;
+    width: 90%;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.speImglet {
+    text-align: center;
+    position: relative;
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    font-family: inherit;
+}
+
+.image-select-preview {
+    position: relative;
+    height: 80px;
+    width: 320px;
+    resize: none;
+    background-color: transparent;
+    margin: 1% 0;
+    background-image: url("/business/images/specials/strawSmall.png");
+    background-repeat: no-repeat;
+    font-family: inherit;
+    text-align: left;
+}
+
+#sp-publish {
+    position: relative;
+    border: 1px solid black;
+    margin: 1%;
+    cursor: pointer;
+    font-family: inherit;
+}
 
 
- font-family: inherit;
+#spmListScroll{
+
+text-align: center
+
 
 }
 
-.sptd{
+.spListTab {
+    position: relative;
+    left: 150px;
+}
+
+.spListTab td{
+
+height: 60px;
+
+}
+
+.spListTab .spListImg{
+
+}
+
+.spCatListTd {
+    text-align: left;
+
+
+}
+
+.spCatListImg{
+
+
+    position: relative;
+    background-color: green;
+    width: 43px;
+    height: 50px;
+
+}
+
+.spTitle {
+    position: relative;
+    width: 100px;
+    text-overflow: ellipsis;
+}
+
+#sp-save {
+    position: relative;
+    border: 1px solid black;
+    margin: 1%;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.spCal-con {
+    position: relative;
+    font-family: inherit;
+}
+
+.spTab {
+    position: relative;
+    font-family: inherit;
+}
+
+.spTabRow {
+    position: relative;
+    font-family: inherit;
+}
+
+.spTabTd {
+    position: relative;
+    font-family: inherit;
+}
+
+.spTabTdCon {
+    position: relative;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.spTabTdField {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    width: 100px;
+    font-family: inherit;
+}
+
+.spFieldPut {
+    outline: 0;
+    width: 80%;
+    font-family: inherit;
+}
+
+.fieldSpan {
+    position: relative;
+    padding: 15px;
+    font-family: inherit;
+}
+
+.spTabTdCon:hover {
+    background-color: lightgreen;
+    font-family: inherit;
+}
+
+.spDTab {
+    font-family: inherit;
+}
+
+.spDTabTd {
+    font-family: inherit;
+}
+
+.spListImg {
+    position: relative: ;
+ height: 50px;
+  
+    font-family: inherit;
+}
+
+.spView {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: none;
+    font-family: inherit;
+}
+
+#specialModalList {
+    display: block;
+    font-family: inherit;
+}
+
+
+
+
+.spListlet{
+
+
 position: relative;
-width: 33%;
-height: 100%;
-padding: 5% 0%;
 
 
- font-family: inherit;
-
-}
-
-.speImg{
-position: relative;
-width:90%;
-height: 90%;
-
- font-family: inherit;
-
-}
+cursor: pointer
 
 
-.speImglet{
-
-text-align: center;
-position: relative;
-width: 90%;
-height: 90%;
-left:5%;
-
- font-family: inherit;
 
 }
 
 
 
-#sp-publish{
-position: relative;
-border: 1px solid black;	
-
-margin: 1% ;
-cursor:pointer;
-
- font-family: inherit;
-
-}
-
-#sp-save{
-position: relative;
-border: 1px solid black;	
-
-
-margin: 1% ;
-cursor:pointer;
- font-family: inherit;
-
-}
 

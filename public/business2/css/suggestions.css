@@ -1,0 +1,48 @@
+.suglet{
+position: relative;
+
+
+width:100%;
+
+border-bottom:1px solid
+ darkgreen;
+
+z-index: 10;
+
+cursor:pointer;
+}
+
+
+
+.suglet table{
+
+position: relative;
+table-layout: fixed;
+
+height: 100%;
+width:100%;
+
+
+}
+
+
+.sugplace{
+position: relative;
+top:5%;
+height: 90%;
+text-align: left;
+
+overflow: scroll;
+
+z-index: 10;
+}
+
+
+.sgtdiv{
+
+position: relative;
+height:100%;
+width:100%;
+
+
+}

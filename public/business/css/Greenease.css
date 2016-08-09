@@ -24,7 +24,7 @@ body, td, a, div, .p {
 }
 
 body{
-background-image:url("../images/mainBackground.png");
+background-image:url("/business/images/mainBackground.png");
 background-repeat: no-repeat;
 background-size: cover;
 height:100%;
@@ -64,13 +64,7 @@ top:10px;
 
 
   
-#adiv{
-  display: none;
-position: relative;
-height:5%;
-z-index:99;
-overflow:visible
-}
+
 
 #amsg{
  
@@ -144,6 +138,8 @@ display: none;
 position: relative;
 width: 80%;
 height:7%;
+z-index: 99;
+margin-top:10px; 
 }
 
 #adminbutton{
@@ -236,7 +232,7 @@ color:darkgreen
 }
 
 #r1{
-//background-image:url("../images/Username.png");
+//background-image:url("/business/images/Username.png");
 background-repeat: no-repeat;
 background-position: left center;
 
@@ -244,7 +240,7 @@ border-bottom:1px solid green;
 }
 
 #r2{
-//background-image:url("../images/Password.png");
+//background-image:url("/business/images/Password.png");
 background-repeat: no-repeat;
 background-position: left center;
 
@@ -254,7 +250,7 @@ border-bottom:1px solid green;
 
 #lobt{
 position:relative;
-background-image:url("../images/LOG_IN.png");
+background-image:url("/business/images/LOG_IN.png");
 background-repeat: no-repeat;
 background-position: center center;
 top:40%;
@@ -299,7 +295,7 @@ border: 0px;
 
 #req{
 position:relative;
-background-image:url("../images/REQ_AC_AS.png");
+background-image:url("/business/images/REQ_AC_AS.png");
 background-repeat: no-repeat;
 background-position: center center;
 top:30%;
@@ -311,7 +307,7 @@ cursor:pointer;
 
 #for{
 position:relative;
-background-image:url("../images/FOR_PASS.png");
+background-image:url("/business/images/FOR_PASS.png");
 background-repeat: no-repeat;
 background-position: center center;
 top:20%;

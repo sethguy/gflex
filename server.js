@@ -1,6 +1,3 @@
-// Example express application adding the parse-server module to expose Parse
-// compatible API routes.
-
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 
@@ -21,7 +18,7 @@ var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
 
 var Signupurl = "http://business.greenease.co/?signup";
-
+var geolib = require('geolib')
 var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
 
@@ -32,6 +29,10 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
+var relLink = "http://localhost:8000/"
+
+var widgPageUrl = relLink + "widgPage";
+
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
@@ -40,7 +41,6 @@ var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
-
 
 var mongogetdb = function(calli) {
     // Use connect method to connect to the Server
@@ -53,6 +53,7 @@ var mongogetdb = function(calli) {
     }); //mongo connect
 
 };
+
 
 var updateDocumentbyid = function(db, table, id, set, callback) {
     // Get the documents collection
@@ -81,7 +82,6 @@ var mongoMsg = function(calli) {
 
 
 };
-
 
 var sertobj = function(table, obj, callback) {
 
@@ -121,7 +121,7 @@ var app = express();
 
 // Serve the Parse API on the /parse URL prefix
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(mountPath, api);
+//app.use(mountPath, api);
 
 // Parse Server plays nicely with the rest of your web routes
 
@@ -131,6 +131,26 @@ var getby = function(table, terms, ops, calli) {
         return function(msg) {
 
             msg.db.collection(table).find(terms).toArray(function(err, docs) {
+
+                msg.docs = docs;
+
+                msg.err = err;
+
+                calli(msg);
+
+            });
+
+
+        }
+
+    } //getby
+
+
+var removeby = function(table, terms, ops, calli) {
+
+        return function(msg) {
+
+            msg.db.collection(table).deleteMany(terms, function(err, docs) {
 
                 msg.docs = docs;
 
@@ -327,6 +347,7 @@ app.get('/MigrateFixpurhis', function(req, res) {
                 findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
 
                         var bi = docs[0];
+
                         if (bi) {
                             bi_id = bi._id.valueOf() + '';
                             console.log("at bi farm id" + bi_id)
@@ -348,22 +369,15 @@ app.get('/MigrateFixpurhis', function(req, res) {
                                 delete purhis._id;
                                 updateDocumentbyid(msg.db, 'PurchaseHistory', id, purhis, function(result, err) {
                                     /*
-                                                                        console.log("")
-
-                                                                        console.log( JSON.stringify(start) );
-                                                                        console.log("")
-                                                                       if(farm) fa_id= farm._id.valueOf();
-
-
-
-
-                                                                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
-                                                                        console.log("")
-
-                                                                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
-                                                                        console.log("")
-
-                                                                        //console.log(result)
+                                        console.log("")
+                                        console.log( JSON.stringify(start) );
+                                        console.log("")
+                                       if(farm) fa_id= farm._id.valueOf();
+                                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
+                                        console.log("")
+                                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
+                                        console.log("")
+                                         //console.log(result)
                                     */
                                 });
 
@@ -401,6 +415,97 @@ app.get('/MigrateFixpurhis', function(req, res) {
 
 
 });
+
+
+app.get('/MigrateUpdateGeoHoods', function(req, res) {
+
+        mongoMsg(getby('neighborhood', { geo: { $exists: true } }, {}, function(msg) {
+
+            //console.log(msg.docs)
+
+            neighborhood = msg.docs
+
+            console.log(neighborhood.length + " :: find buys length");
+            count = 0;
+            neighborhood.forEach(function(hood) {
+
+                    hood.geoPoint = { type: "Point", coordinates: [hood.geo.longitude, hood.geo.latitude] }
+
+                    delete hood.geo;
+
+                    var id = hood._id;
+
+                    delete hood._id;
+
+                    //console.log(hood);
+                    console.log((id + "").length);
+
+                    if ((id + "").length > 15) {
+
+                        updateDocumentbyid(msg.db, 'neighborhood', id, hood, function(res, err) {
+
+                            count++;
+
+                            if (err) console.log(err)
+
+                            console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + neighborhood.length);
+
+                        })
+
+                    }
+
+                }) //neighborhood foreach
+
+        })); // getby
+
+
+    }) //
+
+
+app.get('/MigrateUpdateGeoBusiness', function(req, res) {
+
+
+        mongoMsg(getby('Business', { geo: { $exists: true } }, {}, function(msg) {
+
+            //console.log(msg.docs)
+
+            Business = msg.docs
+
+            console.log(Business.length + " :: find buys length");
+            count = 0;
+            Business.forEach(function(bi) {
+
+                    bi.geoPoint = { type: "Point", coordinates: [bi.geo.longitude, bi.geo.latitude] }
+
+                    delete bi.geo;
+
+                    var id = bi._id;
+
+                    delete bi._id;
+
+                    //console.log(bi);
+                    console.log((id + "").length);
+
+                    if ((id + "").length > 15) {
+
+                        updateDocumentbyid(msg.db, 'Business', id, bi, function(res, err) {
+
+                            count++;
+
+                            if (err) console.log(err)
+
+                            console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + Business.length);
+
+                        })
+
+                    }
+
+                }) //Business foreach
+
+        })); // getby
+
+
+    }) //
 
 
 app.get('/MigrateFixBuysFrom', function(req, res) {
@@ -513,86 +618,6 @@ app.get('/MigrateFixBuysFrom', function(req, res) {
 
 });
 
-app.get('/getFarms/:bid', function(req, res) {
-
-    //console.log(req.params.bid+" getfarms/:bid . bid");
-
-    var terms = { 'business._id': req.params.bid };
-
-    mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
-
-        //console.log( JSON.stringify(msg.docs)+"at getfarms/:bid mbuys with bid")
-
-        var buys = msg.docs;
-        var farm_id_ray = [];
-
-        for (var i = 0; i < buys.length; i++) {
-            var fa = buys[i].farm;
-
-            //farm_id_ray.push( new ObjectId( fa._id )  );
-
-            farm_id_ray.push( new ObjectId(fa._id) );
-
-        };
-
-//        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
-
-        var farmterms = { '_id': { $in: farm_id_ray } };
-
-        getby('Farm', farmterms, {}, function(msg) {
-
-            //console.log(JSON.stringify(msg.docs)+"at getfarms/:bid farms")
-
-            var farms = msg.docs;
-
-            var toReturn = [];
-
-            for (var i = 0; i < buys.length; i++) {
-                // This does not require a network access.
-
-                var theFarm = null;
-
-                for (var j = 0; j < farms.length; j++) {
-
-                    var fa = farms[j];
-                    if (fa.objectId == buys[i].farm.objectId) {
-                        theFarm = fa;
-                    }
-
-                }
-
-                if (theFarm != null) {
-
-                    //console.log("thefarm"+theFarm.name+"thefarm.id"+theFarm.id);
-                    var post = {
-
-                        meat: buys[i].meat,
-                        dairy: buys[i].dairy,
-                        seafood: buys[i].seafood,
-                        produce: buys[i].produce,
-                        farm: { name: theFarm.name, state_code: theFarm.state_code },
-                        ob: theFarm,
-                        buys: buys[i]
-
-                    };
-
-                    toReturn.push(post);
-                } // null farm check
-
-                // console.log(post);
-            }
-            var myResults = { result: toReturn };
-
-            res.status(200).send(myResults);
-
-        })(msg);
-
-
-    }));
-
-
-}); //getFarms/:bid
-
 
 app.get('/', function(req, res) {
 
@@ -644,10 +669,117 @@ app.get('/userdo', function(req, res) {
             function(i) {
 
                 res.send(JSON.stringify(i))
+
             }));
 
-
 }); // user do
+
+
+app.get('/readngoMobileData', function(req, res) {
+
+    fs.readdir('./mobileGdata', function(err, files) {
+
+        res.setHeader('Content-Type', 'text/html');
+
+        MongoClient.connect(databaseUri, function(err, db) {
+
+            console.log(files, 'files')
+
+            if (err) console.log(err);
+            for (var i = 0; i < files.length; i++) {
+
+                console.log(files[i], 'files')
+
+                var data = JSON.parse(fs.readFileSync('./mobileGdata/' + files[i], "utf8"));
+
+                console.log(JSON.stringify(data.results[0]));
+                var name = files[i].replace('.json', '');
+                console.log('');
+                console.log(name);
+                console.log('');
+                var sertray = data.results;
+                var col = db.collection(name);
+
+                inmany(col, sertray);
+
+            }; // files loop
+
+            res.send(files);
+
+            if (err) res.send(err);
+
+        });
+
+        var inmany = function(col, ray) {
+
+                col.insertMany(ray, function(err, r) {
+
+                    if (err) console.log(err);
+                    console.log(r);
+
+                }); // collection insert
+
+            } //in   many
+
+    }); // FS FILE READ
+
+}); //readngoo
+
+app.get('/MigrateMobileFavorites', function(req, res) {
+
+    mongoMsg(getby('GEUserFavorites', {}, {}, function(msg) {
+        var favsle = msg.docs.length;
+        count = 0;
+        msg.docs.forEach(function(GEfav) {
+
+            var rid = GEfav.favorite.objectId;
+
+            var uid = GEfav.user.objectId;
+
+            var fid = GEfav._id;
+
+            /* {
+                 "_id": ObjectId("578458de830d33b7017ef39a"),
+                 "bid": "FpR7tRCkQ3",
+                 "biname": "Teaism",
+                 "createdAt": "2016-01-12T22:48:45.142Z",
+                 "uid": "HecRr5Uc88",
+             }*/
+
+
+            getby('Business', { mobileAppObjectId: rid }, {}, function(msg) {
+                if (msg.docs && msg.docs.length > 0) {
+                    GEfav.bid = msg.docs[0]._id.valueOf() + "";
+
+                    GEfav.biname = msg.docs[0].business;
+
+                    getby('mobileUsers', { objectId: uid }, {}, function(msg) {
+
+                        GEfav.uid = msg.docs[0]._id.valueOf() + "";
+                        console.log(GEfav.U_id)
+
+                        sertobj("userfavs", {
+                            uid: GEfav.uid,
+                            bid: GEfav.bid,
+                            biname: GEfav.biname
+                        }, function(msg) {
+                            console.log(msg.result)
+
+                            count++;
+                            console.log(favsle + '  ' + count)
+
+                        })(msg)
+
+                    })(msg)
+                } //{ mobileAppObjectId: rid },
+            })(msg)
+
+        }); //loop
+
+    })); // getby
+
+    res.json('go');
+});
 
 
 app.get('/readngo', function(req, res) {
@@ -742,9 +874,6 @@ restrictedAcl.setPublicWriteAccess(false);
 
 
 app.get('/editfarm/:fa', function(req, res) {
-    Parse.Cloud.useMasterKey();
-    //
-    // 
 
     console.log(req.param('fa'));
 
@@ -759,29 +888,63 @@ app.get('/editfarm/:fa', function(req, res) {
 
     } else {
 
-
         faob = JSON.parse(req.param('fa'));
         console.log(req.param('fa'));
     }
-    var farm = Parse.Object.extend("Farm");
 
-    var nfarm = new farm();
 
-    nfarm.save(faob, {
-        success: function(farm) {
-            // Execute any logic that should take place after the object is saved.
+    if (faob._id) {
 
-            alert('New object created with objectId: ' + farm.id);
-            res.json({ 'msg': 'Farm updated ', 'farm': farm });
-        },
-        error: function(farm, error) {
-            res.json({ 'msg': error.message });
+        var idToPlace = faob._id;
+        console.log("id", idToPlace)
 
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            alert('Failed to create new object, with error code: ' + error.message);
-        }
-    });
+        mongogetdb(function(db) {
+
+            delete faob._id;
+
+            console.log("id", idToPlace)
+
+            updateDocumentbyid(db, "Farm", idToPlace, faob, function(result, err) {
+
+                console.log("res", JSON.stringify(err));
+
+                faob._id = idToPlace;
+
+                res.json({ 'msg': 'Farm updated ', 'farm': faob }); //
+
+            })
+
+        })
+
+    } else {
+
+        mongoMsg(sertobj("Farm", faob, function(msg) {
+            console.log(msg.result)
+
+            res.json({ 'msg': 'Farm updated ', 'farm': msg.result.ops[0] });
+
+        }));
+
+    }
+
+
+    /*
+        nfarm.save(faob, {
+            success: function(farm) {
+                // Execute any logic that should take place after the object is saved.
+
+                alert('New object created with objectId: ' + farm.id);
+                res.json({ 'msg': 'Farm updated ', 'farm': farm });
+            },
+            error: function(farm, error) {
+                res.json({ 'msg': error.message });
+
+                // Execute any logic that should take place if the save fails.
+                // error is a Parse.Error with an error code and message.
+                alert('Failed to create new object, with error code: ' + error.message);
+            }
+        });
+        */
 
 }); //get newbiz
 
@@ -1216,6 +1379,29 @@ app.get('/setone/:fstring', function(req, res) {
 
 }); //get newbiz
 
+app.get('/removebisug/:bio', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    var bio = JSON.parse(req.params.bio);
+
+    console.log(bio.objectId + '   bisugonjectid');
+
+    mongoMsg(removeby('bisuggestions', { _id: new ObjectId(bio._id) }, {}, function(msg) {
+
+        console.log(msg.docs)
+
+        fndbuys = msg.docs
+
+        console.log(fndbuys.length + " :: removebisug ");
+
+        res.json(fndbuys);
+
+    })); // removeby
+
+}); // new bi sug
+
 
 app.get('/getbisugs', function(req, res) {
     Parse.Cloud.useMasterKey();
@@ -1223,43 +1409,58 @@ app.get('/getbisugs', function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    var bisug = Parse.Object.extend("bisuggestions");
+    mongoMsg(getby('bisuggestions', { verified: { $ne: true } }, {}, function(msg) {
 
-    var newbi = new bisug();
+        console.log(msg.docs)
 
-    var query = new Parse.Query(bisug);
+        fndbuys = msg.docs
 
-    query.limit(100);
+        console.log(fndbuys.length + " :: find buys length");
 
-    query.notEqualTo('verified', true);
+        res.json(fndbuys);
 
-    query.descending('createdAt');
+    })); // getby
 
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
-
-
-}); // new bi sug
+}); // getbisugs
 
 app.get('/setbisugtoverified/:bio', function(req, res) {
-    Parse.Cloud.useMasterKey();
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    var bisug = Parse.Object.extend("bisuggestions");
-
-    var newbi = new bisug();
-
     var bio = JSON.parse(req.params.bio);
+
+    mongoMsg(getby('bisuggestions', { "_id": new ObjectId(bio._id) }, {}, function(msg) {
+
+        console.log(msg.docs)
+
+        fndbuys = msg.docs
+
+        console.log(fndbuys.length + " :: find buys length");
+
+        if (fndbuys.length > 0) {
+
+            console.log(JSON.stringify(fndbuys[0]) + " :: find buys at hide 1");
+
+            lid = fndbuys[0]._id;
+            delete fndbuys[0]._id;
+
+            updateDocumentbyid(msg.db, "bisuggestions", lid, fndbuys[0], function(result, err) {
+                fndbuys[0]._id = lid;
+                res.json({ ob: fndbuys[0], msg: "Business verified" });
+
+            });
+
+        } else {
+
+            res.json({ "msg": "err sugg not found" });
+
+        }
+
+    })); // getby
+
+
+    /*
 
     newbi.save(bio, {
         success: function(hoodob) {
@@ -1282,7 +1483,7 @@ app.get('/setbisugtoverified/:bio', function(req, res) {
         }
     });
 
-
+*/
 }); // new bi sug
 
 
@@ -1292,7 +1493,6 @@ app.get('/newbisug/:bi', function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-
     var bisug = Parse.Object.extend("bisuggestions");
 
     var newbi = new bisug();
@@ -1300,28 +1500,15 @@ app.get('/newbisug/:bi', function(req, res) {
 
     var bio = JSON.parse(bi);
 
+    mongoMsg(sertobj("bisuggestions", biob, function(msg) {
+        console.log(msg.result)
 
-    newbi.save(bio, {
-        success: function(hoodob) {
-            // Execute any logic that should take place after the object is saved.
+        res.json({
+            msg: "thanks for your suggestion",
+            ob: msg.result.ops[0]
+        });
 
-            alert('New object created with objectId: ' + hoodob.id);
-
-            var rson = {};
-
-            rson.msg = "thanks for your suggestion";
-
-            rson.ob = hoodob;
-
-            res.json(rson);
-        },
-        error: function(hoodob, error) {
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            alert('Failed to create new object, with error code: ' + error.message);
-        }
-    });
-
+    }));
 
 }); // new bi sug
 
@@ -1348,20 +1535,65 @@ app.get('/newbiz/:bi', function(req, res) {
 
     );
 
-    Business.save(biob, {
-        success: function(Business) {
-            // Execute any logic that should take place after the object is saved.
+
+    console.log("biob", JSON.stringify(biob))
+
+    if (biob._id) {
+
+        var idToPlace = biob._id;
+        console.log("id", idToPlace)
+
+        mongogetdb(function(db) {
+
+            delete biob._id;
+
+            console.log("id", idToPlace)
+
+            updateDocumentbyid(db, "Business", idToPlace, biob, function(result, err) {
 
 
-            alert('New object created with objectId: ' + Business.id);
-            res.json(Business);
-        },
-        error: function(Business, error) {
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            alert('Failed to create new object, with error code: ' + error.message);
-        }
-    });
+                console.log("res", JSON.stringify(err));
+
+                res.json(result);
+
+
+            })
+
+
+        })
+
+    } else {
+
+        mongoMsg(sertobj("Business", biob, function(msg) {
+            console.log(msg.result)
+
+            res.json(msg.result.ops[0]);
+
+        }));
+
+    }
+
+
+    /*
+
+        Business.save(biob, {
+            success: function(Business) {
+                // Execute any logic that should take place after the object is saved.
+
+
+                alert('New object created with objectId: ' + Business.id);
+              
+            },
+            error: function(Business, error) {
+                // Execute any logic that should take place if the save fails.
+                // error is a Parse.Error with an error code and message.
+                alert('Failed to create new object, with error code: ' + error.message);
+            }
+        });
+
+
+    */
+
 
 }); //get newbiz
 
@@ -1373,6 +1605,74 @@ app.get('/apeazzy', function(req, res) {
     res.send(fs.readFileSync('./apeazzy.html'));
 
 });
+
+
+app.get('/getMobileLogin/:user', function(req, res) {
+
+    var user = JSON.parse(req.param('user'));
+
+    console.log(req.param('user') + "  user  ");
+
+    var getby = function(table, terms, ops, calli) {
+
+            return function(db) {
+
+                db.collection(table).find(terms).toArray(function(err, docs) {
+
+                    calli(docs, err);
+
+                });
+
+            }
+
+        } //getby
+
+    mongogetdb(
+
+        getby('mobileUsers', { username: user.username }, { bcryptPassword: 0 }, function(docs, err) {
+
+            if (docs.length > 0) {
+
+                bcrypt.compare(user.password, docs[0]['bcryptPassword'], function(err, bres) {
+
+                    if (bres) {
+
+                        res.json({
+
+                            user: docs[0],
+                            err: err
+
+                        });
+
+                    } else {
+
+                        res.json({
+
+                            msg: 'wrong password',
+                            err: err
+
+                        });
+
+                    }
+
+                });
+
+            } else {
+
+                res.json({
+
+                    msg: 'no user with that email',
+                    err: err
+
+                });
+
+            }
+
+        })
+
+    );
+
+}); //getMobileLogin
 
 
 app.get('/getlogin/:user', function(req, res) {
@@ -1439,42 +1739,6 @@ app.get('/getlogin/:user', function(req, res) {
         })
 
     );
-
-
-    /*
-
-    var Biz = Parse.Object.extend("Business");
-
-    var Business = new Biz();
-
-    biob.hours_json = JSON.stringify( biob.hours_json );
-    console.log(biob.geo+" this is geo ");
-    var prelo = biob.geo ;
-
-    biob.geo = new Parse.GeoPoint(
-
-      {latitude: parseFloat( prelo.lat ), longitude: parseFloat( prelo.lng ) }
-
-      );
-
-    Business.save(biob, {
-      success: function(Business) {
-        // Execute any logic that should take place after the object is saved.
-        
-
-        alert('New object created with objectId: ' + Business.id);
-      res.json(Business);
-      },
-      error: function(Business, error) {
-        // Execute any logic that should take place if the save fails.
-        // error is a Parse.Error with an error code and message.
-        alert('Failed to create new object, with error code: ' + error.message);
-      }
-    });
-
-
-
-    */
 
 }); //getlogin
 
@@ -1598,27 +1862,16 @@ app.get('/biggeoset', function(req, res) {
 
 app.get('/getzines', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    var cuis = Parse.Object.extend("Cuisines");
+    mongoMsg(getbySort('Cuisines', {}, {}, { name: 1 },
 
-    var query = new Parse.Query(cuis);
+        function(msg) {
 
-    query.ascending('name');
+            res.json(msg.docs);
 
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
+        }));
 
 }); //getzines
 
@@ -2517,172 +2770,40 @@ app.get('/setfarmvis/:buy_id/:value', function(req, res) {
 
     }
 
+    mongoMsg(getby('BuysFrom', { "_id": new ObjectId(buy_id) }, {}, function(msg) {
 
-    //query.equalTo('objectId', req.params.buy_id   );
+        console.log(msg.docs)
 
-    query.get(buy_id, {
+        fndbuys = msg.docs
 
-        success: function(fndbuys) {
+        console.log(fndbuys.length + " :: find buys length");
 
-            console.log(fndbuys.length + " :: find buys length");
+        if (fndbuys.length > 0) {
 
-            if (fndbuys.length > 0) {
+            console.log(JSON.stringify(fndbuys[0]) + " :: find buys at hide 1");
 
-                console.log(JSON.stringify(fndbuys[0]) + " :: find buys at hide 1");
+            fndbuys[0]["hide"] = value;
+            //fndbuys[0].hide = value;
+            console.log(fndbuys[0]['hide'] + " :: find buys at hide 2");
 
-                fndbuys[0].set("hide", value);
-                //fndbuys[0].hide = value;
-                console.log(fndbuys[0].get('hide') + " :: find buys at hide 2");
+            updateDocumentbyid(msg.db, "BuysFrom", fndbuys[0]._id, fndbuys[0], function(result, err) {
 
+                res.json({ stuff: result, msg: "Farm updated!" });
 
-                fndbuys[0].save(null, { useMasterKey: true }).then(function() {
-                    // If I choose to do something else here, it won't be using
-                    // the master key and I'll be subject to ordinary security measures.
-                    res.json(setres(msg, buys));
+            });
 
-                }, function(error) {
+        } else {
 
-                    console.log('buys rel not updated');
+            res.json(setres('update this farm before you make it private', null));
 
-                    res.json(setres("farm not updated  " + JSON.stringify(error), fndbuys[0]));
-
-
-                });
-
-
-                /*fndbuys[0].save({null,{useMasterKey : true}, {
-
-                    success: function(buys){
-                        // Execute any logic that should take place after the object is saved.
-                        res.json(setres(msg, buys));
-
-                    },
-
-                    error: function(buys, error){
-
-                        console.log('buys rel not updated');
-
-                        res.json(setres("farm not updated  " + JSON.stringify(error) , fndbuys[0]));
-
-                    }
-
-                });
-*/
-
-
-            } else {
-
-                res.json(setres('update this farm before you make it private', null));
-
-            }
-
-
-        },
-        error: function(error) {
-
-            res.json(setres(JSON.stringify(error), null));
-
-            alert("Error when getting objects!");
         }
 
+    })); // getby
 
-    });
 
 }); //getusers
 
 
-/*
-app.get('/setfarmvis/:fid/:bid/:value', function(req, res) {
-    //HZL12APiR3/2LGuAOwamN/true
-    var buys = Parse.Object.extend("BuysFrom");
-
-    console.log("bid " + req.params.bid);
-
-    var query = new Parse.Query("BuysFrom");
-
-    var msg = "farm is now public";
-
-    var bid = req.params.bid;
-    var fid = req.params.fid;
-
-    console.log("setfarmvisval" + req.params.value);
-
-    var value = (req.params.value === 'true');
-    console.log(req.params.value + "value" + (req.params.value === 'true') );
-
-    if (value === true) {
-
-        msg = "farm is now private";
-
-    }
-
-    var terms = { 'farm.objectId':fid , 'Business.objectId':bid };
-
-    var Biz = Parse.Object.extend("Business");
-    var Farm = Parse.Object.extend("Farm");
-    var biz = new Biz();
-
-    biz.set('objectId', bid);
-
-    var farm = new Farm();
-    farm.set('objectId', fid);
-
-    query.equalTo('farm', farm);
-    query.equalTo('business', biz);
-
-    query.find({
-
-        success: function(fndbuys){
-
-
-            console.log(fndbuys.length + " :: find buys length");
-
-            if (fndbuys.length > 0) {
-
-                console.log( JSON.stringify( fndbuys[0] ) + " :: find buys at hide 1");
-
-                fndbuys[0].set("hide", value);
-                //fndbuys[0].hide = value;
-                console.log(fndbuys[0].get('hide') + " :: find buys at hide 2");
-
-                fndbuys[0].save({ hide: value }, {
-
-                    success: function(buys){
-                        // Execute any logic that should take place after the object is saved.
-                        res.json(setres(msg, buys));
-
-                    },
-
-                    error: function(buys, error){
-
-                        console.log('buys rel not updated');
-
-                        res.json(setres("farm not updated  " + JSON.stringify(error) , fndbuys[0]));
-
-                    }
-
-                });
-
-            } else {
-
-                res.json(setres('update this farm before you make it private', null));
-
-            }
-
-
-        },
-        error: function(error) {
-
-            res.json(setres('error farm not set', null));
-
-            alert("Error when getting objects!");
-        }
-
-
-    });
-
-}); //getusers
-*/
 function setres(msg, stuff) {
 
     return { 'msg': msg, 'stuff': stuff };
@@ -2802,100 +2923,105 @@ app.get('/getlinked/:email', function(req, res) {
 
 //getfabyname
 
+
+app.get('/widgPage', function(req, res) {
+    res.set('Content-Type', 'text/html');
+    res.send(fs.readFileSync('./Widgpage.html'));
+});
+
+
 app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
     // ne45W7MzvZ/2LGuAOwamN
 
-
-    var widgPageUrl = "http://business.greenease.co/Widgpage.html";
 
     var email = req.param('email');
     var bid = req.param('bid');
     var pic = req.param('pic');
 
     var User = Parse.Object.extend("User");
+
     var query = new Parse.Query(User);
+
     Parse.Cloud.useMasterKey();
+
     query.equalTo('email', email);
-    query.find({
-        success: function(fndUsers) {
-            console.log(JSON.stringify(fndUsers));
 
-            if (fndUsers.length > 0) {
+    var term = req.param('term');
 
-                var paiddate = fndUsers[0].get('paiddate');
-                var txn_info = fndUsers[0].get('txn_info');
+    var userTerms = { email: email };
 
-                console.log("  paiddate  " + paiddate);
-                console.log(" txn" + txn_info);
-                if (paid(paiddate)) {
+    console.log("@userTerms :: " + JSON.stringify(userTerms))
 
-                    cklink(fndUsers[0]);
+    mongoMsg(getby('User', userTerms, {}, function(msg) {
 
-                } else {
+        fndUsers = msg.docs
+        console.log(JSON.stringify(fndUsers));
 
-                    console.log(req.params + "  no pay ");
+        if (fndUsers.length > 0) {
 
-                    res.send(" ");
+            var paiddate = fndUsers[0]['paiddate'];
+            var txn_info = fndUsers[0]['txn_info'];
 
-                }
+            console.log("  paiddate  " + paiddate);
+
+            console.log(" txn" + txn_info);
+
+            if (paid(paiddate) || email.toLowerCase() == 'vanessa@greenease.co' || email.toLowerCase() == 'vferragut@msn.com' || email == 'isethguy@gmail.com') {
+
+                cklink(fndUsers[0]);
 
             } else {
 
-                console.log("no users");
+                console.log(req.params + "  no pay ");
+
+                res.send(" ");
+
+            }
+
+        } else {
+
+            console.log("no users");
+
+            res.send("");
+
+        } //if found users 
+
+    })); // getby
+
+
+    function cklink(user) {
+
+        console.log("at cklink  user id is" + user._id);
+
+        console.log("this is bid in ck link :: " + bid);
+
+        bizTerms = { bid: bid }
+
+        mongoMsg(getby('userbusiness', bizTerms, {}, function(msg) {
+            fndlinks = msg.docs;
+
+            if (fndlinks.length > 0 || email.toLowerCase() == 'vanessa@greenease.co' || email.toLowerCase() == 'vferragut@msn.com' || email == 'isethguy@gmail.com') {
+
+                var widstring = "<iframe src=\"" + widgPageUrl + "?" + user._id + "/" + bid + "/" + pic + "\" width=\"600\" height=\"672\" scrolling=\"no\" frameBorder=\"0\"></iframe>";
+                console.log("widstring ::    " + widstring);
+                res.send(widstring);
+
+            } else {
 
                 res.send("");
 
-            } //if found users 
+                console.log("no links between this user and business ");
 
-
-        },
-        error: function(error) {
-            alert(JSON.stringify(error));
-        }
-    });
-
-    function cklink(user) {
-        console.log("at cklink  user id is" + user.id);
-
-        var usrbiz = Parse.Object.extend("userbusiness");
-        var query = new Parse.Query(usrbiz);
-        Parse.Cloud.useMasterKey();
-        query.equalTo('uid', user.id);
-
-        console.log("this is bid in ck link :: " + bid);
-        query.equalTo('bid', bid);
-
-        query.find({
-            success: function(fndlinks) {
-
-                if (fndlinks.length > 0) {
-
-                    var widstring = "<iframe src=\"" + widgPageUrl + "?" + user.id + "/" + bid + "/" + pic + "\" width=\"600\" height=\"672\" scrolling=\"no\" frameBorder=\"0\"></iframe>";
-                    console.log("widstring ::    " + widstring);
-                    res.send(widstring);
-
-
-                } else {
-
-
-                    res.send("");
-
-                    console.log("no links between this user and business ");
-
-                }
-
-            },
-            error: function(error) {
-                alert("Error when getting objects!");
             }
-        });
+
+        }));
 
     } //cklink 
 
 
     function paid(paiddate) {
 
-        var pn = paiddate.getTime();
+        var pn = new Date(paiddate.iso).getTime();
 
         var nd = new Date();
 
@@ -2913,53 +3039,15 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
 app.get('/getfabyname/:term', function(req, res) {
     var term = req.param('term');
 
-    var currentUser = Parse.User.current();
-    console.log(" sethtest s: " + Parse.User.current() + "+");
+    var farmTerms = { removed: { $ne: true }, 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }; //{ 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
 
-    if (currentUser != null) {
+    console.log("@farmTerms :: " + JSON.stringify(farmTerms))
 
-        console.log(" here it is");
+    mongoMsg(getby('Farm', farmTerms, {}, function(msg) {
 
-    }
+        res.json(msg.docs);
 
-    var myclass = Parse.Object.extend("Farm");
-    var query = new Parse.Query(myclass);
-
-    Parse.Cloud.useMasterKey();
-    query.contains('loname', term.toLowerCase());
-
-    query.limit(200);
-    query.find({
-        success: function(results) {
-
-            //
-            // 
-            /*
-
-            var matches  = [];
-
-            for (var i = 0; i < results.length; i++) {
-             var fa =  results[i];
-
-            if(fa.get("name").toLowerCase().indexOf(term.toLowerCase()) > - 1 ){
-
-            matches.push(fa);
-
-            }// search
-
-            };//f loop
-            */
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-
-
-    });
-
-    console.log(query.toJSON());
+    })); // getby
 
 }); // crm user for email
 
@@ -3065,7 +3153,6 @@ app.get('/newuserbusiness/:bid/:email', function(req, res) {
                                 }
                             }); // save urell 
 
-
                         } /// lnked = false check
 
                     }; ///urel loop
@@ -3077,9 +3164,7 @@ app.get('/newuserbusiness/:bid/:email', function(req, res) {
                 // The request failed
             }
 
-
         }); // user biz query
-
 
     }, function(error) {
 
@@ -3090,6 +3175,7 @@ app.get('/newuserbusiness/:bid/:email', function(req, res) {
 
     ///////////////////////////////////////////////////////
     function makeuserbiz(bid, email) {
+
         var business = Parse.Object.extend("Business");
         var biz = new business();
         biz.set('objectId', bid);
@@ -3209,84 +3295,74 @@ app.get('/catsearch', function(req, res) {
 
     var raw = req.param('catray');
 
+    var latlng = req.param('latlng');
+
+    var mpos = JSON.parse(latlng);
+
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [mpos.lng, mpos.lat] },
+                $maxDistance: (1609.34) * 10
+            }
+        }
+    }
+
     var cats = JSON.parse(raw);
 
-    var queries = [];
-    var cq = new Parse.Query("Business");
     for (var i = 0; i < cats.length; i++) {
         var tc = cats[i];
-
         console.log("catname" + tc.name);
-
-        cq.equalTo(tc.name, true);
-
-        //cq.equalTo('removed',false);
-        //queries.push(cq);
-
+        query[tc.name] = true;
     }; // cat loop
 
-    var lat = 38.9051486;
-    var lng = -76.9995255;
+    console.log('query :', query);
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
+    mongoMsg(getby('Business', query, {}, function(msg) {
 
-    cq.withinMiles('geo', point, 10);
+        res.json(msg.docs);
 
+    })); // getby
 
-    cq.near("geo", point);
-
-    //var mainQuery = Parse.Query.or.apply(this, queries);
-
-    cq.find({
-        success: function(results) {
-
-            console.log('catsaerch query   ' + JSON.stringify(cq.toJSON()));
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error: " + error.code + " " + error.message);
-        }
-    }); //main query
 
 }); //catsearch
 
 
 app.get('/getnear/:lat/:lng', function(req, res) {
 
-
     var lat = req.param('lat');
     var lng = req.param('lng');
-    Parse.Cloud.useMasterKey();
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 5
+            }
+        }
+    }
 
+    console.log('query :', query);
 
-    var query = new Parse.Query("Business");
+    mongoMsg(getby('Business', query, {}, function(msg) {
 
-    //query.withinMiles( 'geo' , point, 50 ); 
+        // if(msg.err) res.json(msg.err);
 
-    // Interested in locations near user.
-    query.near("geo", point);
-    // Limit what could be a lot of points.
-    query.limit(100);
+        var back = {};
+        back.top = { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] };
 
-    // Final list of objects
-    query.find({
-        success: function(po) {
-            var back = {};
-            back.top = point;
-
-            back.ray = [];
-
+        back.ray = [];
+        if (msg.docs) {
+            var po = msg.docs;
 
             for (var i = 0; i < po.length; i++) {
                 var p = po[i];
 
-                var geo = p.get('geo');
-                var num = geo.milesTo(point)
-                console.log(num + "     " + p.get('business'));
+                var geo = p['geoPoint'];
+
+                var meters = geolib.getDistance({ latitude: parseFloat(lat), longitude: parseFloat(lng) }, { latitude: geo.coordinates[1], longitude: geo.coordinates[0] });
+
+                var num = meters / (1609.34);
                 var thing = {};
 
                 thing.num = num;
@@ -3294,22 +3370,15 @@ app.get('/getnear/:lat/:lng', function(req, res) {
                 //thing.geo = geo;
                 //thing.address = p.get('address');
 
-                console.log(JSON.stringify(thing));
-
                 back.ray.push(thing)
 
             };
-
-
-            res.json(back);
-        },
-        error: function(user, error) {
-            res.json("no log");
-
-            // The login failed. Check error to see why.
         }
-    });
+        res.json(back);
 
+    })); // getby
+
+    // Final list of objects
 
 });
 
@@ -3462,7 +3531,7 @@ app.get('/setgeo', function(req, res) {
 
 app.get('/fasearch/:term', function(req, res) {
 
-    var farmTerms = { 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
+    var farmTerms = { removed: { $ne: true }, 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
 
     console.log("@farmTerms :: " + JSON.stringify(farmTerms))
 
@@ -3532,32 +3601,22 @@ app.get('/getclosehoods/:lat/:lng', function(req, res) {
     var lat = req.param('lat');
     var lng = req.param('lng');
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var myclass = Parse.Object.extend("neighborhood");
-    var query = new Parse.Query(myclass);
-
-    Parse.Cloud.useMasterKey();
-    query.limit(100);
-
-    query.withinMiles('geo', point, 30);
-
-    query.near("geo", point);
-
-    query.ascending('name');
-
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 30
+            }
         }
-    });
+    }
 
-    console.log(query.toJSON());
+    mongoMsg(getbySort('neighborhood', query, {}, { name: 1 },
+
+        function(msg) {
+
+            res.json(msg.docs);
+
+        }));
 
 }); // get close hoods
 
@@ -3570,30 +3629,22 @@ app.get('/getbibypoint/:lat/:lng/:dist', function(req, res) {
     var lat = req.param('lat');
     var lng = req.param('lng');
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-
-    Parse.Cloud.useMasterKey();
-    query.limit(100);
-
-    query.withinMiles('geo', point, req.params.dist);
-
-    query.near("geo", point);
-
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * parseFloat(req.params.dist)
+            }
         }
-    });
+    }
 
-    console.log(query.toJSON());
+    mongoMsg(getbySort('Business', query, {}, { name: 1 },
+
+        function(msg) {
+
+            res.json(msg.docs);
+
+        }));
 
 }); // get biby point 
 
@@ -3606,30 +3657,22 @@ app.get('/getbibypoint/:lat/:lng', function(req, res) {
     var lat = req.param('lat');
     var lng = req.param('lng');
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-
-    Parse.Cloud.useMasterKey();
-    query.limit(100);
-
-    query.withinMiles('geo', point, 30);
-
-    query.near("geo", point);
-
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 30
+            }
         }
-    });
+    }
 
-    console.log(query.toJSON());
+    mongoMsg(getbySort('Business', query, {}, { name: 1 },
+
+        function(msg) {
+
+            res.json(msg.docs);
+
+        }));
 
 }); // get biby point 
 
@@ -3641,32 +3684,26 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
     var lat = req.param('lat');
     var lng = req.param('lng');
 
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-
-    Parse.Cloud.useMasterKey();
-    query.limit(300);
-
-    query.withinMiles('geo', point, 30);
-
-    query.near("geo", point);
-
-    query.ascending('business');
-
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 30
+            }
         }
-    });
+    }
 
-    console.log(query.toJSON());
+    console.log('query :', query);
+
+    // var getbySort = function(table, terms, ops, sort, calli) {
+
+    mongoMsg(getbySort('Business', query, {}, { business: 1 },
+
+        function(msg) {
+
+            res.json(msg.docs);
+
+        }));
 
 }); // get close hoods
 
@@ -3762,46 +3799,32 @@ app.get('/facepost/:token/:msg', function(req, res) {
 }); // facepost
 
 
-app.get('/getbibycuisine/:cterm', function(req, res) {
+app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
 
     var cterm = req.params.cterm;
+    var lat = req.params.lat;
+    var lng = req.params.lng;
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-
-    query.limit(100);
-
-    query.ascending('business');
-
-    query.equalTo('cuisine', cterm);
-
-    var lat = 38.9051486;
-    var lng = -76.9995255;
-
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    query.near("geo", point);
-
-    query.find({
-
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-
-            alert("Error when getting objects!");
-
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 5
+            }
         }
+    }
 
-    });
+    query.cuisine = cterm;
 
-    console.log(query.toJSON());
+    mongoMsg(getbySort('Business', query, {}, { name: 1 }, function(msg) {
+
+        res.json(msg.docs);
+
+    }))
+
 
 }); //"/getbusiness"
 
@@ -3848,6 +3871,7 @@ app.get('/ckses/:ses/:id', function(req, res) {
 
     var id = req.params.id;
 
+
     var mongoget = function(table, terms, ops, calli) {
 
             return function(db) {
@@ -3863,7 +3887,7 @@ app.get('/ckses/:ses/:id', function(req, res) {
         } //getby
 
 
-    mongogetdb(mongoget('User', { sessionToken: ses, objectId: id }, { bcryptPassword: 0 }, function(docs, err) {
+    mongogetdb(mongoget('User', { sessionToken: ses, "_id": new ObjectId(id) }, { bcryptPassword: 0 }, function(docs, err) {
 
         var fnduser = docs[0];
 
@@ -4025,7 +4049,10 @@ app.get('/ulog/:email/:pass', function(req, res) {
 app.post('/gipnl2', function(req, res) {
     //alert(req.query.bid);
 
-    console.log("next:" + JSON.stringify(req.body));
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    console.log("next: :: " + JSON.stringify(req.body));
 
     var txn_type = req.body.txn_type;
 
@@ -4040,7 +4067,6 @@ app.post('/gipnl2', function(req, res) {
     var receiver_email = req.body.receiver_email;
     var subscr_id = req.body.subscr_id;
 
-
     //var uid = item_name.replace("Greenease_Widget_","");
     var item_name = req.body.item_name;
 
@@ -4053,11 +4079,9 @@ app.post('/gipnl2', function(req, res) {
 
     req.body.cmd = "_notify-validate";
 
-    Parse.Cloud.httpRequest({
-        method: 'POST',
-        url: 'https://www.paypal.com/cgi-bin/webscr',
-        body: req.body
-    }).then(function(httpResponse) {
+    var urlstring = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+
+    request.post({ url: urlstring, form: req.body }, function(err, httpResponse, body) {
 
         console.log(" post res " + httpResponse.text);
 
@@ -4065,74 +4089,36 @@ app.post('/gipnl2', function(req, res) {
 
         if (word === "VERIFIED") {
 
-            Parse.Cloud.useMasterKey();
-            var User = Parse.Object.extend("User");
+            mongoMsg(getby('User', { verified: { _id: new ObjectId(uid) } }, {}, function(msg) {
 
-            var query = new Parse.Query(User);
+                fnduser["paiddate"] = new Date();
 
-            query.get(uid, {
-                success: function(fnduser) {
+                fnduser["txn_info"] = { 'date': new Date(), 'txn_id': txn_id, 'payer_email': payer_email };
 
-                    fnduser.set("paiddate", new Date());
-                    fnduser.set("txn_info", JSON.stringify({ 'date': new Date(), 'txn_id': txn_id, 'payer_email': payer_email }));
+                idToPlace = fnduser._id;
 
-                    fnduser.save();
+                delete fnduser._id;
 
-                    res.end("");
-                    // The object was retrieved successfully.
-                },
-                error: function(object, error) {
-                    console.error(error);
+                updateDocumentbyid(msg.db, '', idToPlace, fnduser, function() {
 
-                    //res.error(error.message);
+                    //res.end("");
 
-                    // The object was not retrieved successfully.
-                    // error is a Parse.Error with an error code and message.
-                }
-            });
+                    res.json('VERIFIED');
 
+                });
 
-        } //
+            })); // getby
+
+        } // VERIFIED
 
         if (word === "INVALID") {
 
-
             console.log("wrong :: " + httpResponse.text);
-            res.end("");
+            res.json("INVALID");
 
         } //
 
-
-    }, function(httpResponse) {
-
-        console.error('Request failed with response code ' + httpResponse.status);
-        console.log("error2");
-        res.end("");
-    });
-
-
-    /*
-    if( item_name.indexOf("Greenease_Widget_") > -1  ){
-
-                res.json(myResults);
-
-
-
-    }else{
-
-
-
-
-    }
-
-    */
-    // console.log("bid is "+item_name);
-
-    // console.log("bid is +"+bid+"+");
-
-
-    //Parse.Cloud.useMasterKey();
-
+    })
 
 }); //gipnl 2 
 
@@ -4295,7 +4281,8 @@ app.get('/purhis2/:bid/:sort', function(req, res) {
     var sorter = JSON.parse(req.params.sort);
 
     var terms = {};
-    terms[sorter.by] = sorter.di == 0 ? 1 : -1
+
+    terms[sorter.by] = (sorter.di == 0) ? 1 : -1
 
 
     var purhisTerms = { 'business._id': bid };
@@ -4360,231 +4347,242 @@ app.get('/purhis2/:bid/:sort', function(req, res) {
 }); // purhis table pull
 
 
-app.get('/getFarms', function(req, res) {
-    //alert(req.query.bid);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+app.get('/getFarms/:bid', function(req, res) {
 
-    var a = req.query.bid;
+    //console.log(req.params.bid+" getfarms/:bid . bid");
 
-    var BuysFrom = Parse.Object.extend("BuysFrom");
+    var terms = { 'business._id': req.params.bid };
 
-    var Business = Parse.Object.extend("Business");
-    // Create a new instance of that class.
-    var business = new Business();
-    business.id = a;
+    mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
-    console.log("Farm: ");
+        //console.log( JSON.stringify(msg.docs)+"at getfarms/:bid mbuys with bid")
 
-    console.log(JSON.stringify(business) + " buys from bus");
+        var buys = msg.docs;
+        var farm_id_ray = [];
 
-    var clear = true;
+        for (var i = 0; i < buys.length; i++) {
+            var fa = buys[i].farm;
 
-    if (clear) {
+            //farm_id_ray.push( new ObjectId( fa._id )  );
 
-        var buysFromQuery = new Parse.Query(BuysFrom);
-        buysFromQuery.equalTo("business", business);
-        // buysFromQuery.equalTo("business", business );
-        buysFromQuery.include("farm");
-        buysFromQuery.limit(1000);
-        buysFromQuery.find({
+            farm_id_ray.push(new ObjectId(fa._id));
 
-            success: function(farms) {
-                console.log("howdy");
-                //console.log(farms);
-                var toReturn = [];
+        };
 
-                for (var i = 0; i < farms.length; i++) {
-                    // This does not require a network access.
+        //        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
 
-                    var theFarm = farms[i].get("farm");
+        var farmterms = { '_id': { $in: farm_id_ray } };
 
-                    if (theFarm != null) {
+        getby('Farm', farmterms, {}, function(msg) {
 
-                        //console.log("thefarm"+theFarm.name+"thefarm.id"+theFarm.id);
-                        var post = {
+            //console.log(JSON.stringify(msg.docs)+"at getfarms/:bid farms")
 
-                            meat: farms[i].get("meat"),
-                            dairy: farms[i].get("dairy"),
-                            seafood: farms[i].get("seafood"),
-                            produce: farms[i].get("produce"),
-                            farm: { name: theFarm.get("name"), state_code: theFarm.get("state_code") },
-                            ob: theFarm,
-                            buys: farms[i]
+            var farms = msg.docs;
 
-                        };
+            var toReturn = [];
 
-                        toReturn.push(post);
-                    } // null farm check
+            for (var i = 0; i < buys.length; i++) {
+                // This does not require a network access.
 
-                    // console.log(post);
+                var theFarm = null;
+
+                for (var j = 0; j < farms.length; j++) {
+
+                    var fa = farms[j];
+                    if (fa.objectId == buys[i].farm.objectId) {
+                        theFarm = fa;
+                    }
+
                 }
-                var myResults = { result: toReturn };
-                // var longStuff = '{"result":[{"ACL":{"*":{"read":true,"write":true}},"__type":"Object","business":{"__type":"Pointer","className":"Business","objectId":"9e7rzwV6eY"},"className":"BuysFrom","createdAt":"2015-02-24T04:10:34.271Z","farm":{"__type":"Object","category":"Meats","category_meat":true,"className":"Farm","createdAt":"2014-12-29T15:29:28.964Z","name":"Red Row Farm ","objectId":"Hjc93gb8Mw","products":"Chicken Eggs","state":"Virginia","state_code":"VA","updatedAt":"2015-01-14T19:20:25.283Z","website":"http://redrowfarm.com"},"meat":true,"objectId":"YbeB8jRUNm","updatedAt":"2015-02-24T04:10:39.298Z"}';
-                res.json(myResults);
-                //response.success(farms);
-            },
-            error: function(error) {
-                res.error(error.message);
+
+                if (theFarm != null) {
+
+                    //console.log("thefarm"+theFarm.name+"thefarm.id"+theFarm.id);
+                    var post = {
+
+                        meat: buys[i].meat,
+                        dairy: buys[i].dairy,
+                        seafood: buys[i].seafood,
+                        produce: buys[i].produce,
+                        farm: { name: theFarm.name, state_code: theFarm.state_code },
+                        ob: theFarm,
+                        buys: buys[i]
+
+                    };
+
+                    toReturn.push(post);
+                } // null farm check
+
+                // console.log(post);
             }
-        });
+            var myResults = { result: toReturn };
+
+            res.status(200).send(myResults);
+
+        })(msg);
 
 
-    } //if clear
+    }));
 
 
-}); // app.getfarms
+}); //getFarms/:bid
 
 
 app.get('/showFarms/:uid/:bid', function(req, res) {
-    //alert(req.query.bid);
+
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
 
     var uid = req.param('uid');
     var bid = req.param('bid');
 
-    var usrbiz = Parse.Object.extend("userbusiness");
     console.log(uid + "    " + bid);
-    var ubizq = new Parse.Query("userbusiness");
 
-    ubizq.equalTo('uid', uid);
+    var userbusinessTerms = { uid: uid, bid: bid };
 
-    ubizq.equalTo('bid', bid);
+    mongoMsg(getby('userbusiness', userbusinessTerms, {}, function(msg) {
 
+        var links = msg.docs;
 
-    //ubizq.include("User");
+        //links.length > 0 || (req.param('uid') == 'Aup1bxd3il') || req.param('uid') == 'ne45W7MzvZ'
 
-    ubizq.find({
-        success: function(links) {
-            console.log("link count" + links.length);
-
-            if (links.length > 0) {
-
-                var uid = links[0].get('uid');
-
-                //var user = links[0].get('User');
-
-                console.log("this is user   :::  " + uid);
-
-                var users = Parse.Object.extend("User");
-
-                var ufind = new Parse.Query(users);
-                Parse.Cloud.useMasterKey();
-
-                ufind.get(uid, {
-                    success: function(user) {
-
-                        var paid = user.get('paiddate');
-
-                        console.log("here at get paid date" + JSON.stringify(paid));
-
-                        //console.log(user.get('))
-
-                        if (user) {
-
-                            var today = new Date();
-
-                            var millis = 2629743833;
-
-                            var tm = today.getTime();
-
-                            var um = paid.getTime();
-
-                            var diff = Math.abs(tm - um);
-
-                            console.log(" diff in time between paid date and right now  " + diff);
-
-                            if (diff < millis) {
-
-                                var BuysFrom = Parse.Object.extend("BuysFrom");
-                                var Business = Parse.Object.extend("Business");
-
-                                var business = new Business();
-                                business.id = bid;
-
-                                var buysFromQuery = new Parse.Query(BuysFrom);
-                                buysFromQuery.equalTo("business", business);
-                                buysFromQuery.include("farm");
-                                buysFromQuery.find({
-                                    success: function(farms) {
-                                        console.log("howdy");
-                                        //console.log(farms);
-                                        var toReturn = [];
-
-                                        for (var i = 0; i < farms.length; i++) {
-                                            // This does not require a network access.
-
-                                            var theFarm = farms[i].get("farm");
-
-                                            if (theFarm != null && farms[i].hide !== true) {
-
-                                                //console.log("thefarm"+theFarm.name+"thefarm.id"+theFarm.id);
-                                                var post = {
-
-                                                    meat: farms[i].get("meat"),
-                                                    dairy: farms[i].get("dairy"),
-                                                    seafood: farms[i].get("seafood"),
-                                                    produce: farms[i].get("produce"),
-                                                    farm: { name: theFarm.get("name"), state_code: theFarm.get("state_code") },
-                                                    ob: theFarm,
-                                                    buys: farms[i]
-
-                                                };
-
-                                                toReturn.push(post);
-                                            } // null farm check
-
-                                            // console.log(post);
-                                        }
-                                        var myResults = toReturn;
-                                        // var longStuff = '{"result":[{"ACL":{"*":{"read":true,"write":true}},"__type":"Object","business":{"__type":"Pointer","className":"Business","objectId":"9e7rzwV6eY"},"className":"BuysFrom","createdAt":"2015-02-24T04:10:34.271Z","farm":{"__type":"Object","category":"Meats","category_meat":true,"className":"Farm","createdAt":"2014-12-29T15:29:28.964Z","name":"Red Row Farm ","objectId":"Hjc93gb8Mw","products":"Chicken Eggs","state":"Virginia","state_code":"VA","updatedAt":"2015-01-14T19:20:25.283Z","website":"http://redrowfarm.com"},"meat":true,"objectId":"YbeB8jRUNm","updatedAt":"2015-02-24T04:10:39.298Z"}';
-                                        res.json({ 'result': myResults });
-                                        //response.success(farms);
-                                    },
-                                    error: function(error) {
-                                        res.error(error.message);
-                                    }
-                                });
-
-                            } else {
+        if (true) {
 
 
-                                res.json({ 'result': [] });
+            userTerms = { '_id': new ObjectId(uid) }
+
+            getby('User', userTerms, {}, function(msg) {
+
+                user = msg.docs[0];
+
+                var paid = user['paiddate'];
+
+                var email = user['email'];
+
+                console.log("here at get paid date" + JSON.stringify(paid));
+
+                //console.log(user.get('))
+
+                if ((user && paid) || ADMINEMAIL(email)) {
 
 
-                            } // if paid 
+                    var today = new Date();
 
+                    var millis = 2629743833;
 
-                        } else {
+                    var tm = today.getTime();
 
+                    var um = 2629743833 + 1;
 
-                            res.json({ 'result': [] });
+                    var diff = Math.abs(tm - um);
 
+                    if (paid) {
 
-                        } //if user
+                        um = new Date(paid.iso).getTime();
 
-                    }, // end of ufind success
-                    error: function(object, error) {
-                        res.send(error.message);
+                        diff = Math.abs(tm - um);
                     }
-                }); // of ufind.get
+                    console.log(" diff in time between paid date and right now  " + diff);
+
+                    if ((diff < millis) || ADMINEMAIL(email)) {
+
+                        BuysFromTerms = { 'business._id': bid };
+
+                        getby('BuysFrom', BuysFromTerms, {}, function(msg) {
+
+                            //console.log( JSON.stringify(msg.docs)+"at getfarms/:bid mbuys with bid")
+
+                            var buys = msg.docs;
+                            var farm_id_ray = [];
+
+                            for (var i = 0; i < buys.length; i++) {
+                                var fa = buys[i].farm;
+
+                                //farm_id_ray.push( new ObjectId( fa._id )  );
+
+                                farm_id_ray.push(new ObjectId(fa._id));
+
+                            };
+
+                            //        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
+
+                            var farmterms = { '_id': { $in: farm_id_ray } };
+
+                            getby('Farm', farmterms, {}, function(msg) {
+
+                                //console.log(JSON.stringify(msg.docs)+"at getfarms/:bid farms")
+
+                                var farms = msg.docs;
+
+                                var toReturn = [];
+
+                                for (var i = 0; i < buys.length; i++) {
+                                    // This does not require a network access.
+
+                                    var theFarm = null;
+
+                                    for (var j = 0; j < farms.length; j++) {
+
+                                        var fa = farms[j];
+                                        if (fa.objectId == buys[i].farm.objectId) {
+                                            theFarm = fa;
+                                        }
+
+                                    }
+
+                                    if (theFarm != null) {
+
+                                        //console.log("thefarm"+theFarm.name+"thefarm.id"+theFarm.id);
+                                        var post = {
+
+                                            meat: buys[i].meat,
+                                            dairy: buys[i].dairy,
+                                            seafood: buys[i].seafood,
+                                            produce: buys[i].produce,
+                                            farm: { name: theFarm.name, state_code: theFarm.state_code },
+                                            ob: theFarm,
+                                            buys: buys[i]
+
+                                        };
+
+                                        toReturn.push(post);
+                                    } // null farm check
+
+                                    // console.log(post);
+                                }
+                                var myResults = { result: toReturn };
+
+                                res.status(200).send(myResults);
+
+                            })(msg);
 
 
-            } // if there are links and paid show farms
+                        })(msg);
 
 
-            // end of first query success
-        },
-        error: function(error) {
-            res.error(error.message);
+                    }
+
+
+                }
+
+
+            })(msg)
+
+
         }
-    });
+
+
+    }));
 
 
 }); // show farms method for widget view
 
+
+var ADMINEMAIL = function(email) {
+
+    return email == 'vanessa@greenease.co' || email == 'vanessa@vferragut@msn.com' || email == 'isethguy@gmail.com'
+
+}
 
 app.get('/biz_home', function(req, res) {
     var currentUser = Parse.User.current();
@@ -5792,7 +5790,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
     console.log(req.param('bid') + "   prolist  " + req.param('fid'));
 
-    var terms = { 'business._id' :  req.params.bid , 'farm._id' : req.params.fid  };
+    var terms = { 'business._id': req.params.bid, 'farm._id': req.params.fid };
 
     mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
@@ -5830,7 +5828,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
         else {
             console.log("No existing purchase record found - add one");
             // TODO: verify user is adding a purchase record for a farm he/she owns - right now this is handled on the client
-           
+
             //var parseACL = new Parse.ACL();
             //parseACL.setPublicReadAccess(true);
             // parseACL.setPublicWriteAccess(true);
@@ -5840,7 +5838,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
             // buysFrom['ACL'] = parseACL
             buysFrom["business"] = {
-                _id:req.param('bid')
+                _id: req.param('bid')
             };
 
             buysFrom["farm"] = {

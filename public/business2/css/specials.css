@@ -1,0 +1,207 @@
+#specialModal{
+	
+    position: absolute;
+    height: 80%;
+    width: 80%;
+    overflow: hidden;
+    top: 10%;
+    left: 10%;
+    border: 5px solid darkgreen;
+    background-color: white;
+    color: black;
+    z-index: 99;
+    background-image: url("../images/mainBackground.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10px;
+    display: none;
+    font-family: 'Oxygen', sans-serif;
+}
+
+
+#sp-scroll{
+
+position: relative;
+overflow: scroll;
+height: 100%;
+width:100%;
+z-index: 5;
+ font-family: inherit;
+
+
+}
+
+#specialbisearch{
+position: relative;
+	
+
+
+ font-family: inherit;
+
+
+}
+
+
+#spec_asearchcon{ 
+
+   z-index: 10;
+    position: relative;
+    margin: 3% 0;
+    left:0;
+    width: 300px;
+     font-family: inherit;
+
+}
+
+#sp-bi-put{
+position: relative;
+border: 1px solid black;	
+
+height:30px;
+width:300px;
+ font-family: inherit;
+
+
+}
+
+#sp-bi-address{
+position: relative;
+
+
+ font-family: inherit;
+
+
+
+}
+
+#sp-bi-name{
+position: relative;
+ font-family: inherit;
+
+
+}
+
+#sp-bi-title{
+position: relative;
+
+
+height:30px;
+width:300px;
+margin: 1% 0;
+ font-family: inherit;
+
+
+}
+
+#sp-terms{
+position: relative;
+border: 1px solid black;	
+
+height:20%;
+width:500px;
+resize: none;
+background-color: transparent;
+margin: 1% 0;
+
+ font-family: inherit;
+
+}
+
+#sp-image-select{
+position: relative;
+border: 1px solid black;	
+height:20%;
+width:80%;
+margin: 1% 0;
+
+ font-family: inherit;
+
+}
+
+
+.spec_nav{
+
+    position: relative;
+    padding: 5%;
+    background-color: green;
+    color: white;
+    margin: 5% 0%;
+    cursor: pointer;
+
+
+ font-family: inherit;
+
+}
+
+
+.spec_nav-con{
+
+    position: absolute;
+    width: 200px;
+    text-align: left;
+    top: 5%;
+    left: 5%;
+    z-index: 10;
+
+
+ font-family: inherit;
+
+}
+
+.sptd{
+position: relative;
+width: 33%;
+height: 100%;
+padding: 5% 0%;
+
+
+ font-family: inherit;
+
+}
+
+.speImg{
+position: relative;
+width:90%;
+height: 90%;
+
+ font-family: inherit;
+
+}
+
+
+.speImglet{
+
+text-align: center;
+position: relative;
+width: 90%;
+height: 90%;
+left:5%;
+
+ font-family: inherit;
+
+}
+
+
+
+#sp-publish{
+position: relative;
+border: 1px solid black;	
+
+margin: 1% ;
+cursor:pointer;
+
+ font-family: inherit;
+
+}
+
+#sp-save{
+position: relative;
+border: 1px solid black;	
+
+
+margin: 1% ;
+cursor:pointer;
+ font-family: inherit;
+
+}
+

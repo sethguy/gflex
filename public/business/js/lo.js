@@ -9,13 +9,11 @@ var pass = paput.value;
 
 if( email!=null && email.length>0  && pass!=null && pass.length>0  ){
 
-var json = {username:email,password:pass};
-
-var urlstring ="/getlogin/"+encodeURIComponent(  JSON.stringify( json )  );//username="+email+"&password="+pass;
+var urlstring = PARSE_BASE_URL+"login?username="+email+"&password="+pass;
 
 getwithkeys(urlstring,function(stuff){
 
-var user = stuff.user;
+var user = stuff;
 
 loginwithuser(user);
 
@@ -51,9 +49,7 @@ setCookie('user',null,1);
 
 postwithkeys( urlstring , function( stuff ){
 
-alert(JSON.stringify(stuff))
-
-//window.location.reload();
+window.location.reload();
 
 });
 
@@ -62,21 +58,22 @@ alert(JSON.stringify(stuff))
 function loginwithuser(user){
 //starts the show
 
+
 var unot = JSON.stringify(user);
 
-
-console.log('at login with set coook ie'+ unot);
 setCookie('user', unot ,1);
+
 
 get('linkbox').user = user;
 
-get('iname').value = "Greenease_Widget_"+user.objectId;
+get('iname').value = "Greenease_Widget_"+user._id;
 
 var lotab = get('lotab').stprop('display','none');
 
 console.log(JSON.stringify(user));
 
 if(isadmin( user )){
+
 
 if(user.lv===0){
 helpadviews();

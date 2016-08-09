@@ -1,10 +1,10 @@
-var sbos= [
-{'name':'adb','title':'Add Business'},
-{'name':'ebu','title':'Edit Business/User'},
-//{'name':'adu','title':'Greenease CRM'},
-{'name':'adf','title':'Add/Edit Farm'},
-//{'name':'avf','title':'Verify Farm'},
-{'name':'avb','title':'Verify Business'}
+var sbos = [
+    { 'name': 'adb', 'title': 'Add Business' },
+    { 'name': 'ebu', 'title': 'Edit Business/User' },
+    //{'name':'adu','title':'Greenease CRM'},
+    { 'name': 'adf', 'title': 'Add/Edit Farm' },
+    //{'name':'avf','title':'Verify Farm'},
+    { 'name': 'avb', 'title': 'Verify Business' }
 
 ];
 
@@ -13,341 +13,352 @@ addck = [];
 //{'name':'ulink','title':'Link User','view':'ulink'},
 var abfields = [
 
-{'name':'business','title':'Business Name'},
-{'name':'address','title':'Address'},
-{'name':'cuisine','title':'Cuisine'},
-{'name':'phone','title':'Phone Number'},
-{'name':'website','title':'Website'},
-{'name':'linked','title':'Linked User','view':'linkedusers','onlyedit':true},
-{'name':'owner_email','title':'Contact Email'},
-{'name':'hours','title':'Hours','view':'hours'},
-{'name':'cats','title':'Categories','view':'cats', 'onlyedit' : true },
-{'name':'place_id','title':'Place Id','rule':'hidden'},
-{'name':'geo','title':'Geo Location','rule':'hidden'},
+    { 'name': 'business', 'title': 'Business Name' },
+    { 'name': 'address', 'title': 'Address' },
+    { 'name': 'cuisine', 'title': 'Cuisine' },
+    { 'name': 'phone', 'title': 'Phone Number' },
+    { 'name': 'website', 'title': 'Website' },
+    { 'name': 'linked', 'title': 'Linked User', 'view': 'linkedusers', 'onlyedit': true },
+    { 'name': 'owner_email', 'title': 'Contact Email' },
+    { 'name': 'hours', 'title': 'Hours', 'view': 'hours' },
+    { 'name': 'cats', 'title': 'Categories', 'view': 'cats', 'onlyedit': true },
+    { 'name': 'place_id', 'title': 'Place Id', 'rule': 'hidden' },
+    { 'name': 'geo', 'title': 'Geo Location', 'rule': 'hidden' },
 
 ];
 
 var tabmod = new abfieldvmod();
 
-function helpadviews(){
+function helpadviews() {
 
 
-if(addck.length==0){
+    if (addck.length == 0) {
 
-addck.push(1);
-// TITLE PLACEMENT
-for (var i = 0; i < sbos.length; i++) {
-	
-	var sbo = sbos[i];
+        addck.push(1);
+        // TITLE PLACEMENT
+        for (var i = 0; i < sbos.length; i++) {
 
-get(sbo.name+'view').pend(
+            var sbo = sbos[i];
 
-div().cl('sabtcon').inn(
+            get(sbo.name + 'view').pend(
 
-	sbo.title
+                div().cl('sabtcon').inn(
 
-)
+                    sbo.title
 
-	);
+                )
 
-}// Tiltle loop
+            );
 
-//abform build
+        } // Tiltle loop
 
-var adform = get('asformcon');
+        //abform build
 
-for (i = 0; i < abfields.length; i++) {
-				
-	var af = abfields[i];
 
-if(af.view==null){
-var aftd = abfield( af );
+        var adform = get('asformcon');
 
-adform[af.name]=aftd;
+        for (i = 0; i < abfields.length; i++) {
 
-adform.pend( aftd );
-}else{
+            var af = abfields[i];
 
-if(!af.onlyedit){
+            if (af.view == null) {
+                var aftd = abfield(af);
 
-var aftd = tabmod[af.view]();
+                adform[af.name] = aftd;
 
-adform[af.name]=aftd;
+                adform.pend(aftd);
+            } else {
 
-adform.pend(el('p').inn(af.title));
+                if (!af.onlyedit) {
 
-adform.pend( aftd );
+                    var aftd = tabmod[af.view]();
 
-}
+                    adform[af.name] = aftd;
 
+                    adform.pend(el('p').inn(af.title));
 
-}// feild placement
+                    adform.pend(aftd);
 
+                }
 
-}// adfield loop
 
-//ADD THE CONTROLS
-adform.pend(
+            } // feild placement
 
-el('table').pend(
 
-	el('tr').pend(
+        } // adfield loop
 
-		el('td').pend(
+        //ADD THE CONTROLS
+        adform.pend(
 
-div().cl('bsavebt').prop('id','bsavebt').prop('onmousedown',function(){
+            el('table').pend(
 
-//var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
+                el('tr').pend(
 
-var bi = getbifromfields();
+                    el('td').pend(
 
-bi.loname = bi.business.toLowerCase();
+                        div().cl('bsavebt').prop('id', 'bsavebt').prop('onmousedown', function() {
 
-console.log('bi is :  '+JSON.stringify(bi) );
+                            //var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
 
-var urlstring = savebusinessurl+"/"+encodeURIComponent(JSON.stringify( bi ));
+                            var bi = getbifromfields();
 
-grabstuff(urlstring , function( stuff ){
+                            bi.loname = bi.business.toLowerCase();
 
-console.log( stuff );
+                            console.log('bi is :  ' + JSON.stringify(bi));
 
-clearfields();
+                            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
 
-});//save request
+                            grabstuff(urlstring, function(stuff) {
 
+                                console.log(stuff);
 
-}).inn("Save Business")
+                                clearfields();
 
-			)
+                            }); //save request
 
-		).pend(
 
-		el('td').pend(
 
-div().cl('bsavebt').prop('id','bsavebt').prop('onmousedown',function(){
 
-//var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
+                        }).inn("Save Business")
 
-var bi = getbifromfields();
+                    )
 
-bi.loname = bi.business.toLowerCase();
+                ).pend(
 
-console.log('bi is :  '+JSON.stringify(bi) );
+                    el('td').pend(
 
-var urlstring = savebusinessurl+"/"+encodeURIComponent( JSON.stringify( bi ) );
+                        div().cl('bsavebt').prop('id', 'bsavethenbt').prop('onmousedown', function() {
 
-grabstuff(urlstring , function( stuff ){
+                            //var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
 
-console.log( stuff );
+                            var bi = getbifromfields();
 
-clearfields();
-showbiztoedit(stuff);
-pressideop( {'name':'ebu','title':'Edit Business/User'} );
+                            bi.loname = bi.business.toLowerCase();
 
-});//save request
+                            console.log('bi is :  ' + JSON.stringify(bi));
 
-}).inn("Save Then edit")
+                            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
 
-			)
-		)
-	)	
-);
+                            grabstuff(urlstring, function(stuff) {
 
-}
+                                console.log(stuff);
 
-}//helpadviews
+                                clearfields();
+                                showbiztoedit(stuff);
+                                pressideop({ 'name': 'ebu', 'title': 'Edit Business/User' });
 
+                            }); //save request
 
+                        }).inn("Save Then edit")
 
-function getbifromfields(){
-var bi={};
-for (var i = 0; i < abfields.length; i++) {
+                    )
+                )
+            )
+        );
 
-	var af = abfields[i];
+    }
 
-if(af.view==null){
+} //helpadviews
 
-var put = get('adf'+af.name);
 
- bi[af.name]=put.value;
+function getbifromfields() {
+    var bi = {};
+    for (var i = 0; i < abfields.length; i++) {
 
-}// special file ck
+        var af = abfields[i];
 
+        if (af.view == null) {
 
-};// f loops
+            var put = get('adf' + af.name);
 
-var newbhours = {};
+            bi[af.name] = put.value;
 
-for (var i = 0; i < dayray.length; i++) {
-	var day = dayray[i];
+        } // special file ck
 
-var odput = get(day.short+'_o');
-var cdput = get(day.short+'_c');
+    }; // f loops
 
-newbhours[day.short] = { 'op':odput.value,'cl':cdput.value };
+    var newbhours = {};
 
-};// day loop
+    /*
+    for (var i = 0; i < dayray.length; i++) {
+    	var day = dayray[i];
 
-bi.hours_json = newbhours ;
-bi.geo = JSON.parse(get('adfgeo').value);
-bi.place_id = get('adfplace_id').value;
+    var odput = get(day.short+'_o');
+    var cdput = get(day.short+'_c');
 
-console.log( JSON.stringify(bi) );
+    newbhours[day.short] = { 'op':odput.value,'cl':cdput.value };
 
-return bi;
-}//getbifromfields
+    };// day loop
 
-function abfield(af){
+    bi.hours_json = newbhours;
+    */
 
-if(af.rule==null){
+    console.log("here" + get('daytextcon').ohours)
 
-var abf = div().cl('abfield');
+    
 
-var put = el('input').cl('afput').prop('placeholder',af.title).prop('id','adf'+af.name);
+    if(get('daytextcon').ohours){
 
-abf.put = put;
+bi.ohours = get('daytextcon').ohours;
 
-abf.pend(
+//bi.ohours.periods = JSON.parse(bi.ohours.periods)
 
-	el('p').inn(af.title)
+console.log(bi.ohours.weekday_text)
+//bi.ohours.weekday_text = JSONbi.ohours.weekday_text)
 
-	).pend(
+    }
+    bi.geo = JSON.parse(get('adfgeo').value);
+    bi.place_id = get('adfplace_id').value;
 
-	put
+    console.log(JSON.stringify(bi));
 
+    return bi;
+} //getbifromfields
 
-	);
+function abfield(af) {
 
-}else{
+    if (af.rule == null) {
 
-var abf = div().stprop('display','none');
+        var abf = div().cl('abfield');
 
-var put = el('input').cl('afput').prop('type','hidden').prop('id','adf'+af.name);
+        var put = el('input').cl('afput').prop('placeholder', af.title).prop('id', 'adf' + af.name);
 
-abf.put = put;
+        abf.put = put;
 
-abf.pend( put );
+        abf.pend(
 
-}// rule ck
+            el('p').inn(af.title)
 
-return abf;
-}//abfield
+        ).pend(
 
-function makesidebar(){
+            put
 
-var badbox = get('getbackadbox');
 
-var sb = div().cl('sidebar').prop('id','sidebar');
+        );
 
-for (var i = 0; i < sbos.length; i++) {
-	
-	var sbo = sbos[i];
+    } else {
 
-sb.pend( sideop( sbo ) );
+        var abf = div().stprop('display', 'none');
 
-}//loop
+        var put = el('input').cl('afput').prop('type', 'hidden').prop('id', 'adf' + af.name);
 
-document.body.appendChild(sb);
-}//makesidebar
+        abf.put = put;
 
+        abf.pend(put);
 
-function sideop(sb){
-var sbr = div().cl('sbo');
-sbr.pend(
+    } // rule ck
 
-el('p').inn(sb.title)
+    return abf;
+} //abfield
 
-	).prop('onmousedown',function(){
+function makesidebar() {
 
-pressideop( sb );
+    var badbox = get('getbackadbox');
 
-	});
+    var sb = div().cl('sidebar').prop('id', 'sidebar');
 
-return sbr;
-}//sbo
+    for (var i = 0; i < sbos.length; i++) {
 
-function pressideop(sb){
+        var sbo = sbos[i];
 
-if(sb.name==='avb'){
+        sb.pend(sideop(sbo));
 
-loadbisugs();
+    } //loop
 
-}
+    document.body.appendChild(sb);
+} //makesidebar
 
-for (var i = 0; i < sbos.length; i++) {
-	
-	var sbi = sbos[i];
 
-get(sbi.name+'view').stprop('display','none');
+function sideop(sb) {
+    var sbr = div().cl('sbo');
+    sbr.pend(
 
+        el('p').inn(sb.title)
 
+    ).prop('onmousedown', function() {
 
+        pressideop(sb);
 
-};//sb loop
+    });
 
-get(sb.name+'view').stprop('display','block');
+    return sbr;
+} //sbo
+
+function pressideop(sb) {
+
+    if (sb.name === 'avb') {
+
+        loadbisugs();
+
+    }
+
+    for (var i = 0; i < sbos.length; i++) {
+
+        var sbi = sbos[i];
+
+        get(sbi.name + 'view').stprop('display', 'none');
+
+    }; //sb loop
+
+    get(sb.name + 'view').stprop('display', 'block');
+
     google.maps.event.trigger(map, "resize");
-
 
 } // side op selection
 
 
-function loadbisugs(){
+function loadbisugs() {
 
-if( get('sugplace') ){
+    if (get('sugplace')) {
 
-get('sbugplace').inn('');
+        get('sbugplace').inn('');
 
-}else{
+    } else {
 
-get('avbview').pend( 
+        get('avbview').pend(
 
-	div().cl('sugplace').prop('id','bsugplace').prop('align','left')
+            div().cl('sugplace').prop('id', 'bsugplace').prop('align', 'left')
 
-	 );
+        );
 
-}
+    }
 
-var urlstring = getbisugurl;
+    var urlstring = getbisugurl;
 
+    grabstuff(urlstring, function(stuff) {
 
-grabstuff( urlstring , function(stuff){
+        placechoices(stuff, sugdiv, get('bsugplace'));
 
-
-placechoices( stuff ,sugdiv, get('bsugplace') );
-
-
-
-});//sug requst
+    }); //sug requst
 
 
+} //loadbisugs
 
 
-}//loadbisugs
+function clearfields() {
 
+    get('adfbusiness').value = "";
+    get('adfaddress').value = "";
+    get('adfphone').value = "";
+    get('adfplace_id').value = "";
+    get('adfgeo').value = "";
+    get('adfwebsite').value = "";
 
-function clearfields(){
+    get("adfcuisine").value = "";
+    get("daytextcon").inn('');
 
-get('adfbusiness').value = "";
-get('adfaddress').value = "";
-get('adfphone').value = "";
-get('adfplace_id').value = "";
-get('adfgeo').value = "";
-get('adfwebsite').value = "";
+    get('adfowner_email').value = "";
+/*
+    for (var i = 0; i < 7; i++) {
 
-get("adfcuisine").value = "";
+        get(dayray[i].short + '_o').value = "";
 
-get('adfowner_email').value = "";
+        get(dayray[i].short + '_c').value = "";
 
-for (var i = 0; i < 7; i++) {
+    }; // day loop
+    */
 
-get(dayray[i].short+'_o').value ="";
-
-get(dayray[i].short+'_c').value = "";
-
-};// day loop
-
-}//clear fields
+} //clear fields
 
 
 /*
@@ -357,143 +368,134 @@ get(dayray[i].short+'_c').value = "";
        <div id="adfazultscon" class="fazultcon">
 */
 
-function adsearchfarmsbyname(ele){
+function adsearchfarmsbyname(ele) {
 
-var word = ele.value;
-var rcon = get('adfazultscon').stprop('display','block').inn("");
+    var word = ele.value;
+    var rcon = get('adfazultscon').stprop('display', 'block').inn("");
 
-if(word.length>0){
+    if (word.length > 0) {
 
-var urlstring = GetfaByNameUrl+"/"+word;
+        var urlstring = GetfaByNameUrl + "/" + word;
 
-grabstuff(urlstring,function(stuff){
+        grabstuff(urlstring, function(stuff) {
 
-//console.log(JSON.stringify(stuff));
-console.log(word+"  word n term   "+ele.value);
+                //console.log(JSON.stringify(stuff));
+                console.log(word + "  word n term   " + ele.value);
 
-if(word!==ele.value){
+                if (word !== ele.value) {
 
-console.log('caugth');
+                    console.log('caugth');
 
-}
+                }
 
 
-if(word===ele.value){
+                if (word === ele.value) {
 
-console.log('all clear');
-get('adfazultscon').inn("");
+                    console.log('all clear');
+                    get('adfazultscon').inn("");
 
-for (var i = 0; i < stuff.length; i++) {
-	
-	var fa = stuff[i];
+                    for (var i = 0; i < stuff.length; i++) {
 
-//fa.name.toLowerCase().indexOf(ele.value.toLowerCase() )>-1  &&  
+                        var fa = stuff[i];
 
-if( ele.value.length>0 ){
+                        //fa.name.toLowerCase().indexOf(ele.value.toLowerCase() )>-1  &&  
 
-	rcon.pend(
+                        if (ele.value.length > 0) {
 
-		adfazult(fa)
+                            rcon.pend(
 
-		);
+                                adfazult(fa)
 
-}// q ck
+                            );
 
-};// farm loop
+                        } // q ck
 
+                    }; // farm loop
 
-}//latency ck
 
-})//request
+                } //latency ck
 
-}else{
+            }) //request
 
-get('adbizultscon').stprop('display','none').inn("");
+    } else {
 
-}//length ck
+        get('adbizultscon').stprop('display', 'none').inn("");
 
-}//dsearchfarmsbyname
+    } //length ck
 
+} //dsearchfarmsbyname
 
 
+function abfieldvmod() {
 
+    this.ulink = function() {
+            var ul = div().cl("ulinkbox");
 
+            var ulb = div().cl("ulbt").inn("Send User Email");
+            ul.pend(ulb);
+            return ul;
+        } //place_id
 
-function abfieldvmod(){
 
-this.ulink = function(){
-var ul = div().cl("ulinkbox");
+    this.linkedusers = function() {
 
-var ulb = div().cl("ulbt").inn("Send User Email");
-ul.pend(ulb);
-return ul;
-}//place_id
 
+        return div();
+    }
 
-this.linkedusers =function(){
+    this.owner_email = function() {
 
 
+            return div();
+        } //owner email
 
-	return div();
-}
+    this.place_id = function() {
 
-this.owner_email = function(){
 
+        } //place_id
 
 
-return div();
-}//owner email
+    this.cats = function() {
 
-this.place_id = function(){
+        return div();
+    }; //categories
 
+    this.hours = function() {
+            /*
+            var ht = el('table').cl('abhourstab');
 
+            var tr = el('tr');
 
+            for (var i = 0; i < dayray.length; i++){
 
-}//place_id
+            	var day = dayray[i];
 
+            tr.pend( 
 
-this.cats = function(){
+            	el('td').pend(
 
-return div();
-};//categories
+            div().cl('abhrsdiv').pend(
 
-this.hours = function(){
+            		el('p').inn( day.short ).stprop('text-decoration','underline')
 
-var ht = el('table').cl('abhourstab');
+            		).pend( el('p').inn('open:') ).pend(
 
-var tr = el('tr');
+            el('input').prop('id',day.short+'_o')
 
-for (var i = 0; i < dayray.length; i++) {
-	var day = dayray[i];
+            		).pend( el('p').inn('close:') ).pend(
 
-tr.pend( 
+            el('input').prop('id',day.short+'_c')
+            		
+            		)  
+            )
 
-	el('td').pend(
+            	)
 
-div().cl('abhrsdiv').pend(
+            }//day loop
 
-		el('p').inn(day.short).stprop('text-decoration','underline')
+            ht.pend(tr);
+            */
+            return div().cl('daytextcon').props({ 'id': 'daytextcon' })
+        } //hous
 
-		).pend(el('p').inn('open:')).pend(
-
-el('input').prop('id',day.short+'_o')
-
-		).pend(el('p').inn('close:')).pend(
-
-el('input').prop('id',day.short+'_c')
-		
-		)  
-)
-
-	)
-
-}//day loop
-
-ht.pend(tr);
-
-return ht;
-}//hous
-
-}//fieldmod
-
-
+} //fieldmod

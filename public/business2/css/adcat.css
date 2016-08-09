@@ -1,0 +1,43 @@
+.adcatview{
+
+position: relative;
+
+height:90%;
+
+width:100%;
+border: 1px solid darkgreen;
+
+
+
+}
+
+.adcattab{
+position: relative;
+height:100%;
+width:100%;
+
+table-layout: fixed;
+}
+
+
+.adcattdiv{
+position: relative;
+height:100%;
+width:100%;
+text-align: center;
+}
+
+.adcatimg{
+position: relative;
+height:50%;
+cursor:pointer;
+
+}
+
+
+.adcattdiv:hover{
+border: 1px solid darkgreen;
+
+
+
+}

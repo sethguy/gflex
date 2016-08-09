@@ -10,7 +10,7 @@ z-index: 99;
 .adfarmsearchcon{
 position: absolute;
 top:5%;
-left:35%;
+left:23%;
 height:5%;
 width:30%;
 z-index: 99;
@@ -98,6 +98,11 @@ color:inherit;
     background-color: white;
 }
 
+#removefabt {
+    position: absolute;
+        left: 56.5%;
+}
+
 .adnewfarmbt{
 position: relative;
 top:5%;
@@ -117,7 +122,7 @@ z-index: 5;
 #savefabt{
     position: absolute;
     top:5%;
-left:75%;
+left:80%;
 
 
 }

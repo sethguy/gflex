@@ -1,56 +1,57 @@
-function isadmin(user) {
-    return user.isadmin;
-} //isamdin
+function isadmin(user){
+return user.isadmin;
+}//isamdin
 
 
-function loginbsuser(user) {
-
-    console.log(JSON.stringify(user) + " loginbsuser ");
-    getlinkedbusiness(user, function(stuff) {
+ function loginbsuser(user){
 
 
-        var bizlist = stuff;
+getlinkedbusiness(user,function(stuff){
 
 
-        if (bizlist.length > 1) {
+var bizlist = stuff;
 
 
-            var adiv = get('adiv').prop('bizlist', bizlist).stprop('display', 'block');
+if(bizlist.length>1){
 
 
-        } else if (bizlist.length === 1) {
-
-            firebizselection(bizlist[0].bi);
-
-        } else {
-
-            alert('no business links')
-
-        }
+var adiv = get('adiv').prop('bizlist' , bizlist ).stprop('display','block');
 
 
-    });
-    // get user business
-    // decide wether they should see biz selection input
+}else if(bizlist.length===1){
 
-} //loginbsuser
+firebizselection( bizlist[ 0 ].bi );
 
+}else{
 
-function getlinkedbusiness(user, calli) {
+alert('no business links')
 
-    var urlstring = getlinkedurl + "/" + user.email;
-
-    grabstuff(urlstring, function(stuff) {
-
-        console.log("get linked return:" + stuff);
-
-        calli(stuff);
+}
 
 
-    }); // 
+});
+// get user business
+// decide wether they should see biz selection input
+
+}//loginbsuser
 
 
-} //getlinked business
+function getlinkedbusiness(user,calli){
+
+var urlstring = getlinkedurl+"/"+user.email;
+
+grabstuff(urlstring,function(stuff){
+
+console.log("get linked return:"+stuff);
+
+calli(stuff);
+
+
+});// 
+
+
+}//getlinked business
+
 
 
 /*
@@ -80,3 +81,5 @@ function getlinkedbusiness(user, calli) {
 
 }
 */
+
+

@@ -1,0 +1,626 @@
+{ "results": [
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "rkwT22NtRg": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-09-28T06:39:06.931Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "13W5E7kRes",
+        "updatedAt": "2014-09-28T06:39:06.931Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "rkwT22NtRg"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "xw8MytpVZQ": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-12-30T20:22:08.105Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "zVRGgyEFdS"
+        },
+        "deal_id": "zVRGgyEFdS",
+        "did_accept_deal": true,
+        "objectId": "1RcUG65fox",
+        "updatedAt": "2015-12-30T20:22:08.105Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "xw8MytpVZQ"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "6AVhJ7lR6R": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-10-06T20:05:44.088Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "40tValjBfl",
+        "updatedAt": "2014-10-06T20:05:44.088Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "6AVhJ7lR6R"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "cGFcMHzIc3": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-09-03T16:35:28.138Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "7aRSBLd2Gk",
+        "updatedAt": "2014-09-03T16:35:28.138Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "cGFcMHzIc3"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "uDONYMRaCY": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-10-16T11:49:28.156Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "9tyK0EeVTy",
+        "updatedAt": "2014-10-16T11:49:28.156Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "uDONYMRaCY"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "LGsRqI877H": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-07-14T02:41:46.789Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "FAwktmMteP"
+        },
+        "deal_id": "FAwktmMteP",
+        "did_accept_deal": true,
+        "objectId": "A6VBv4JlKk",
+        "updatedAt": "2014-07-14T02:41:46.789Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "LGsRqI877H"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "xzulKKpoRJ": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-05-09T23:03:17.756Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "e2Y6zAM4IR"
+        },
+        "deal_id": "e2Y6zAM4IR",
+        "did_accept_deal": true,
+        "objectId": "Ccse5tbYxR",
+        "updatedAt": "2015-05-09T23:03:17.756Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "xzulKKpoRJ"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "xw8MytpVZQ": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-06-25T14:38:35.561Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "e2Y6zAM4IR"
+        },
+        "deal_id": "e2Y6zAM4IR",
+        "did_accept_deal": true,
+        "objectId": "EuEUcJVTqG",
+        "updatedAt": "2015-06-25T14:38:35.561Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "xw8MytpVZQ"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "nhpsTN6yMc": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-08-01T03:45:21.406Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "e2Y6zAM4IR"
+        },
+        "deal_id": "e2Y6zAM4IR",
+        "did_accept_deal": true,
+        "objectId": "JTHadjLEqX",
+        "updatedAt": "2015-08-01T03:45:21.406Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "nhpsTN6yMc"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "BHF0r8MYLi": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-06-26T23:38:50.861Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "dwKxC2yjSZ"
+        },
+        "deal_id": "dwKxC2yjSZ",
+        "did_accept_deal": true,
+        "objectId": "NVNc91S7BX",
+        "updatedAt": "2014-06-26T23:38:50.861Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "BHF0r8MYLi"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "G5EVfUnero": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-06-24T17:43:00.912Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "dwKxC2yjSZ"
+        },
+        "deal_id": "dwKxC2yjSZ",
+        "did_accept_deal": true,
+        "objectId": "NjQlntwlAo",
+        "updatedAt": "2014-06-24T17:43:00.912Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "G5EVfUnero"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "wxLuSZyHZc": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-09-26T14:24:58.309Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "Q6ZTzy1Meb",
+        "updatedAt": "2014-09-26T14:24:58.309Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "wxLuSZyHZc"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "co0Gq8N0fP": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-04-07T22:48:32.987Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "OpC7vnQB9J"
+        },
+        "deal_id": "OpC7vnQB9J",
+        "did_accept_deal": true,
+        "objectId": "SHnvJzc3AX",
+        "updatedAt": "2015-04-07T22:48:32.987Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "co0Gq8N0fP"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "Ln7DnRc8us": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-08-20T15:11:54.205Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "cG6be0p0v2",
+        "updatedAt": "2014-08-20T15:11:54.205Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "Ln7DnRc8us"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "NfFVd35LCi": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-10-22T01:47:15.823Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "ctXqnjGhTt",
+        "updatedAt": "2014-10-22T01:47:15.823Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "NfFVd35LCi"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "xw8MytpVZQ": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-04-15T13:25:16.141Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "OpC7vnQB9J"
+        },
+        "deal_id": "OpC7vnQB9J",
+        "did_accept_deal": true,
+        "objectId": "fU1soxis7g",
+        "updatedAt": "2015-04-15T13:25:16.141Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "xw8MytpVZQ"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "cGFcMHzIc3": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-07-21T19:21:28.528Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "FAwktmMteP"
+        },
+        "deal_id": "FAwktmMteP",
+        "did_accept_deal": true,
+        "objectId": "hwh8dQOZO1",
+        "updatedAt": "2014-07-21T19:21:28.528Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "cGFcMHzIc3"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "xw8MytpVZQ": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-11-01T14:08:06.363Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "l7iD68LtS7"
+        },
+        "deal_id": "l7iD68LtS7",
+        "did_accept_deal": true,
+        "objectId": "k9DIX6nsFW",
+        "updatedAt": "2014-11-01T14:08:06.363Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "xw8MytpVZQ"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "DOURbFEg5A": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-08-16T05:02:06.519Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "LnWuMqXKab"
+        },
+        "deal_id": "LnWuMqXKab",
+        "did_accept_deal": true,
+        "objectId": "mCNqwvJ4yo",
+        "updatedAt": "2014-08-16T05:02:06.519Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "DOURbFEg5A"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "BHF0r8MYLi": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-06-23T14:39:30.419Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "dwKxC2yjSZ"
+        },
+        "deal_id": "dwKxC2yjSZ",
+        "did_accept_deal": true,
+        "objectId": "oYG5KBKZmv",
+        "updatedAt": "2014-06-23T14:39:30.419Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "BHF0r8MYLi"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "ZIz6VzWa39": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2014-07-21T19:17:26.502Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "FAwktmMteP"
+        },
+        "deal_id": "FAwktmMteP",
+        "did_accept_deal": true,
+        "objectId": "r8t8SGgRXJ",
+        "updatedAt": "2014-07-21T19:17:26.502Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "ZIz6VzWa39"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "tQxDIjisdB": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-07-21T16:15:52.518Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "e2Y6zAM4IR"
+        },
+        "deal_id": "e2Y6zAM4IR",
+        "did_accept_deal": true,
+        "objectId": "sdXcH1RUcx",
+        "updatedAt": "2015-07-21T16:15:52.518Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "tQxDIjisdB"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "uRzW9pViOA": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-05-05T12:45:36.893Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "e2Y6zAM4IR"
+        },
+        "deal_id": "e2Y6zAM4IR",
+        "did_accept_deal": true,
+        "objectId": "ukBbDLyyej",
+        "updatedAt": "2015-05-05T12:45:36.893Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "uRzW9pViOA"
+        }
+    },
+	{
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "LqP9DlL0v5": {
+                "read": true,
+                "write": true
+            }
+        },
+        "createdAt": "2015-01-24T00:01:07.950Z",
+        "deal": {
+            "__type": "Pointer",
+            "className": "GERedeemSpecial",
+            "objectId": "Qs1gtyTOtJ"
+        },
+        "deal_id": "Qs1gtyTOtJ",
+        "did_accept_deal": true,
+        "objectId": "vJnAecFmqh",
+        "updatedAt": "2015-01-24T00:01:07.950Z",
+        "user": {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": "LqP9DlL0v5"
+        }
+    }
+] }

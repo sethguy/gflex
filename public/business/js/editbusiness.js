@@ -1,511 +1,485 @@
-
 var ebtabmod = new ebfieldvmod();
-function ebfieldvmod(){
 
+function ebfieldvmod() {
 
-this.linkedusers = function( bi){
 
-var scrollcon = div().cl('linksrlcon').prop('id','ebfscroll');
+    this.linkedusers = function(bi) {
 
-var lu = div().cl("eblinkurcon").pend(
+        var scrollcon = div().cl('linksrlcon').prop('id', 'ebfscroll');
 
-div().cl('linkconhead').pend(
+        var lu = div().cl("eblinkurcon").pend(
 
-	div().cl('linkedinfo').pend(
+            div().cl('linkconhead').pend(
 
-el('input').cl('linkput').prop('id','ebfemailtoadd').prop('placeholder','Type in email to link user')
-		
-		)
+                div().cl('linkedinfo').pend(
 
-	).pend(
-	
-	div().cl('linkbt').pend(
+                    el('input').cl('linkput').prop('id', 'ebfemailtoadd').prop('placeholder', 'Type in email to link user')
 
-		el('p').inn("+")
+                )
 
-		).prop('onmousedown',function(){
+            ).pend(
 
-var emailval  = get('ebfemailtoadd').value;
+                div().cl('linkbt').pend(
 
+                    el('p').inn("+")
 
-trytolink( { 'email' : emailval,'bi':bi } );
-				
-		})//add link on mouse down
+                ).prop('onmousedown', function() {
 
-	)
+                    var emailval = get('ebfemailtoadd').value;
 
-).pend(
 
-scrollcon
+                    trytolink({ 'email': emailval, 'bi': bi });
 
-);
+                }) //add link on mouse down
 
-return lu;
-}
+            )
 
+        ).pend(
 
+            scrollcon
 
-this.owner_email = function(bi){
+        );
 
-var linkstring = "Link User";
-if(bi.islinked) linkstring = 'Unlink User';
+        return lu;
+    }
 
-var put = el('input').cl('afput').prop('value' , bi.owner_email ).prop('placeholder','Contact Email').prop('id','ebfowner_email');
 
-//var hilput = el('input').cl('afput').prop('value' , bi.owner_email ).prop('id','ebfislinked');
+    this.owner_email = function(bi) {
 
-var ul = div().cl("ulinkbox").prop('align','center');
+            var linkstring = "Link User";
+            if (bi.islinked) linkstring = 'Unlink User';
 
-var ulb = div().prop('id','ebflinkbt').cl("ulbt").inn(linkstring).prop('onmousedown',function(){
+            var put = el('input').cl('afput').prop('value', bi.owner_email).prop('placeholder', 'Contact Email').prop('id', 'ebfowner_email');
 
-//linkbusinessurl+"/"+bi['objectId']+"/"+get('ebfowner_email').value
+            //var hilput = el('input').cl('afput').prop('value' , bi.owner_email ).prop('id','ebfislinked');
 
- var urlstring = linkbusinessurl+"/"+bi['objectId']+"/"+get('ebfowner_email').value;
-/*
-if(bi.islinked){
+            var ul = div().cl("ulinkbox").prop('align', 'center');
 
-urlstring = unlinkbusinessurl+"/"+bi['objectId']+"/"+get('ebfowner_email').value;
-}
-*/
-newuserbiz( urlstring ,function(stuff){
-if(stuff.msg){
+            var ulb = div().prop('id', 'ebflinkbt').cl("ulbt").inn(linkstring).prop('onmousedown', function() {
 
-	alert(stuff.msg)
-	
-	}else{
+                //linkbusinessurl+"/"+bi['_id']+"/"+get('ebfowner_email').value
 
-	alert("!!User Not Linked!!");
+                var urlstring = linkbusinessurl + "/" + bi['_id'] + "/" + get('ebfowner_email').value;
+                /*
+                if(bi.islinked){
 
-	}
+                urlstring = unlinkbusinessurl+"/"+bi['_id']+"/"+get('ebfowner_email').value;
+                }
+                */
+                newuserbiz(urlstring, function(stuff) {
+                    if (stuff.msg) {
 
-});
+                        alert(stuff.msg)
 
+                    } else {
 
+                        alert("!!User Not Linked!!");
 
-});
+                    }
 
-var t = touchtab( [ put , ulb ] );
+                });
 
 
-ul.pend(t);
+            });
 
-return ul;
-}//place_id
+            var t = touchtab([put, ulb]);
 
-this.place_id = function(){
 
+            ul.pend(t);
 
-}//place_id
+            return ul;
+        } //place_id
 
-this.hours = function(bi){
+    this.place_id = function() {
 
 
-var htry = bi.hours_json;
+        } //place_id
 
-var per = {
-"Sun":{"op":"","cl":""},
 
-"Mon":{"op":"","cl":""},
+    this.hours = function(bi) {
 
-"Tue":{"op":"","cl":""},
+        if (bi.ohours != null) {
 
-"Wed":{"op":"","cl":""},
+            if (bi.ohours.weekday_text) {
 
-"Thu":{"op":"","cl":""},
+                console.log("weekday text before", bi.ohours.weekday_text)
 
-"Fri":{"op":"","cl":""},
+                weekray = bi.ohours.weekday_text;
+                try {
 
-"Sat":{"op":"","cl":""}
 
-};
+                    weekray = JSON.parse(bi.ohours.weekday_text)
+                    console.log(weekray)
+                        // generates an exception
+                } catch (e) {
+                    console.log(e)
 
- if( bi.hours_json  &&  bi.hours_json.length>0){
- 
+                    if (e) {
 
- 	per = JSON.parse(bi.hours_json);
-}
+                        weekray = bi.ohours.weekday_text;
 
+                    }
 
-console.log(bi.hours_json+"hours");
+                    // statements to handle any exceptions
 
-var ht = el('table').cl('abhourstab');
+                }
+                console.log(weekray)
 
-var tr = el('tr');
+                return el('div').cl('abhourstab').pendray(weekray, function(wtext) {
 
-for (var i = 0; i < dayray.length; i++) {
-	var day = dayray[i];
+                    return div().cl('bwlet').pend(
 
-console.log(per[day.short].op +"  ++ "+per[day.short].cl )
+                        el('p').inn(wtext)
 
-tr.pend( 
+                    );
+                });
 
-	el('td').pend(
+            }
+        }
 
-div().cl('abhrsdiv').pend(
+        return el('div').cl('abhourstab').pend(el('p').inn('no hours'));
 
-		el('p').inn(day.short).stprop('text-decoration','underline')
+    }; //hous
 
-		).pend(el('p').inn('open:')).pend(
 
-el('input').prop('id',"eb"+day.short+'_o').prop('value',per[day.short].op)
+    this.cats = function(bi) {
 
-		).pend(el('p').inn('close:')).pend(
+        console.log(JSON.stringify(bi));
 
-el('input').prop('id',"eb"+day.short+'_c').prop('value',per[day.short].cl)
-		
-		)  
-)
+        var cv = div().cl('adcatview');
 
-	)
+        var ct = el('table').cl('adcattab');
 
-}//day loop
+        var tr = el('tr');
+        for (var i = 0; i < gcats.length; i++) {
 
-ht.pend(tr);
+            var cat = gcats[i];
 
-return ht;
-};//hous
+            console.log(cat.qstring.name + "   " + bi[cat.qstring.name] + " cat name");
 
+            var bival = bi[cat.qstring.name];
+            var imgpk = 'imgoff';
 
+            if (bival) imgpk = 'imgon';
 
 
-this.cats = function(bi){
+            var td = el('td');
 
-console.log(JSON.stringify(bi));
+            td.pend(
 
-var cv = div().cl('adcatview');
+                catpart(cat, imgpk, bival)
 
-var ct = el('table').cl('adcattab');
 
-var tr = el('tr');
-for (var i = 0; i < gcats.length; i++) {
+            );
+            tr.pend(td);
 
-var  cat = gcats[i];
+            if (i % 3 == 2) {
 
-console.log( cat.qstring.name+"   "+bi[cat.qstring.name]+" cat name");
+                ct.pend(tr);
 
-var bival = bi[cat.qstring.name];
-var imgpk = 'imgoff';
+                tr = el('tr');
+            }
 
-if(bival)imgpk = 'imgon';
+        }; //rayloop
 
+        cv.pend(ct);
+        return cv;
+    }; //category view
 
-var td = el('td');
 
-td.pend(
+} //ebfieldmod
 
-catpart(cat,imgpk,bival)
+function catpart(cat, imgpk, bival) {
 
+    var cp = div().cl('adcattdiv').pend(
 
-	);
-	tr.pend(td);
+        el('p').inn(cat.name)
 
-if(i%3==2){
+    ).pend(
 
-ct.pend(tr);
+        el('img').prop(
+            'src', 'business/images/' + cat[imgpk]).cl('adcatimg').prop(
+            "id", "ebcat" + cat.name).prop(
+            'value', bival)
 
-tr = el('tr');
-}
+    ).prop('onmousedown', function() {
 
-};//rayloop
+        var part = get("ebcat" + cat.name)
 
-cv.pend(ct);
-return cv;
-};//category view
+        var v = part.value
 
+        if (v) {
 
+            part.src = 'business/images/' + cat.imgoff;
+            part.value = false;
 
-}//ebfieldmod
+        } else {
 
-function catpart(cat,imgpk,bival){
+            part.src = 'business/images/' + cat.imgon;
+            part.value = true;
 
-var cp = div().cl('adcattdiv').pend(
+        }
 
-el('p').inn(cat.name)
+    });
 
-		).pend(
+    return cp;
+} //catpart
 
-el('img').prop(
-	'src','business/images/'+cat[imgpk]).cl('adcatimg').prop(
-	"id","ebcat"+cat.name).prop(
-	'value',bival)
 
-		).prop('onmousedown',function(){
+function adsbibyname(ele) {
 
-	var part = get("ebcat"+cat.name)
+    var word = ele.value;
+    var rcon = get('adbizultscon').stprop('display', 'block').inn("");
 
-	var v = part.value
+    if (word.length > 0) {
 
-if(v){
+        var urlstring = GetBizByNameUrl + "/" + word;
 
-part.src = 'business/images/'+cat.imgoff;
-part.value = false;
+        grabstuff(urlstring, function(stuff) {
 
-}else{
+                console.log(word + "  word n term   " + ele.value);
 
-part.src = 'business/images/'+cat.imgon;
-part.value = true;
+                if (word !== ele.value) {
 
-}
+                    console.log('caugth');
 
-		});
+                }
 
-return cp;
-}//catpart
 
-function adsbibyname(ele){
+                if (word === ele.value) {
 
-var word = ele.value;
-var rcon = get('adbizultscon').stprop('display','block').inn("");
+                    console.log('all clear');
 
-if(word.length>0){
+                    get('adbizultscon').inn("");
 
-var urlstring = GetBizByNameUrl+"/"+word;
+                    for (var i = 0; i < stuff.length; i++) {
+                        var bi = stuff[i];
 
-grabstuff(urlstring,function(stuff){
-	
-console.log(word+"  word n term   "+ele.value);
+                        if (ele.value.length > 0) {
 
-if(word!==ele.value){
+                            rcon.pend(
 
-console.log('caugth');
+                                adbizult(bi)
 
-}
+                            );
 
+                        } // q ck
 
-if(word===ele.value){
+                    };
 
-console.log('all clear');
 
-get('adbizultscon').inn("");
+                } // latency ck 
 
-for (var i = 0; i < stuff.length; i++) {
-	var bi = stuff[i];
 
-if(   ele.value.length>0 ){
+            }) //request
 
-	rcon.pend(
+    } else {
 
-		adbizult(bi)
+        get('adbizultscon').stprop('display', 'none').inn("");
 
-		);
+    } //length ck
 
-}// q ck
+} //adbiz term  search
 
-};
 
+function adbizult(bi) {
 
-}// latency ck 
+    var bz = div().cl('bizult').pend(
 
+        el('p').inn(bi.business)
 
+    ).prop('onmousedown', function() {
 
-})//request
+        showbiztoedit(bi);
 
-}else{
+        //firebizselection(bi);
 
-get('adbizultscon').stprop('display','none').inn("");
+        get('adbizultscon').stprop('display', 'none').inn("");
 
-}//length ck
+    });
 
-}//adbiz term  search
+    return bz;
+} //bizult
 
+function showbiztoedit(bi) {
 
+    console.log(JSON.stringify(bi) + "biztoedit");
 
-function adbizult(bi){
+    get('adBisSuggestBox').value = bi.business;
 
-var bz = div().cl('bizult').pend(
+    var sendid = bi._id;
 
-			el('p').inn(bi.business)
+    console.log(bi.geo + "thi is geo");
 
-			).prop('onmousedown',function(){
+    if (!bi.geo) {
 
-showbiztoedit(bi);
+        bi.geo = { "__type": "GeoPoint", "latitude": 38.9061564, "longitude": -77.04190679999999 };
+        console.log("hit");
 
-//firebizselection(bi);
+    }
 
-get('adbizultscon').stprop('display','none').inn("");
 
-			});
+    var bec = get('bedicon').inn("");
 
-	return bz;
-}//bizult
+    for (i = 0; i < abfields.length; i++) {
 
-function showbiztoedit(bi){
+        var af = abfields[i];
 
-console.log(JSON.stringify(bi)+"biztoedit");
+        if (af.view == null) {
 
-get('adBisSuggestBox').value = bi.business;
+            if (af.name !== "geo") {
+                var aftd = ebfield(af, bi[af.name]);
 
-var sendid = bi.objectId;
+                //bec[af.name]=aftd;
 
-console.log(bi.geo+"thi is geo");
+                bec.pend(aftd);
 
-if(!bi.geo ){
+            } else {
 
-bi.geo = {"__type":"GeoPoint","latitude":38.9061564,"longitude":-77.04190679999999};
-console.log("hit");
+                var aftd = ebfield(af, "{\"lat\":" + bi.geo.latitude + ",\"lng\":" + bi.geo.longitude + "}");
 
-}
+                //bec[af.name]=aftd;
 
+                bec.pend(aftd);
 
-var bec = get('bedicon').inn("");
+            } //not geo
 
-for (i = 0; i < abfields.length; i++) {
-				
-	var af = abfields[i];
+        } else {
 
-if(af.view==null){
+            var aftd = ebtabmod[af.view](bi);
 
-if(af.name!=="geo"){
-var aftd = ebfield( af,bi[af.name] );
+            //bec[af.name]=aftd;
 
-//bec[af.name]=aftd;
+            bec.pend(el('p').inn(af.title));
 
-bec.pend( aftd );
+            bec.pend(aftd);
 
-}else{
 
-var aftd = ebfield( af , "{\"lat\":"+bi.geo.latitude+",\"lng\":"+bi.geo.longitude+"}" );
+        } // feild placement
 
-//bec[af.name]=aftd;
 
-bec.pend( aftd );
+    } // adfield loop
 
-}//not geo
 
-}else{
+    getlinkedusers(bi, filllinkedtab);
 
-var aftd = ebtabmod[af.view]( bi );
 
-//bec[af.name]=aftd;
+    bec.pend(
 
-bec.pend( el('p').inn( af.title ) );
+        div().cl('bsavebt').prop('id', 'editbsave').prop('onmousedown', function() {
 
-bec.pend( aftd );
+            //var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
 
+            var bi = getbifromeditfields(sendid);
 
-}// feild placement
+            bi.loname = bi.business.toLowerCase();
 
+            console.log('bi is :  ' + JSON.stringify(bi));
 
-}// adfield loop
+            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
 
+            grabstuff(urlstring, function(stuff) {
 
-getlinkedusers( bi , filllinkedtab );
+                console.log(stuff);
 
+                alert("Business Edited !")
 
-bec.pend(
+                //cleareditfields();
 
-div().cl('bsavebt').prop('id','editbsave').prop('onmousedown',function(){
+            }); //save request
 
-//var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
 
-var bi = getbifromeditfields(sendid);
+        }).inn("Save Business")
 
-bi.loname = bi.business.toLowerCase();
+    );
 
-console.log('bi is :  '+JSON.stringify(bi) );
+    bec.pend(
 
-var urlstring = savebusinessurl+"/"+encodeURIComponent(JSON.stringify( bi ));
+        div().cl('bsavebt').prop('id', 'editbremv').prop('onmousedown', function() {
 
-grabstuff(urlstring , function( stuff ){
+            //var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
 
-console.log( stuff );
+            var bi = getbifromeditfields(sendid);
 
-alert("Business Edited !")
+            console.log('bi is :  ' + JSON.stringify(bi));
 
-//cleareditfields();
+            bi.removed = true;
 
-});//save request
+            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
 
+            grabstuff(urlstring, function(stuff) {
 
-}).inn("Save Business")
+                console.log(stuff);
+                get('adBisSuggestBox').value = "";
+                get('bedicon').inn("");
+                alert("Business Removed !")
 
-	);
+                //cleareditfields();
 
-bec.pend(
+            }); //save request
 
-div().cl('bsavebt').prop('id','editbremv').prop('onmousedown',function(){
 
-//var bi =  {"business":"Nando's Peri-Peri","address":"1210 18th St NW Washington","phone":"(202) 621-8603","owner_email":"","hours":{"Sun":{"op":"1100","cl":"2200"},"Mon":{"op":"1100","cl":"2200"},"Tue":{"op":"1100","cl":"2200"},"Wed":{"op":"1100","cl":"2200"},"Thu":{"op":"1100","cl":"2200"},"Fri":{"op":"1100","cl":"2300"},"Sat":{"op":"1100","cl":"2300"}}};
+        }).inn("Remove Business")
 
+    );
 
-var bi = getbifromeditfields(sendid);
+} //showbiztoedit
 
-console.log('bi is :  '+JSON.stringify(bi) );
-bi.removed = true;
 
-var urlstring = savebusinessurl+"/"+JSON.stringify( bi );
+function getbifromeditfields(id) {
 
-grabstuff( urlstring , function( stuff ){
+    var bi = {};
+    bi._id = id;
+    for (var i = 0; i < abfields.length; i++) {
 
-console.log( stuff );
-get('adBisSuggestBox').value = "";
-get('bedicon').inn("");
-alert("Business Removed !")
+        var af = abfields[i];
 
-//cleareditfields();
+        if (af.view == null) {
 
-});//save request
+            var put = get('ebf' + af.name);
 
+            bi[af.name] = put.value;
 
-}).inn("Remove Business")
+        } // special file ck
 
-	);
+    }; // f loops
 
-}//showbiztoedit
+    var newbhours = {};
+    /*
+        for (var i = 0; i < dayray.length; i++) {
+            var day = dayray[i];
 
-function getbifromeditfields(id){
+            var odput = get("eb" + day.short + '_o');
+            var cdput = get("eb" + day.short + '_c');
 
-var bi={};
-bi.objectId=id;
-for (var i = 0; i < abfields.length; i++) {
+            //newbhours[day.short] = { 'op': odput.value, 'cl': cdput.value };
 
-	var af = abfields[i];
+        }; // day loop/
 
-if(af.view==null){
+        */
 
-var put = get('ebf'+af.name);
 
- bi[af.name]=put.value;
+    // bi.hours_json = newbhours;
 
-}// special file ck
 
-};// f loops
+    bi.geo = JSON.parse(get('ebfgeo').value);
 
-var newbhours = {};
 
-for (var i = 0; i < dayray.length; i++) {
-	var day = dayray[i];
+    for (var i = 0; i < gcats.length; i++) {
+        var cat = gcats[i];
 
-var odput = get("eb"+day.short+'_o');
-var cdput = get("eb"+day.short+'_c');
+        var part = get("ebcat" + cat.name);
 
-newbhours[day.short] = { 'op':odput.value,'cl':cdput.value };
+        var v = part.value;
+        bi[cat.qstring.name] = v;
 
-};// day loop
+    }; //gcatloop
 
 
+    console.log(JSON.stringify(bi));
 
-bi.hours_json = newbhours ;
-
-
-bi.geo = JSON.parse( get('ebfgeo').value);
-
-
-for (var i = 0; i < gcats.length; i++) {
-	var cat = gcats[i];
-
-var part = get("ebcat"+cat.name);
-
-var v = part.value;
-bi[cat.qstring.name] = v;
-
-};//gcatloop
-
-
-console.log( JSON.stringify(bi) );
-
-return bi;
-}//getbifromfields
+    return bi;
+} //getbifromfields
 
 /*
 
@@ -523,165 +497,163 @@ return str;
 
 */
 
-function ebfield(af,value){
+function ebfield(af, value) {
 
-if(af.rule==null){
+    if (af.rule == null) {
 
-var abf = div().cl('abfield');
+        var abf = div().cl('abfield');
 
-var put = el('input').cl('afput').prop('placeholder',af.title).prop('id','ebf'+af.name);
+        var put = el('input').cl('afput').prop('placeholder', af.title).prop('id', 'ebf' + af.name);
 
-abf.put = put;
+        abf.put = put;
 
-abf.pend(
+        abf.pend(
 
-	el('p').inn(af.title)
+            el('p').inn(af.title)
 
-	).pend(
+        ).pend(
 
-	put.prop('value', value)
+            put.prop('value', value)
 
-	);
+        );
 
-}else{
+    } else {
 
-var abf = div().stprop('display','none');
+        var abf = div().stprop('display', 'none');
 
-var put = el('input').cl('afput').prop('type','hidden').prop('id','ebf'+af.name);
+        var put = el('input').cl('afput').prop('type', 'hidden').prop('id', 'ebf' + af.name);
 
-abf.put = put.prop('value', value);
+        abf.put = put.prop('value', value);
 
-abf.pend( put );
+        abf.pend(put);
 
 
-}// rule ck
+    } // rule ck
 
-return abf;
-}//abfield
+    return abf;
+} //abfield
 
 
-function linkedrow(urel,bi){
+function linkedrow(urel, bi) {
 
-var lr = div().cl('linkedrow').pend(
+    var lr = div().cl('linkedrow').pend(
 
-		div().cl('linkedinfo').pend( 
+        div().cl('linkedinfo').pend(
 
-		 el('p').inn( urel['rel'].email ) 
+            el('p').inn(urel['rel'].email)
 
-		  )
+        )
 
-).pend(
+    ).pend(
 
-		div().cl('linkbt').pend(
-		el('p').inn("-")
-		).prop('onmousedown',function(){
+        div().cl('linkbt').pend(
+            el('p').inn("-")
+        ).prop('onmousedown', function() {
 
-unlink( bi , urel['rel'].email );
+            unlink(bi, urel['rel'].email);
 
 
-		})// remove link bt onmouseodnw
+        }) // remove link bt onmouseodnw
 
-);
+    );
 
-return lr;
-}//linked row dom element function
+    return lr;
+} //linked row dom element function
 
-function getlinkedusers( bi , calli ){
+function getlinkedusers(bi, calli) {
 
 
+    var urlstring = getlinkedbybid + "/" + bi._id;
 
-var urlstring = getlinkedbybid+"/"+bi.objectId;
+    grabstuff(urlstring, calli);
 
-grabstuff(urlstring,calli);
 
+} //getlinkeduser
 
-}//getlinkeduser
+function filllinkedtab(urels) {
 
-function filllinkedtab(urels){
+    for (var i = 0; i < urels.length; i++) {
+        var rel = urels[i];
 
-for (var i = 0; i < urels.length; i++) {
-	var rel = urels[i];
+        var lr = linkedrow(rel, rel.bi);
 
-var lr = linkedrow( rel , rel.bi );
+        get('ebfscroll').pend(lr);
 
-get('ebfscroll').pend( lr );
+    }; //urels link
 
-};//urels link
 
+} //filllinkedtab
 
 
-}//filllinkedtab
+function unlink(bi, email) {
 
+    urlstring = unlinkbusinessurl + "/" + bi['_id'] + "/" + email;
 
-function unlink(bi,email){
+    grabstuff(urlstring, function(stuff) {
+        if (stuff.msg) {
 
-urlstring = unlinkbusinessurl+"/"+bi['objectId']+"/"+email;
+            alert(stuff.msg)
 
-grabstuff( urlstring ,function(stuff){
-if(stuff.msg){
+            showbiztoedit(bi);
 
-	alert(stuff.msg)
-	
-	showbiztoedit(bi);
 
-	
-	}else{
+        } else {
 
-	alert("!!User Not Linked!!");
+            alert("!!User Not Linked!!");
 
-	}
+        }
 
-});// request
+    }); // request
 
-}//unlink
+} //unlink
 
-function trytolink(smrel){
-var bi =smrel.bi;
-console.log(JSON.stringify(smrel)+"  smrel ");
+function trytolink(smrel) {
+    var bi = smrel.bi;
+    console.log(JSON.stringify(smrel) + "  smrel ");
 
- var urlstring = linkbusinessurl+"/"+bi['objectId']+"/"+get('ebfemailtoadd').value;
+    var urlstring = linkbusinessurl + "/" + bi['_id'] + "/" + get('ebfemailtoadd').value;
 
 
-newuserbiz( urlstring ,function(stuff){
-if(stuff.msg){
+    newuserbiz(urlstring, function(stuff) {
+        if (stuff.msg) {
 
-	alert(stuff.msg)
-	
-var url2 = ckforuserurl+"/"+get('ebfemailtoadd').value;
+            alert(stuff.msg)
 
-grabstuff(url2 , function( stuff ){
+            var url2 = ckforuserurl + "/" + get('ebfemailtoadd').value;
 
-console.log("ckfor user to send email on link "+ JSON.stringify(stuff) );
+            grabstuff(url2, function(stuff) {
 
-});
+                console.log("ckfor user to send email on link " + JSON.stringify(stuff));
 
-showbiztoedit(bi);
+            });
 
-	}else{
+            showbiztoedit(bi);
 
-	alert("!!User Not Linked!!");
+        } else {
 
-	}
+            alert("!!User Not Linked!!");
 
-});
+        }
 
-}// try to link function
+    });
 
-function cleareditfields(){
+} // try to link function
 
-get('ebfbusiness').value = "";
-get('ebfaddress').value = "";
-get('ebfphone').value = "";
-get('ebfplace_id').value = "";
-get('ebfemail').value = "";
-get('ebfgeo').value = "";
+function cleareditfields() {
 
-for (var i = 0; i < 7; i++) {
+    get('ebfbusiness').value = "";
+    get('ebfaddress').value = "";
+    get('ebfphone').value = "";
+    get('ebfplace_id').value = "";
+    get('ebfemail').value = "";
+    get('ebfgeo').value = "";
 
-get("eb"+dayray[i].short+'_o').value ="";
+    for (var i = 0; i < 7; i++) {
 
-get("eb"+dayray[i].short+'_c').value = "";
+        get("eb" + dayray[i].short + '_o').value = "";
 
-};// day loop
+        get("eb" + dayray[i].short + '_c').value = "";
 
-}//clear fields
+    }; // day loop
+
+} //clear fields

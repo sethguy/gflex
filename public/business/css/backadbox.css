@@ -115,9 +115,16 @@ border:1px solid blue;
 .abhourstab{
 
 position:relative;
-height:25%;
-width: 100%;
-table-layout: fixed;
+
+text-align: center;
+
+
+}
+
+.abhourstab p{
+
+margin: 1px
+
 
 }
 

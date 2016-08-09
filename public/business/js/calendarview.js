@@ -11,7 +11,7 @@
 // to use the Prototype JavaScript library.
 //
 // As such, CalendarView is licensed under the terms of the GNU Lesser General
-// Public License (LGPL). More information on the Dynarch Calendar can be
+// business License (LGPL). More information on the Dynarch Calendar can be
 // found at:
 //
 //   www.dynarch.com/projects/calendar

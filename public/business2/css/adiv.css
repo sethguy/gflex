@@ -1,0 +1,111 @@
+#adiv{
+  display: none;
+position: relative;
+height:5%;
+z-index:99;
+overflow:visible;
+width:90%;
+}
+
+#admsg{
+ 
+position: absolute;
+height:100%;
+top:0;
+left:125px;
+overflow: hidden;
+}
+
+
+
+
+#adiv input{
+position: relative;
+height:100%;
+width: 350px;
+font-size: 100%;
+z-index: 20;
+  
+}
+
+
+#adiv input:focus{
+    outline: 0;
+    background-color: transparent;
+    background:transparent!important;
+    border: 0px;
+}
+
+#atab{
+position: relative;
+height: 100%;
+overflow:visible;
+table-layout:fixed;
+}
+
+#adiv td{
+position: relative;
+padding-left: 3px;
+overflow:visible
+}
+
+.asearchcon2{
+margin-top: 2%;
+position: absolute;
+
+
+width:100%;
+
+max-height: 300px;
+overflow:scroll;
+}
+
+.asearchcon{
+
+position: absolute;
+
+
+left:500px;
+top:0;
+
+}
+
+.bizult p{
+position: relative;
+margin: 0;
+color: inherit;
+}
+
+.bizult{
+position: relative;
+
+width: 100%;
+
+cursor:pointer;
+padding-bottom: 2%;
+color: black;
+}
+
+.bizult:hover{
+background-color:#6c9c43;
+color:white;
+}
+
+.bizultscon{
+position: relative;
+
+width: 99%;
+
+display: none;
+
+background-color: white;
+text-align: left;
+
+}
+
+
+
+
+
+
+

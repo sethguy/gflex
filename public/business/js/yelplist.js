@@ -1510,7 +1510,7 @@ var hoodlist = [ {'name':'Argentina','cities':[{'name':'Buenos Aires','hoods':[
 {'name':'Villa Olímpica'},
 {'name':'Vitacura'},
 {'name':'Ñuñoa'},
-            ]]},{'name':'Czech Republic','cities':[{'name':'Praha','hoods':[                                    
+            ]]},{'name':'Czech Republc','cities':[{'name':'Praha','hoods':[                                    
 {'name':'Anděl'},
 {'name':'Baba'},
 {'name':'Balabenka'},

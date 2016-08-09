@@ -1,0 +1,28 @@
+
+.liltraktrak {
+    position: absolute;
+    height:100px;
+
+    z-index: 9999;
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+
+.lilpopop{
+position: absolute;
+z-index: 9999;
+
+}
+
+
+.lilnono{
+
+top:-50%;
+
+}
+

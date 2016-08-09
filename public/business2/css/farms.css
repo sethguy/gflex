@@ -1,0 +1,514 @@
+.farmsearchcon{
+position: absolute;
+top:0px;
+left:0px;
+height:100%;
+width:100%;
+z-index: 99;
+}
+
+.adfarmsearchcon{
+position: absolute;
+top:5%;
+left:35%;
+height:5%;
+width:30%;
+z-index: 99;
+text-align: center;
+}
+
+
+.adfarmsearchcon input{
+position: relative;
+height:100%;
+width:100%;
+color:darkgreen;
+z-index: 10;
+font-size: 100%;
+border: 0px;
+text-align: center;
+}
+
+
+#adFarmselinput:focus{
+
+ outline: 0;
+    background-color: transparent;
+    background:transparent!important;
+    border: 0px;
+
+
+
+}
+
+.farmsearchcon2{
+	  margin-top:2%;
+position: absolute;
+    width: 100%;
+    max-height: 300px;
+    overflow: scroll;
+}
+
+#adfarmcon{
+position: absolute;
+top:10%;
+left:0%;
+height:90%;
+width:100%;
+
+
+}
+
+
+.wb3p{
+
+position: relative;
+z-index: 10;
+}
+
+.fazult{
+position: relative;
+height:30px;
+width:100%;
+margin: 0;
+
+cursor:pointer;
+color:black;
+}
+
+.fazult:hover{
+background-color:#6c9c43;
+color:white;
+}
+
+.fazult p{
+
+position: relative;
+margin: 0px;
+color:inherit;
+}
+
+
+
+.fazultcon{
+    position: relative;
+    width: 99%;
+
+   display: none;
+    background-color: white;
+}
+
+.adnewfarmbt{
+position: relative;
+top:5%;
+width:20%;
+left:-40%;
+text-align: center;
+background-color: transparent;
+cursor: pointer;
+height:5%;
+}
+
+.adnewfarmbt p{
+position: relative;
+z-index: 5;
+
+}
+#savefabt{
+    position: absolute;
+    top:5%;
+left:75%;
+
+
+}
+
+#savefabt p{
+position: relative;
+z-index: 5;
+margin: 0px;
+}
+
+.bfarmfieldcon{
+position: relative;
+
+
+
+
+
+}
+.bfafieldt{
+position: relative;
+margin: 1%;
+
+
+
+}
+.adnewfarmput{
+position: relative;
+color:inherit;
+font-size: 100%;
+height:20%;
+border-bottom: 1px solid darkgreen;
+width:80%;
+}
+
+.adfarmsubcon{
+position: absolute;
+height:100%;
+width:100%;
+overflow: scroll;
+
+}
+
+
+.adeditfarm{
+display: none;
+
+
+}
+
+.adnewfarm{
+display: block;
+
+
+
+}
+
+.faprocon{
+    margin: 2% 0%;
+position: relative;
+height:30%;
+width:80%;
+text-align: center;
+
+}
+
+.faprotab{
+position: relative;
+table-layout: fixed;
+height:100%;
+width:100%;
+
+}
+
+.faprotab td{
+position: relative;
+
+}
+
+.faprotdiv{
+position: relative;
+height:100%;
+width:100%;
+
+}
+
+.faprotdiv p {
+font-family: 'Oxygen', sans-serif; 
+color :#FF6633;
+margin: 0px;
+font-weight: 300;
+font-size: 75%;
+}
+.proimg{
+
+position: relative;
+height:55px;
+
+}
+
+
+
+.faprotdiv .catck{
+position: relative;
+height: 27px;
+width: 27px;
+
+background-color: white;
+border: 1px solid black;
+cursor:pointer;
+background-repeat: no-repeat;
+background-size: 90% 90%;
+z-index:10;
+
+}
+
+.catck .ckimg{
+position: relative;
+height: 100%;
+width :100%;
+
+}
+
+
+
+#FarmInfodiv{
+position: absolute;
+background-repeat: no-repeat;
+background-size: 100% 100%;
+left:50%;
+height:550px;
+width:475px;
+border: 1px solid green;
+display: none;
+margin-left: 3%;
+overflow: scroll;
+}
+
+.lgfadebig{
+
+    background-color: lightgreen;
+    opacity: .1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    filter: alpha(opacity=80);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 200%;
+    width: 100%;
+    z-index: 1;
+    border-radius: inherit;
+
+}
+
+#FarmInfodiv .wblet{
+position:relative;
+z-index:10;
+margin: 3% 0%;
+overflow: hidden;
+}
+
+#farmlet{
+position: relative;
+height: 30%;
+overflow:scroll;
+}
+
+#certlet{
+  height: 90%;
+  position: absolute;
+  left: 53%;
+  top: 20%;
+  width: 50%;
+  overflow: scroll;
+  z-index: 15;
+}
+
+#infocontainer{
+  
+  position: absolute;
+  left: 0%;
+  top: 20%;
+  width: 53%;
+  overflow:hidden;
+word-wrap: break-word;
+}
+
+#infocontainer p{
+word-wrap: break-word;
+}
+
+
+.certbox{
+ 
+  position: relative;
+  
+  width: 100%;
+}
+
+.certspace{
+
+
+    position: relative;
+    height: 30%;
+}
+
+
+.certbox img{
+
+position: relative;
+    left: 0px;
+    top: 0px;
+    height: 30px;
+    width: 30px;
+    display: block;
+
+}
+
+.certname{
+  height:100%;
+  position: absolute;
+  color:darkgreen;
+  left:30px;
+  top:0px;
+}
+
+
+#cholet{
+position: relative;
+height: 20%;
+}
+
+
+
+#datelet{
+position: relative;
+height: 5%;
+}
+
+#datelet p{
+position: relative;
+margin: 0;
+}
+
+#dateput{
+position:relative;
+height:100%;
+width:100%;
+z-index: 10;
+}
+
+#poplet{
+position: relative;
+height: 20%;
+    font-size: 85%;
+
+}
+
+
+#poplet p{
+
+position: relative;
+z-index: 10;
+    font-size: 85%;
+}
+
+
+#notelet{
+position: relative;
+height: 10%;
+}
+
+#conlet{
+position: relative;
+height: 5%;
+}
+
+
+#conlet .fcat{
+position: absolute;
+height: 100%;
+z-index: 10;
+border: 0px;
+width:15%;
+color:white;
+text-align: center;
+cursor: pointer;
+}
+
+#conlet p{
+position: relative;
+margin-top: 5px;
+z-index: 10;
+font-size: 75%;
+font-family: 'Oxygen', sans-serif; 
+color:white;
+font-weight: 300;
+}
+
+
+.fcat{
+position: absolute;
+height: 100%;
+z-index: 10;
+
+width:25%;
+}
+
+#dbox{
+position:absolute;
+left:40%;
+top:0px;
+width:60%;
+height: 100%;
+}
+
+#notebox{
+position:absolute;
+top:0px;
+left:20%;
+width:80%;
+height: 100%;
+}
+
+#notearea{
+resize:none;
+position: relative;
+width:98%;
+height: 95%;
+z-index:10;
+background-color: transparent;
+}
+
+
+
+
+#farminfocontainer{
+position: relative;
+margin: 5%;
+height: 90%;
+width:90%;
+}
+
+
+.farmlet .farminfo{
+font-family: 'Oxygen', sans-serif; 
+color:darkgreen;
+font-size: 30%;
+margin: 0px !important;
+padding: 0px !important;
+} 
+
+.farmlet p{
+margin: 0px !important;
+padding: 0px !important;
+color:purple;
+}
+
+#farmname{
+font-size: 100%;
+font-weight: 500;
+}
+
+#cholet p {
+font-family: 'Oxygen', sans-serif; 
+color :#FF6633;
+margin: 0px;
+font-weight: 300;
+font-size: 75%;
+}
+
+
+.catck{
+position: relative;
+height: 20%;
+width: 30%;
+background-color: white;
+border: 1px solid black;
+cursor:pointer;
+background-repeat: no-repeat;
+background-size: 90% 90%;
+z-index:10;
+
+}
+
+  
+#msgbox{
+position: relative;
+}
+
+#formbox{
+position: relative;
+}
+
+

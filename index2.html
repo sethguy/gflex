@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Greenease Business Lv2</title>
+    <!-- TODO: change all these to HTTPS! -->
+
+    <link type="text/css" rel="stylesheet" href="business/css/Greenease.css">
+    <link type="text/css" rel="stylesheet" href="business/css/fades.css">
+    <link type="text/css" rel="stylesheet" href="business/css/sign.css">
+    <link type="text/css" rel="stylesheet" href="business/css/widget.css">
+    <link type="text/css" rel="stylesheet" href="business/css/farms.css">
+    <link type="text/css" rel="stylesheet" href="business/css/backadbox.css">
+    <link type="text/css" rel="stylesheet" href="business/css/gmaps.css">
+    <link type="text/css" rel="stylesheet" href="business/css/adcat.css">
+    <link type="text/css" rel="stylesheet" href="business/css/gcrm.css">
+    <link type="text/css" rel="stylesheet" href="business/css/touchtab.css">
+    <link type="text/css" rel="stylesheet" href="business/css/linkedusers.css">
+    <link type="text/css" rel="stylesheet" href="business/css/suggestions.css">
+    <link type="text/css" rel="stylesheet" href="business/css/specials.css">
+    <link href='https://fonts.googleapis.com/css?family=Cabin|Muli|Cabin+Condensed|Cabin+Sketch|Poiret+One|Josefin+Sans|Shadows+Into+Light|Shadows+Into+Light+Two' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="business/css/adiv.css">
+    <link type="text/css" rel="stylesheet" href="business/css/farmtable.css">
+
+
+    <script type="text/javascript" src="https://lines.flavaflight.net/flava"></script>
+    <script type="text/javascript" src="business/js/nums.js"></script>
+    <script type="text/javascript" src="business/js/touchtab.js"></script>
+    <script type="text/javascript" src="business/js/uslist.js"></script>
+    <script type="text/javascript" src="business/js/gl2.js"></script>
+    <script type="text/javascript" src="business/js/lo.js"></script>
+    <script type="text/javascript" src="business/js/bsuser.js"></script>
+    <script type="text/javascript" src="business/js/gcrm.js"></script>
+    <script type="text/javascript" src="business/js/business.js"></script>
+    <script type="text/javascript" src="business/js/farms.js"></script>
+    <script type="text/javascript" src="business/js/farmtable.js"></script>
+    <script type="text/javascript" src="business/js/widgets.js"></script>
+    <script type="text/javascript" src="business/js/backadbox.js"></script>
+    <script type="text/javascript" src="business/js/editbusiness.js"></script>
+    <script type="text/javascript" src="business/js/gs2.js"></script>
+    <script type="text/javascript" src="business/js/navbuttons.js"></script>
+    <script type="text/javascript" src="business/js/suggestions.js"></script>
+    <script type="text/javascript" src="business/js/specials.js"></script>
+
+    <script type="text/javascript" src="business/js/prototype.js"></script>
+    <link rel="stylesheet" type="text/css" href="business/css/calendarview.css" />
+    <script type="text/javascript" src="business/js/calendarview.js"></script>
+
+    <!---
+font-family: 'Cabin', sans-serif;
+font-family: 'Muli', sans-serif;
+font-family: 'Cabin Condensed', sans-serif;
+font-family: 'Cabin Sketch', cursive;
+font-family: 'Poiret One', cursive;
+font-family: 'Josefin Sans', sans-serif;
+font-family: 'Shadows Into Light', cursive;
+font-family: 'Shadows Into Light Two', cursive;
+-------->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Noticia+Text' rel='stylesheet' type='text/css'>
+
+    <!-- 
+    <script>
+        if (window.location.protocol != "https:")
+            window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+    </script>
+-->
+
+    <meta name="gwt:property" content="locale=en_US">
+
+    <style>
+    input:-webkit-autofill {
+        background-color: transparent !important;
+    }
+    
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #669933 inset;
+    }
+    </style>
+
+
+</head>
+
+<body onmousedown="touchout()" onload="gl2go()">
+    <div id="bcent" align="center">
+
+        <div id="paytime">
+            <div id="payfade" class="fullfade"> </div>
+            <div id="paymsg">
+
+                <p>Thank you for your interest in a monthly service to Greenease Business in order to access the widgets on your business account. You may stop this service at anytime.</p>
+
+                <div id="gotopay"></div>
+            </div>
+        </div>
+
+
+        <div id="adminbutton">
+            Admin Button
+        </div>
+
+
+        <img id="topcut" src="business/images/topcut.png" alt="">
+
+        <!---------------------------- aDIV ---------------------------->
+        <div id="adiv">
+
+            <div id="admsg"> Select a business before you do ANYTHING!</div>
+            <div>
+
+                <div class="asearchcon">
+
+                    <div class="gfade"></div>
+
+                    <input onkeyup="searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="BisSuggestBox" type="text">
+
+                    <div class="asearchcon2">
+
+                        <div id="bizultscon" class="bizultscon">
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!---------------------------- END OF  aDIV ---------------------------->
+
+
+        <!---------------------------- NAV0/HEADER ---------------------------->
+        <div align="center" id="navhead">
+            <table cellspacing="20px" cellpadding="0" id="navtab">
+                <tr>
+                    <td id="nww" onmousedown="showwidgetview()">WEB WIDGETS</td>
+                    <td id="nph" onmousedown="showpurchasehistory()">PURCHASE HISTORY</td>
+                    <td id="nlg" onmousedown="showspecialmodal()"> add special</td>
+                    <td id="nlg" onmousedown="logout()">LOG OUT</td>
+                </tr>
+            </table>
+        </div>
+        <!---------------------------- END OF NAV0/HEADER---------------------------->
+
+
+        <!----------------------------- FORGOT PASSWORD FORM -------------------------->
+        <div id="ForgotForm">
+
+            <div id="fo3" class="four">
+                <div onmousedown="foback()" id="foback" class="bdiv">
+                    <p>BACK </p>
+                    <div class="gfade"></div>
+                </div>
+                <input id="foemail" class="tput" placeholder="Email">
+            </div>
+            <div onmousedown="fosend()" style="border-bottom: 0px " id="fo4" class="four">
+                <div class="bdiv">
+                    <p>SEND PASSWORD RESET</p>
+                    <div class="gfade"></div>
+                </div>
+            </div>
+
+            <div id="fo2" class="four">
+                <p id="fostatus"></p>
+            </div>
+            <div id="fo1" class="four"></div>
+
+
+        </div>
+
+        <!----------------------------END OF FORGOT PASSWORD FORM ---------------------------->
+
+
+
+        <!----------------------------- REQUEST ACCESS FORM-------------------------->
+        <div id="RequestForm">
+            <div class="half">
+                <div onmousedown="raback()" id="raback" class="four">
+                    <div class="bdiv">
+                        <p>BACK </p>
+                        <div class="gfade"></div>
+                    </div>
+                </div>
+                <div class="four">
+                    <p>TELL US A LITTLE BIT ABOUT YOURSELF :) </p>
+                </div>
+                <div class="four">
+                    <input id="raname" class="tput" placeholder="Name" autocomplete="off">
+                </div>
+                <div class="four">
+                    <input id="rabname" class="tput" placeholder="Restaurant Name" autocomplete="off">
+                </div>
+            </div>
+            <div class="half">
+                <div class="four">
+                    <input id="racity" class="tput" placeholder="City" autocomplete="off">
+                </div>
+                <div class="four">
+                    <input id="raemail" class="tput" placeholder="email" autocomplete="off">
+                </div>
+                <div class="four">
+                    <input id="rafarm" class="tput" placeholder="One Farm you purchase from" autocomplete="off">
+                </div>
+                <div onmousedown="rasend()" style="border-bottom: 0px " id="rasend" class="four">
+                    <div class="bdiv">
+                        <p>SEND </p>
+                        <div class="gfade"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!----------------------------END OF REQUEST ACCESS FORM---------------------------->
+
+
+
+        <!----------------------------WIDGETPAGE---------------------------->
+        <div id="wpcontainer">
+            <div class="wpdiv" id="wdbuilder">
+                <div class="wblet" id="wb1">MANAGE FARMS</div>
+
+                <div class="wblet" id="wb2">
+
+                    <div class="farmsearchcon">
+
+                        <div class="gfade"></div>
+
+                        <input onkeyup="searchfarmsbyname(this)" id="Farmselinput" type="text" autocomplete="off">
+
+                        <div class="farmsearchcon2">
+                            <div id="fazultscon" class="fazultcon">
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="wblet" id="wb3">
+                    <p id="wb3p"></p>
+                    <div class="rfade"></div>
+                </div>
+                <div class="wblet" id="wb4">
+                    <p>please select you background image</p>
+                    <div id="impickdiv">
+
+                        <table id="wdpktab" class="wdpktab">
+
+
+
+                        </table>
+
+                    </div>
+                    <div id="plable">To add widget to your website, kindly subscribe for $9.99/month
+                        <div class="gfade"></div>
+                    </div>
+                </div>
+
+                <div class="wblet" id="wb5">
+                    <div id="paybox" style="position:relative;">
+
+                        <!------Paybox---->
+
+                        <form id="payform" method="post" action="https://www.paypal.com/cgi-bin/webscr" class="paypal-button" target="_blank">
+                            <div class="hide" id="errorBox"></div>
+                            <input type="hidden" name="src" value="1">
+                            <input type="hidden" name="button" value="subscribe">
+                            <input id="iname" type="hidden" name="item_name" value="">
+                            <input type="hidden" name="amount" value="9.99">
+                            <input type="hidden" name="p3" value="1">
+                            <input type="hidden" name="t3" value="M">
+                            <input type="hidden" name="shipping" value="0">
+                            <input type="hidden" name="tax" value="0">
+
+                            <input type="hidden" name="env" value="www">
+
+                            <input type="hidden" name="notify_url" value="https://business.greenease.co/gipnl2">
+                            <input type="hidden" name="cmd" value="_xclick-subscriptions">
+                            <input type="hidden" name="a3" value="9.99">
+                            <input type="hidden" name="business" value="vferragut@msn.com">
+                            <input type="hidden" name="bn" value="JavaScriptButton_subscribe">
+                            <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_subscribe_113x26.png" alt="PayPal - The safer, easier way to pay online">
+                        </form>
+
+                    </div>
+                </div>
+                <div align="center" class="wblet" id="wb6">
+                    <p>Copy and paste web widget code into your web site (Right click and choose 'Copy' or Ctrl + C on your keyboard)</p>
+                    <div id="linkbox" align="center">
+
+                        <textarea id="linktext"></textarea>
+
+                    </div>
+                    <div class="fullfade"></div>
+                </div>
+            </div>
+
+            <style>
+
+            </style>
+
+            <div class="wpdiv" id="FarmInfodiv">
+                <div class="datepop" id="datepop"></div>
+
+
+                <div class="lgfadebig"></div>
+
+                <div id="farminfocontainer">
+
+                    <div class="wblet" id="farmlet">
+                        <div id="certlet"></div>
+                        <div class="gfade"></div>
+                        <div style="position:relative;z-index:10;overflow:auto;height:100%;width:100%">
+
+                            <div sytle="position:relativewidth:100%">
+
+                                <b>
+<p align="center" style="postion:relative;margin:0px;padding:0px;margin-bottom:3px" id="namefainfo" class="farminfo" > </p>
+</b>
+                            </div>
+                            <div id="infocontainer">
+                                <p style="font-size:100%;position:relative;top:0px;left:0px;margin:0px;padding:0px" id="farmer_first_namefainfo" class="farminfo"> </p>
+
+                                <p style="font-size:100%;margin:0px;padding:0px" id="addressfainfo" class="farminfo"> </p>
+
+                                <p style="font-size:100%;margin:0px;padding:0px" id="productsfainfo" class="farminfo"> </p>
+
+
+                                <p style="font-size:100%;margin:0px;padding:0px" id="phonefainfo" class="farminfo"> </p>
+                                <p style="font-size:100%;margin:0px;padding:0px" id="emailfainfo" class="farminfo"></p>
+                                <a target="_blank" style="font-size:100%;margin:0px;padding:0px" id="websitefainfo" class="farminfo"></a>
+                            </div>
+
+                            <!----
+
+
+
+  ------>
+                            <div style="position:relative" id="certdiv">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="wblet" id="cholet">
+
+                        <div class="gfade"></div>
+
+                        <div class="fcat" id="producechobox" align="center">
+                            <img align="center" src="business/images/apple.png" alt="">
+                            <p>PRODUCE</p>
+                            <div class="catck" onmousedown="ckchobox(this)" id="choproduce"></div>
+
+                        </div>
+
+                        <div class="fcat" id="dairychobox" align="center">
+
+                            <img align="center" src="business/images/cheese.png" alt="">
+                            <p>DAIRY</p>
+                            <div class="catck" onmousedown="ckchobox(this)" id="chodairy"></div>
+
+                        </div>
+                        <div class="fcat" id="meatchobox" align="center">
+
+
+                            <img align="center" src="business/images/chicken.png" alt="">
+                            <p>MEAT</p>
+                            <div class="catck" onmousedown="ckchobox(this)" id="chomeat"></div>
+                        </div>
+
+
+                        <div class="fcat" id="seafoodchobox" align="center">
+                            <img align="center" src="business/images/fish.png" alt="">
+                            <p style="margin-top:10%">SEAFOOD</p>
+                            <div class="catck" onmousedown="ckchobox(this)" id="choseafood"></div>
+                        </div>
+
+                    </div>
+                    <div class="wblet" id="poplet">
+                        <p id="popwords">Click the checkboxes above to update the agricultural goods you purchase from this farm.</p>
+
+                        <div class="gfade"></div>
+                    </div>
+                    <div class="wblet" id="datelet">
+                        <p>EFFECTIVE DATE</p>
+                        <div id="dbox">
+                            <div class="gfade">
+                            </div>
+                            <div id="dateput"></div>
+
+
+                            <script type="text/javascript">
+                            var date = new Date();
+
+                            get('dateput').inn(date.toDateString());
+                            </script>
+
+
+                            <script type="text/javascript">
+                            bigcal = Calendar.setup({
+                                //  parentElement: 'datepop',        
+                                dateField: 'dateput'
+                            });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="wblet" id="notelet">
+                        <p>NOTES</p>
+                        <div id="notebox">
+                            <textarea id="notearea"></textarea>
+                            <div class="gfade"></div>
+                        </div>
+
+
+                    </div>
+                    <div class="wblet" id="conlet">
+                        <div onmousedown="savefarmupdate()" id="fisave" class="fcat" style="left:5%">
+                            <div class="fullfade"></div>
+                            <p>SAVE</p>
+                        </div>
+
+
+
+                        <div id="fiup"></div>
+                        <!----
+    <div id = "fiup"  class="fcat"  style="left:55%" ><div class="fullfade"></div><p>UPDATE</p></div>
+    ------>
+                        <div id="ficlose" onmousedown="closefarminfo()" class="fcat" style="left:30%">
+                            <div class="fullfade"></div>
+                            <p>CLOSE</p>
+                        </div>
+
+                        <div onmousedown="makefarmprivate()" id="fimake" class="fcat" style="left:50%;width:40%">
+                            <div class="fullfade"></div>
+                            <p id="makemsg">MAKE PRIVATE</p>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!----
+
+<div style="position:absolute;top;0pxheight:0px;left:0px;display:none;">
+  <div id ="wproud" class="scrolldiv">  
+We're proud to buy from local and sustainable farms
+  </div>
+  <div id ="wproud" class="scrolldiv">  
+<div class="scat">
+<p>Meats</p>
+</div>
+<div id = "meatlist" class="slist"> 
+
+</div>
+
+  </div>
+
+  <div id ="wproud" class="scrolldiv">  
+<div class="scat">
+<p>Produce</p>
+</div>
+<div id = "prolist" class="slist"> 
+
+</div>
+
+  </div>
+
+  <div id ="wproud" class="scrolldiv">  
+<div class="scat">
+<p>Dairy</p>
+</div>
+<div id = "dairylist" class="slist"> 
+
+</div>
+
+
+  </div>
+
+  <div id ="wproud" class="scrolldiv">  
+<div class="scat">
+<p>Seafood</p>
+</div>
+<div id = "sealist" class="slist"> 
+
+</div>
+
+  </div>
+
+</div>
+
+
+-------->
+
+            <div class="wpdiv" id="widgetpreview">
+
+                <div align="center" id="backdiv">
+                    <div align="center" id="condiv">
+                        <div id="fader" class="widgfade"></div>
+
+
+                        <div id="wordsdiv">
+                            <div id="wproud" class="scrolldiv">
+                                <b>We're proud to buy from <br>local and sustainable farms</b>
+
+                            </div>
+
+                            <div id="category_meatpart" class="scrolldiv">
+                                <div class="scat">
+                                    <p id="mcl"><b>Meats</b></p>
+                                </div>
+                                <div id="category_meatlist" class="slist">
+
+                                </div>
+
+                            </div>
+
+                            <div id="category_producepart" class="scrolldiv">
+                                <div class="scat">
+                                    <p id="pcl"><b>Produce</b></p>
+                                </div>
+                                <div id="category_producelist" class="slist">
+
+                                </div>
+
+                            </div>
+
+                            <div id="category_dairypart" class="scrolldiv">
+                                <div class="scat">
+                                    <p id="dcl"><b>Dairy</b></p>
+                                </div>
+                                <div id="category_dairylist" class="slist">
+
+                                </div>
+
+
+                            </div>
+
+                            <div id="category_seafoodpart" class="scrolldiv">
+                                <div class="scat">
+                                    <p id="scl"><b>Seafood</b></p>
+                                </div>
+                                <div id="category_seafoodlist" class="slist">
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+                    </div>
+                    <div id="longdiv">
+                        Farm updates brought to you by Greenease ® for Business
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!---------------------------- END OF WIDGET PAGE---------------------------->
+
+
+
+        <!----------------------------FARMTABLE SPACE---------------------------->
+
+
+
+        <div id="farmtablediv" align="center">
+            <!----------
+            <img src="business/images/soon.png" style="position:absolute;top:50px;left:830px"></img>
+          ---------->
+
+            <div align="center" id="tableholder">
+                <div class="gfade"></div>
+
+                <div id="farmtable">
+
+                    <div class="ftc" id="fth0">
+
+                        <div class="nth">
+                            <p onmousedown="sortby(this)">DATE</p>
+                        </div>
+
+                    </div>
+                    <div class="ftc" id="fth1">
+
+                        <div class="nth">
+                            <p onmousedown="sortby(this)">FARM NAME</p>
+                        </div>
+
+                    </div>
+
+                    <div class="ftc" id="fth2">
+
+                        <div class="nth">
+                            <p onmousedown="sortby(this)">CATEGORY</p>
+                        </div>
+
+                    </div>
+
+                    <div class="ftc" id="fth3">
+                        <div class="nth">
+                            <p>NOTES</p>
+                        </div>
+                    </div>
+
+
+                    <div class="ftc" id="fth4">
+                        <div class="nth">
+                            <p>PLACE NEW ORDER</p>
+                        </div>
+                    </div>
+
+                    <div id="farmbod">
+
+
+                        <div class="ftc" id="ftc0">
+
+
+
+                        </div>
+                        <div class="ftc" id="ftc1">
+
+
+                        </div>
+
+                        <div class="ftc" id="ftc2">
+
+
+                        </div>
+
+                        <div class="ftc" id="ftc3">
+                        </div>
+
+
+                        <div class="ftc" id="ftc4">
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <!--
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+<tr>
+  <td><div class="ftra"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+  <td><div class="ftrc"></div></td>
+</tr>
+-->
+                </div>
+
+            </div>
+        </div>
+
+        <!---------------------------- END OF FARMTABLE SPACE---------------------------->
+
+
+        <!---------------------------- BACKADBOX---------------------------->
+
+        <div align="center" id="backadbox">
+            <div class="gfade"></div>
+            <div id="adbview" class="subadview">
+
+                <table id="abtab">
+
+                    <tr>
+
+                        <td>
+
+                            <div id="asformcon" class="adsec">
+
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+                            <div id="asmapcon" class="adsec">
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div id="aduview" class="subadview">
+
+                <div id="usdiv">
+
+                    <div class="usbizputcon" id="usbizputcon">
+
+                        <div class="gfade"></div>
+
+                        <input onkeyup="usbizsearch(this)" placeholder="Type in a Business Name" id="usbizSuggestBox" type="text">
+
+                    </div>
+
+                    <div class="uscon">
+
+                        <div class="gfade"></div>
+
+                        <input onkeyup="usearchbyemail(this)" placeholder="Type in a User Email" id="usSuggestBox" type="text">
+
+                        <div class="uscon2">
+                            <div id="uzultscon" class="uzultscon">
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div id="crmdiv" class="usopcon">
+
+
+
+                </div>
+
+
+            </div>
+
+            <div id="ebuview" class="subadview">
+
+                <div class="searchcon">
+
+                    <div id="searchmsg"> Select a business before you do ANYTHING!</div>
+                    <div>
+
+                        <div class="asearchcon">
+
+                            <div class="gfade"></div>
+
+                            <input onkeyup="adsbibyname(this)" placeholder="BEGIN TYPING THE NAME OF A BUSIENSS" id="adBisSuggestBox" type="text">
+
+                            <div class="asearchcon2">
+                                <div id="adbizultscon" class="bizultscon">
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="bedicon" class="bedicon">
+
+                </div>
+
+            </div>
+
+            <div id="adfview" class="subadview">
+                <div class="adfarmsearchcon">
+
+                    <div class="gfade"></div>
+
+                    <input onkeyup="adsearchfarmsbyname(this)" placeholder="Type name of farm" id="adFarmselinput" type="text" autocomplete="off">
+
+                    <div class="farmsearchcon2">
+                        <div id="adfazultscon" class="fazultcon">
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div onmousedown="showfarmfields(this)" class="adnewfarmbt">
+                    <div class="gfade"></div>
+                    <p> Add New Farm </p>
+                </div>
+
+                <div onmousedown="savefarm()" id="savefabt" class="adnewfarmbt">
+                    <div class="gfade"></div>
+                    <p> Save </p>
+                </div>
+
+                <div id="adfarmcon">
+
+                    <div class="adfarmsubcon" id="adeditfarm"></div>
+
+                    <div class="adfarmsubcon" id="adnewfarm"></div>
+
+                </div>
+
+            </div>
+
+            <div id="avfview" class="subadview">
+
+
+            </div>
+
+            <div id="avbview" class="subadview">
+
+
+            </div>
+
+        </div>
+
+
+        <!---------------------------- END OF BACK AD BOX---------------------------->
+
+
+
+        <table id="lotab">
+            <tr>
+                <td id="rtd">
+
+                    <div id="r1" class="four">
+
+                        <input onkeyup="testput(event)" placeholder="USERNAME" id="uemail" class="tput" autocomplete="on">
+
+                    </div>
+                    <div id="r2" class="four">
+
+                        <input id="upass" onkeyup="testput(event)" placeholder="PASSWORD" type="password" class="tput" autocomplete="on">
+
+
+                    </div>
+                    <div id="r3" class="four">
+                        <div onmousedown="showra()" id="req">
+                            <div class="gfade"></div>
+                        </div>
+                    </div>
+                    <div id="r4" class="four">
+                        <div onmousedown="showfo()" id="for">
+                            <div class="gfade"></div>
+                        </div>
+                    </div>
+
+                </td>
+                <td id="ltd">
+                    <div id="l1" class="four"></div>
+                    <div id="l2" class="four">
+                        <div onmousedown="trytologin()" id="lobt">
+                            <div class="gfade"></div>
+                        </div>
+                    </div>
+                    <div id="l3" class="four"></div>
+                    <div id="l4" class="four"></div>
+                </td>
+            </tr>
+        </table>
+
+
+        <div id="specialModal">
+
+
+            <div class="spec_nav-con">
+
+
+                <span onmousedown="closeSpecialsModals()" class="spec_nav">Close</span>
+                <span onmousedown="sendSpecial()" class="spec_nav">Publish</span>
+                <span onmousedown="sendSpecial()" class="spec_nav">Save</span>
+
+
+            </div>
+
+
+            <div id="sp-scroll">
+
+
+                <div id="specialbisearch" class="specialbisearch">
+
+                    <!----input placeholder="Type in a business name" id="sp-bi-put"---->
+
+                    <div id="spec_asearchcon" class="asearchcon">
+
+
+
+                        <input onkeyup="spec_searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="sp-bi-put" type="text">
+
+                        <div class="asearchcon2">
+
+                            <div id="spec_bizultscon" class="bizultscon" style="display: none;"></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <p class="sp-bi-name" id="sp-bi-name"> </p>
+
+                <p class="sp-bi-address" id="sp-bi-address"> </p>
+
+                <input placeholder="Enter Title" id="sp-bi-title">
+                <br>
+                <p> Terms: </p>
+                <textarea id="sp-terms"></textarea>
+                <br>
+                <table id="sp-image-select">
+                    <tr>
+                        <td>
+                            <img src="">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="">
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--  bcent div --->
+    <img src="business/images/powered2.png" alt="" id="poweredby">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo&libraries=places&callback=initgMap"></script>
+
+
+</body>
+
+</html>

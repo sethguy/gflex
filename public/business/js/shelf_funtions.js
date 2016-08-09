@@ -424,7 +424,7 @@ if(bi.adderess==null  || bi.adderess.length==0 ){
 
 misses.push( [ bi , "no adderess" ] );
 
-//console.log("miss"+JSON.stringify(  bi.name+"    ::   "+bi.objectId ) );
+//console.log("miss"+JSON.stringify(  bi.name+"    ::   "+bi._id ) );
 
 }
 

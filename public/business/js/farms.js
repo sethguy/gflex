@@ -123,7 +123,7 @@ function searchfarmsbyname(ele) {
 
                             if (stuff.result) alert(stuff.result)
 
-                        }, JSON.stringify({ farmName: ele.value, mail: user.username, userId: user.objectId }));
+                        }, JSON.stringify({ farmName: ele.value, mail: user.username, userId: user._id }));
 
 
                     });
@@ -249,6 +249,8 @@ function adfirefarmselection(fa) {
 
 function firefarmselection(fa) {
 
+    alert("seth")
+
     get("wpcontainer").appendChild(get('FarmInfodiv'));
 
     console.log(JSON.stringify(fa));
@@ -297,8 +299,6 @@ function showfarminfo(fa) {
 
 function fillfarminfo(fa) {
     //place regular farm fileds
-
-
     get('notearea').value = "";
 
     if (BigCal) {
@@ -309,6 +309,8 @@ function fillfarminfo(fa) {
     for (var i = 0; i < bfarmfields.length; i++) {
 
         var fi = bfarmfields[i];
+
+        console.log(fi.name + "  fill info " + fa[fi.name]);
 
         var fn = fi.name;
 
@@ -321,8 +323,7 @@ function fillfarminfo(fa) {
 
             if (fa[fn]) link = fa[fn];
 
-            if (!get(fn + "fainfo").body) get(fn + "fainfo").inn('Website').prop('href', link);
-
+            if (get(fn + "fainfo") !== null) get(fn + "fainfo").inn('Website').prop('href', link);
 
         } else {
 
@@ -330,7 +331,7 @@ function fillfarminfo(fa) {
 
             if (fa[fn]) show = fa[fn];
 
-            if (!get(fn + "fainfo").body) get(fn + "fainfo").inn(show);
+            if (get(fn + "fainfo") !== null) get(fn + "fainfo").inn(show);
 
         }
 
@@ -457,10 +458,8 @@ function savefarmupdate() {
 
     }; // fpro loop
 
-    console.log('farnbiz' + JSON.stringify(farm));
-
-    var bid = biz._id;
-    var fid = farm._id;
+    var bid = biz._id || biz._id;
+    var fid =  farm._id || farm._id;
 
     if (window.Prototype) {
         delete Object.prototype.toJSON;
@@ -488,12 +487,13 @@ function savefarmupdate() {
 
         var bfarm = buy.ob;
 
-        if (bfarm.objectId === farm.objectId) {
+        if (bfarm._id === farm._id) {
             hadfarm = true;
             for (var j = 0; j < pros.length; j++) {
                 var pro = pros[j];
 
                 if ((buy[pro.name] && pro.value) || (!buy[pro.name] && !pro.value)) {
+
 
                 } else {
 
@@ -501,9 +501,11 @@ function savefarmupdate() {
 
                 }
 
+
             }; //loop
 
         }
+
 
     }; // purhis ck  loop
 
@@ -618,10 +620,8 @@ function setbuysfrom(fa) {
             var theFarm = buys.ob;
 
             if (theFarm.name === fa.name) {
-                console.log("this is buys 7 " + JSON.stringify(buys));
 
-                makebt.buysfrom = buys;
-                //makebt.stprop('display','block');
+                makebt.stprop('display', 'block');
 
                 setckboxes(buys);
                 console.log(JSON.stringify(buys));
@@ -632,7 +632,7 @@ function setbuysfrom(fa) {
 
                     makebt.value = buys.buys.hide;
 
-                    makemsg.inn("Make farm public");
+                    makemsg.inn("Make farm business");
 
                 } else {
 
@@ -729,7 +729,7 @@ function getfarmfromfields() {
     }; //feild loop
 
     if (adselecedFarm) {
-        fa.objectId = adselecedFarm.objectId;
+        fa._id = adselecedFarm._id;
     }
 
     return fa;
@@ -926,7 +926,23 @@ function facatpart(cat, imgpk, bival) {
     return cp;
 } //catpart
 
-function savefarm() {
+var removefarm = function() {
+
+    var answer = confirm("Remove this farm ?")
+    if (answer) {
+
+        savefarm(true);
+
+    } else {
+
+    }
+
+
+}
+
+function savefarm(rm) {
+
+    get('savefabt').style.display = "none";
 
     var name = get('edfaname');
 
@@ -939,7 +955,7 @@ function savefarm() {
 
             if (nava.length > 0) {
                 var fa = getfarmfromfields();
-
+                fa.removed = rm;
                 fa.loname = fa.name.toLowerCase();
 
                 console.log(JSON.stringify(fa));
@@ -947,11 +963,26 @@ function savefarm() {
                 var urlstring = EditFarmUrl + "/" + encodeURIComponent(JSON.stringify(fa));
                 grabstuff(urlstring, function(stuff) {
 
+                    get('savefabt').style.display = "block";
 
                     if (stuff.msg) {
 
-
                         alert(stuff.msg)
+
+                        if (stuff.farm && stuff.farm.removed) {
+
+                            showfarmfields(true);
+
+                        } else {
+
+                            adfirefarmselection(stuff.farm);
+
+                            get('adFarmselinput').value = "";
+
+                            get('adfazultscon').stprop('display', 'none').inn("");
+
+
+                        }
 
                     }
 
@@ -1064,9 +1095,9 @@ function makefarmprivate() {
 
     var makebt = get('fimake');
 
+
     var value = makebt.value;
 
-    console.log(value + " value 1");
 
     if (value === true) {
 
@@ -1077,13 +1108,9 @@ function makefarmprivate() {
         value = true;
 
     }
-    console.log(value + " value 2");
-    var fimakebuyid = get('fimake').buysfrom.buys.objectId
-        //var urlstring = toggleprivateUrl+"/"+farm.objectId+"/"+biz.objectId+"/"+value;
 
-    console.log(fimakebuyid + "  fimake ")
 
-    var urlstring = toggleprivateUrl + "/" + fimakebuyid + "/" + value;
+    var urlstring = toggleprivateUrl + "/" + farm._id + "/" + biz._id + "/" + value;
 
     console.log(urlstring + "  stefarmvis");
 
@@ -1097,7 +1124,9 @@ function makefarmprivate() {
 
             alert(msg)
 
+
         } else {
+
 
             alert('error')
 

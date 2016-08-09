@@ -1,0 +1,69 @@
+.demoflexcon{
+position: relative;
+height:500px;
+width:800px;
+
+
+}
+
+
+.flextab{
+position: relative;
+height:100%;
+width:100%;
+
+table-layout: fixed;
+
+}
+
+.flextab td{
+position: relative;
+
+text-align: center;
+
+}
+.flextab tr{
+position: relative;
+
+
+}
+
+.flexcell{
+position: relative;
+height:100%;
+width:100%;
+
+
+}
+
+.flexcell2{
+position: relative;
+height:100%;
+width:100%;
+border: 1px solid green;
+
+}
+.flexcell3{
+position: relative;
+height:100%;
+width:100%;
+border: 1px solid darkblue;
+
+}
+
+.flexcell4{
+position: relative;
+height:100%;
+width:100%;
+border: 1px solid darkblue;
+
+}
+
+.flexcon{
+position: relative;
+height:500px;
+width:800px;
+border: 1px solid purple;
+
+
+}

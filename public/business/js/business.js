@@ -1,213 +1,218 @@
-function business(bi) {
+function business(bi){
 
 
-} //business
+}//business
 
 
-function searchbibyname(ev, ele) {
-    console.log("key code :" + ev.keyCode);
-    var kc = ev.keyCode;
-    /*
-    if( kc===38 || kc ===40 ){
 
+function searchbibyname(ev,ele){
+console.log("key code :"+ev.keyCode);
+var kc = ev.keyCode;
+/*
+if( kc===38 || kc ===40 ){
 
-    return;
-    }
-    */
-    var word = ele.value;
-    var rcon = get('bizultscon').stprop('display', 'block'); //.inn("");
 
-    if (word.length > 0) {
-        var lowterm = ele.value.toLowerCase();
-        if (!get('adiv').bizlist) {
+return;
+}
+*/
+var word = ele.value;
+var rcon = get('bizultscon').stprop('display','block');//.inn("");
 
-            var urlstring = GetBizByNameUrl + "/" + word;
+if(word.length>0){
+var lowterm = ele.value.toLowerCase();
+if(!get('adiv').bizlist){
 
-            grabstuff(urlstring, function(stuff) {
+var urlstring = GetBizByNameUrl+"/"+word;
 
-                    //console.log(JSON.stringify(stuff));
+grabstuff(urlstring,function(stuff){
 
-                    //var matches = stuff.matches;
-                    //var term = 
+//console.log(JSON.stringify(stuff));
 
-                    console.log(word + "  word n term   " + ele.value);
+//var matches = stuff.matches;
+//var term = 
 
-                    if (word !== ele.value) {
+console.log(word+"  word n term   "+ele.value);
 
+if(word!==ele.value){
 
-                        console.log('caugth');
 
-                    }
+console.log('caugth');
 
-                    if (word === ele.value) {
-                        console.log('all clear');
-                        get('bizultscon').inn("");
+}
 
-                        for (var i = 0; i < stuff.length; i++) {
-                            var bi = stuff[i];
+if(word===ele.value){
+console.log('all clear');
+get('bizultscon').inn("");
 
+for (var i = 0; i < stuff.length; i++) {
+	var bi = stuff[i];
 
-                            if (ele.value.length > 0) {
 
-                                rcon.pend(
+if( ele.value.length>0 ){
 
-                                    bizult(bi).prop("id", 'bzult' + i)
+	rcon.pend(
 
-                                );
+		bizult(bi).prop("id",'bzult'+i)
 
-                            } // q ck
+		);
 
+}// q ck
 
-                        };
 
 
-                    } //if word ===term
+};
 
 
-                }) //request
+}//if word ===term
 
-        } else {
 
-            var list = get('adiv').bizlist;
+})//request
 
-            get('bizultscon').inn("");
-            for (var i = 0; i < list.length; i++) {
-                var bi = list[i].bi;
+}else{
 
-                if (bi.loname.indexOf(lowterm) > -1 && ele.value.length > 0) {
+var list = get('adiv').bizlist;
 
-                    rcon.pend(
+get('bizultscon').inn("");
+for (var i = 0; i < list.length; i++) {
+	var bi = list[i].bi;
 
-                        bizult(bi)
+if(  bi.loname.indexOf( lowterm ) > -1 && ele.value.length > 0 ){
 
-                    );
+	rcon.pend(
 
-                } // q ck
+		bizult(bi)
 
-            };
+		);
 
+}// q ck
 
-        } // check for a bizlist to pull from
+};
 
-    } else {
 
-        get('bizultscon').stprop('display', 'none').inn("");
 
-    } //length ck
+}// check for a bizlist to pull from
 
+}else{
 
-} //searchbibyname
+get('bizultscon').stprop('display','none').inn("");
 
+}//length ck
 
-function bizult(bi) {
 
-    var bz = div().cl('bizult').pend(
+}//searchbibyname
 
-        el('p').inn(bi.business)
 
-    ).prop('onmousedown', function() {
+function bizult(bi){
 
-        firebizselection(bi);
+var bz = div().cl('bizult').pend(
 
-        get('BisSuggestBox').value = bi.business;
+			el('p').inn(bi.business)
 
-        get('bizultscon').stprop('display', 'none').inn("");
+			).prop('onmousedown',function(){
 
-    });
+firebizselection(bi);
 
-    return bz;
-} //bizult
+get('BisSuggestBox').value = bi.business;
 
+get('bizultscon').stprop('display','none').inn("");
 
-function newbiz(bi) {
+			});
 
-    grabstuff("http://business.greenease.co/newbiz/" + JSON.stringify(bi), function(stuff) {
+	return bz;
+}//bizult
 
-        console.log(stuff);
 
-    });
+function newbiz(bi){
 
-} //newbiz
+grabstuff("http://business.greenease.co/newbiz/"+JSON.stringify(bi),function(stuff){
 
-function getfarms(bi, calli) {
+console.log(stuff);
 
-    var urlstring = getbizfarmsurl + "/" + bi._id;
+});
 
-    grabstuff(urlstring, function(stuff) {
+}//newbiz
 
-        displaywidgpreview(stuff);
+function getfarms( bi , calli ){
 
-        if (calli) calli(stuff);
+var urlstring = getbizfarmsurl+"/"+bi._id;
 
-    }); //request
+grabstuff(urlstring,function(stuff){
 
+displaywidgpreview(stuff);
 
-} // getfarms
+if(calli)calli(stuff);
 
+});//request
 
-function refeshbusiness(bi, fa) {
 
-    writefarmtable(bi);
+}// getfarms
 
-    fillfarminfo(fa);
 
-    getfarms(bi, function(stuff) {
+function refeshbusiness(bi,fa){
 
-        setbuysfrom(fa);
+writefarmtable(bi);
 
-    });
+fillfarminfo(fa);
 
-    console.log("refeshbusiness");
-} //refresh
+getfarms(bi,function(stuff){
 
-function getwidglink() {
-    var biz = get('linkbox').biz;
-    var user = get('linkbox').user;
-    var pic = get('linkbox').pic;
-    //alert(JSON.stringify(user))
+setbuysfrom(fa);
 
-    if (!pic) pic = 'cafe';
+});
 
-    var urlstring = widgtextUrl + "/" + user.email + "/" + biz.objectId + "/" + pic;
+console.log("refeshbusiness");
+}//refresh
 
-    grabtext(urlstring, function(stuff) {
-        //alert(stuff)
-        var lt = get('linktext').value = stuff;
+function getwidglink(){
+	var biz = get('linkbox').biz;
+var user = get('linkbox').user;
+var pic = get('linkbox').pic;
+//alert(JSON.stringify(user))
 
-    });
+if(!pic)pic ='cafe';
 
+var urlstring =  widgtextUrl+"/"+user.email+"/"+biz._id+"/"+pic;
 
-} //getwidglink
+grabtext(urlstring,function(stuff){
+//alert(stuff)
+var lt = get('linktext').value = stuff;
 
-function firebizselection(bi) {
+});
 
-    console.log(JSON.stringify(bi) + "  fire biz");
 
-    var lb = get('linkbox').prop('biz', bi);
-    getwidglink();
+}//getwidglink
 
-    buysfromlist = null;
+function firebizselection(bi){
 
-    get('farmtablediv').stprop('display', 'none');
+console.log(JSON.stringify(bi)+"  fire biz");
 
-    get("FarmInfodiv").biz = null;
+var lb = get('linkbox').prop('biz' , bi );
+getwidglink();
 
-    get("FarmInfodiv").stprop('display', 'none');
+buysfromlist=null;
+  
+get('farmtablediv').stprop('display','none');
 
-    get("topcut").stprop('position', 'relative').stprop('height', '10%');
+get("FarmInfodiv").biz = null;
 
-    get('navhead').stprop('display', 'block');
+get("FarmInfodiv").stprop('display','none');
 
-    get("widgetpreview").stprop('display', 'block');
+get("topcut").stprop('position','relative').stprop('height','10%');
 
-    get("wpcontainer").stprop('display', 'block').prop('biz', bi);
+get('navhead').stprop('display','block');
 
-    getfarms(bi);
+get("widgetpreview").stprop('display','block');
 
-    get("FarmInfodiv").biz = bi;
+get("wpcontainer").stprop('display','block').prop('biz',bi);
 
-    writefarmtable(bi);
+getfarms(bi);
 
-    setpreback({ 'name': 'cf', 'title': 'Cafe', 'img': 'business/images/cafe.png', 'short': 'cafe' });
+get("FarmInfodiv").biz = bi;
 
-} //firebizselection
+writefarmtable(bi);
+
+setpreback( {'name':'cf','title':'Cafe','img':'business/images/cafe.png','short':'cafe'} );
+
+}//firebizselection
+
+

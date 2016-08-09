@@ -8,39 +8,43 @@ var farmtabcols = [{
     'title': 'NOTES'
 }, {
     'title': 'PLACE NEW ORDER'
-}];
+} ];
 
 var sortbys = {
-    'DATE': { 'name': 'actionEffectiveDate', 'state': null },
-    'FARM NAME': { 'name': 'farmname', 'state': null },
-    'CATEGORY': { 'name': 'category', 'state': null },
+'DATE':{'name':'actionEffectiveDate','state':null},
+'FARM NAME':{'name':'farmname','state':null},
+'CATEGORY':{'name':'category','state':null},
 };
 
 
 function farmtable() {
 
 
+
 } //farmtable
 
 
 function writefarmtable(bi) {
-    get('farmtablediv').biz = bi;
+get('farmtablediv').biz=bi;
     console.log(JSON.stringify(bi) + " at write farm tab ");
 
-    fillfarmtable(bi);
+fillfarmtable
+(bi);
 
 } //writefarmtable
 
 
-function showfarmtable(bi) {
 
-    get('farmtablediv').stprop('display', 'block');
+function showfarmtable(bi){
 
-    get('wpcontainer').stprop('display', 'none');
+    get('farmtablediv').stprop('display','block');
 
-    writefarmtable(bi);
 
-} //show farm table
+get('wpcontainer').stprop('display','none');
+
+writefarmtable(bi);
+
+}//show farm table
 
 function fillfarmtable(bi,sort) {
 if(!sort)sort = JSON.stringify({'by':'actionEffectiveDate','di':1} );
@@ -91,7 +95,7 @@ if(place){
 
     url = place;
 
-ment = el('img').prop('src','images/farmersweb_logo.jpg').cl('farmersimg');
+ment = el('img').prop('src','business/images/farmersweb_logo.jpg').cl('farmersimg');
 
 }else if(thefarm.website){
 
@@ -130,25 +134,21 @@ placetd = farmweb(5,url,ment);
 } //fill farm table
 
 
+function farmweb(tn,url,ment){
+var l =0;
 
+if(url)l=url.length;
 
+var td = div().cl("fts").pend( ment.prop('href',url).prop('onmousedown',function(){
 
+window.open(url);
 
-function farmweb(tn, url, ment) {
-    var l = 0;
+}) 
 
-    if (url) l = url.length;
+);
 
-    var td = div().cl("fts").pend(ment.prop('href', url).prop('onmousedown', function() {
-
-            window.open(url);
-
-        })
-
-    );
-
-    return td;
-} //farmweb
+return td;
+}//farmweb
 
 
 function PurchaseHistoryRecord(rec) {
@@ -157,24 +157,26 @@ function PurchaseHistoryRecord(rec) {
 } //PurchaseHistoryRecord
 
 
+
+
 function rowtime(group, farm) {
 
     for (var i = 0; i < group.length; i++) {
 
         var ele = group[i];
 
-        if (i < group.length - 1) {
-            ele.onmousedown = function() {
+if(i<group.length-1){
+        ele.onmousedown = function() {
 
-                    //  NEED THIS !!!!!! FarmInfodiv.removeFromParent();
+                //  NEED THIS !!!!!! FarmInfodiv.removeFromParent();
 
-                    get('FarmInfodiv').stprop('backgroundImage', "url(\"business/images/mainBackground.png\")");
-                    get('farmtablediv').appendChild(get('FarmInfodiv'));
-
-                    phfirefarmselection(farm);
-
-                } // ele onmousedown
-        } // don listen on last row
+                get('FarmInfodiv').stprop('backgroundImage', "url(\"business/images/mainBackground.png\")");
+                get('farmtablediv').appendChild( get('FarmInfodiv') );
+            
+                phfirefarmselection(farm);
+            
+            } // ele onmousedown
+}// don listen on last row
 
 
         ele.onmouseout = function() {
@@ -192,6 +194,8 @@ function rowtime(group, farm) {
     } // group loop
 
 } //rowtime
+
+
 
 
 function overrow(group) {
@@ -236,10 +240,10 @@ function datecol(date, acode) {
     var ds = div();
     ds.cl("datespace");
 
-    //  var d = Date.parse("2015-05-24T04:00:00.000Z");
+  //  var d = Date.parse("2015-05-24T04:00:00.000Z");
 
-    var da = new Date();
-    da.setTime(Date.parse(date.iso));
+var da = new Date(  );
+da.setTime(Date.parse(date.iso));
 
     ds.innerHTML = da.toDateString();
 
@@ -248,7 +252,7 @@ function datecol(date, acode) {
 
     var sp = div();
 
-    //      console.log(" get value code   "+acode.getCodeValue() );
+    //  	console.log(" get value code   "+acode.getCodeValue() );
 
     if (acode == 1) {
 
@@ -271,7 +275,7 @@ function gettd(tn, stuff) {
     var td = div();
 
     // if (stuff.length()==0) stuff ="N/A";
-    // console.log(stuff + "  intd  ");
+   // console.log(stuff + "  intd  ");
 
     td.innerHTML = stuff;
     td.cl("fts");
@@ -281,45 +285,49 @@ function gettd(tn, stuff) {
 }
 
 
-function sortby(ele) {
+function sortby(ele){
 
-    var inn = ele.innerHTML;
+var inn = ele.innerHTML;
 
-    var state = sortbys[inn].state;
+var state = sortbys[inn].state;
 
-    if (state === null) {
+if(state===null){
 
-        sortbys[inn].state = 1;
-        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
-        return;
-    }
+    sortbys[inn].state = 1;
+    fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
+return;
+}
 
-    if (state === 1) {
+if(state===1){
 
-        sortbys[inn].state = 0;
-        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
-        return;
-    }
-    if (state === 0) {
+    sortbys[inn].state = 0;
+fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
+return;
+}
+if(state===0){
 
-        sortbys[inn].state = 1;
-        fillfarmtable(get('farmtablediv').biz, JSON.stringify({ 'by': sortbys[inn].name, 'di': sortbys[inn].state }));
-        return;
-    }
+    sortbys[inn].state = 1;
+    fillfarmtable( get('farmtablediv').biz, JSON.stringify({'by':sortbys[inn].name,'di':sortbys[inn].state}) );
+return;
+}
 
 
 }
 
-function createPurHistRec(bid, fid, newphlist, note, milli, calli) {
+function createPurHistRec(bid,fid,newphlist,note,milli,calli){
 
-    var urlstring = createPurHistRecUrl + "/" + bid + "/" + fid + "/" + JSON.stringify(newphlist) + "/" + encodeURIComponent(note) + "/" + milli;
+var urlstring = createPurHistRecUrl+"/"+bid+"/"+fid+"/"+JSON.stringify(newphlist)+"/"+encodeURIComponent(note)+"/"+milli;
 
-    console.log(urlstring + "   new purchaseHistoryRecords ");
+console.log(urlstring+"   new purchaseHistoryRecords ");
 
-    grabstuff(urlstring, function(stuff) {
+grabstuff(urlstring,function(stuff){
 
-        calli(stuff);
+calli( stuff );
 
-    });
+});
 
-} //createPurHistRec
+}//createPurHistRec
+
+
+
+

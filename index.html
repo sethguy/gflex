@@ -18,12 +18,27 @@
     <link type="text/css" rel="stylesheet" href="business/css/linkedusers.css">
     <link type="text/css" rel="stylesheet" href="business/css/suggestions.css">
     <link type="text/css" rel="stylesheet" href="business/css/specials.css">
+
+    <!-----
+
+                    var placesUrl = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + bio.place_id + '&key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo';
+
+
+------>
+
+
+
+    <link type="text/css" rel="stylesheet" href="business/css/liltraktrak.css">
     <link href='https://fonts.googleapis.com/css?family=Cabin|Muli|Cabin+Condensed|Cabin+Sketch|Poiret+One|Josefin+Sans|Shadows+Into+Light|Shadows+Into+Light+Two' rel='stylesheet' type='text/css'>
     <link type="text/css" rel="stylesheet" href="business/css/adiv.css">
     <link type="text/css" rel="stylesheet" href="business/css/farmtable.css">
 
 
-    <script type="text/javascript" src="https://lines.flavaflight.net/flava"></script>
+
+    <link type="text/css" rel="stylesheet" href="business/css/bootstrap.min.css">
+
+
+    <script type="text/javascript" src="business/js/flava.js"></script>
     <script type="text/javascript" src="business/js/nums.js"></script>
     <script type="text/javascript" src="business/js/touchtab.js"></script>
     <script type="text/javascript" src="business/js/uslist.js"></script>
@@ -42,6 +57,12 @@
     <script type="text/javascript" src="business/js/suggestions.js"></script>
     <script type="text/javascript" src="business/js/specials.js"></script>
 
+
+
+    <script type="text/javascript" src="business/js/jquery-1.12.2.min.js"></script>
+
+    <script type="text/javascript" src="business/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="business/js/prototype.js"></script>
     <link rel="stylesheet" type="text/css" href="business/css/calendarview.css" />
     <script type="text/javascript" src="business/js/calendarview.js"></script>
@@ -59,12 +80,12 @@ font-family: 'Shadows Into Light Two', cursive;
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Noticia+Text' rel='stylesheet' type='text/css'>
 
-    <!-- 
-    <script>
-        if (window.location.protocol != "https:")
-            window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
-    </script>
--->
+
+    <!-----script>
+        if (window.location.protocol != "http:")
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+    </script------>
+
 
     <meta name="gwt:property" content="locale=en_US">
 
@@ -140,11 +161,14 @@ font-family: 'Shadows Into Light Two', cursive;
                 <tr>
                     <td id="nww" onmousedown="showwidgetview()">WEB WIDGETS</td>
                     <td id="nph" onmousedown="showpurchasehistory()">PURCHASE HISTORY</td>
-                    <td id="nlg" onmousedown="showspecialmodal()"> add special</td>
+                    <!-------- <td id="nlg" onmousedown="showspecialmodal()"> SPECIALS </td>-------->
                     <td id="nlg" onmousedown="logout()">LOG OUT</td>
                 </tr>
             </table>
         </div>
+
+
+
         <!---------------------------- END OF NAV0/HEADER---------------------------->
 
 
@@ -267,25 +291,27 @@ font-family: 'Shadows Into Light Two', cursive;
 
                         <!------Paybox---->
 
-                        <form id="payform" method="post" action="https://www.paypal.com/cgi-bin/webscr" class="paypal-button" target="_blank">
+                        <form id="payform" method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class="paypal-button" target="_blank">
+
                             <div class="hide" id="errorBox"></div>
                             <input type="hidden" name="src" value="1">
                             <input type="hidden" name="button" value="subscribe">
                             <input id="iname" type="hidden" name="item_name" value="">
                             <input type="hidden" name="amount" value="9.99">
                             <input type="hidden" name="p3" value="1">
-                            <input type="hidden" name="t3" value="M">
+                            <input type="hidden" name="t3" value="D">
                             <input type="hidden" name="shipping" value="0">
                             <input type="hidden" name="tax" value="0">
 
                             <input type="hidden" name="env" value="www">
 
-                            <input type="hidden" name="notify_url" value="https://business.greenease.co/gipnl2">
+                            <input type="hidden" name="notify_url" value="https://https://gflex-greenease.rhcloud.com/gipnl2">
                             <input type="hidden" name="cmd" value="_xclick-subscriptions">
                             <input type="hidden" name="a3" value="9.99">
-                            <input type="hidden" name="business" value="vferragut@msn.com">
+                            <input type="hidden" name="business" value="vferragut-facilitator@msn.com">
                             <input type="hidden" name="bn" value="JavaScriptButton_subscribe">
                             <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_subscribe_113x26.png" alt="PayPal - The safer, easier way to pay online">
+
                         </form>
 
                     </div>
@@ -762,6 +788,7 @@ We're proud to buy from local and sustainable farms
 
                         <td>
                             <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+
                             <div id="asmapcon" class="adsec">
 
 
@@ -804,14 +831,9 @@ We're proud to buy from local and sustainable farms
 
                 </div>
 
-
-
                 <div id="crmdiv" class="usopcon">
 
-
-
                 </div>
-
 
             </div>
 
@@ -868,6 +890,11 @@ We're proud to buy from local and sustainable farms
                     <p> Add New Farm </p>
                 </div>
 
+                <div onmousedown="removefarm()" id="removefabt" class="adnewfarmbt">
+                    <div class="gfade"></div>
+                    <p> Remove </p>
+                </div>
+
                 <div onmousedown="savefarm()" id="savefabt" class="adnewfarmbt">
                     <div class="gfade"></div>
                     <p> Save </p>
@@ -884,6 +911,7 @@ We're proud to buy from local and sustainable farms
             </div>
 
             <div id="avfview" class="subadview">
+
 
 
             </div>
@@ -943,34 +971,108 @@ We're proud to buy from local and sustainable farms
 
         <div id="specialModal">
 
+            <div class="spView" id="specialModalAdd">
 
-            <div class="spec_nav-con">
-
-
-                <span onmousedown="closeSpecialsModals()" class="spec_nav">Close</span>
-                <span onmousedown="sendSpecial()" class="spec_nav">Publish</span>
-                <span onmousedown="sendSpecial()" class="spec_nav">Save</span>
+                <div class="spec_nav-con">
 
 
-            </div>
+                    <span onmousedown="closeSpecialsModals()" class="spec_nav">Close</span>
+                    <!----- <span onmousedown="sendSpecial()" class="spec_nav">Publish</span>---->
 
 
-            <div id="sp-scroll">
+                    <span onmousedown="showSpecialsList()" class="spec_nav">List</span>
+                    <!-------span onmousedown="sendSpecial()" class="spec_nav">Preview</span-------->
+
+                    <span onmousedown="sendSpecial()" class="spec_nav">Save</span>
 
 
-                <div id="specialbisearch" class="specialbisearch">
-
-                    <!----input placeholder="Type in a business name" id="sp-bi-put"---->
-
-                    <div id="spec_asearchcon" class="asearchcon">
+                </div>
 
 
+                <div id="sp-scroll">
 
-                        <input onkeyup="spec_searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="sp-bi-put" type="text">
 
-                        <div class="asearchcon2">
+                    <div id="specialbisearch" class="specialbisearch">
 
-                            <div id="spec_bizultscon" class="bizultscon" style="display: none;"></div>
+                        <!-----------
+                        <div id="spec_asearchcon" class="asearchcon">
+
+                            <input onkeyup="spec_searchbibyname( event , this )" placeholder="BEGIN TYPING THE NAME OF A BUSINESS" id="sp-bi-put" type="text">
+
+                            <div class="asearchcon2">
+
+                                <div id="spec_bizultscon" class="bizultscon" style="display: none;"></div>
+
+                            </div>
+
+                        </div> -------->
+
+
+
+                    </div>
+
+                    <p class="sp-bi-name" id="sp-bi-name"> </p>
+
+                    <p class="sp-bi-address" id="sp-bi-address"> </p>
+
+                    <input placeholder="Enter Special Title" id="sp-bi-title">
+                    <br>
+                    <p> Terms: </p>
+                    <p> Please type out your special's terms and conditions here. For example "Free appetizer with the purchase of two dinner entrees. Valid between 5:00-10:00pm weekdays, and 5:00-11:00pm weeknights. Cannot be combined with other offers. </p>
+                    <textarea id="sp-terms"></textarea>
+
+                    <br>
+
+                    <div id="spCal-con" class="spCal-con">
+
+
+
+                    </div>
+                    <br>
+
+                    <p>Select a Category</p>
+
+
+                    <div class="spCatBox">
+
+
+                        <table class="spcattab">
+
+                            <tr>
+
+                                <td onmousedown="selectCatImg('Drinks')" class="spCatTd">
+                                    <img src="business/images/specials/Drinks.png" alt="" class="spcatimg">
+                                    <p class="catTitle">Beverage Special</p>
+
+                                </td>
+
+                                <td onmousedown="selectCatImg('Dessert')" class="spCatTd">
+                                    <img src="business/images/specials/Dessert.png" alt="" class="spcatimg">
+                                    <p class="catTitle">Dessert Special</p>
+
+                                </td>
+
+                                <td onmousedown="selectCatImg('Dinner')" class="spCatTd">
+                                    <img src="business/images/specials/Dinner.png" alt="" class="spcatimg">
+
+
+                                    <p class="catTitle">Meal Special</p>
+                                </td>
+
+
+                            </tr>
+
+                        </table>
+
+                    </div>
+
+
+
+                    <div id="image-select-preview" class="image-select-preview">
+
+                        <div id="catPreBox" class="spCatTd ">
+
+                            <img id="selectedCatPart" src="business/images/specials/Dinner.png" alt="" class="spcatimg">
 
                         </div>
 
@@ -978,31 +1080,58 @@ We're proud to buy from local and sustainable farms
 
 
 
+                    <p>Select a Image</p>
+
+                    <table id="sp-image-select">
+                        <tr>
+                            <td>
+                                <img src="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="">
+                            </td>
+                        </tr>
+                    </table>
+
                 </div>
 
-                <p class="sp-bi-name" id="sp-bi-name"> </p>
 
-                <p class="sp-bi-address" id="sp-bi-address"> </p>
-
-                <input placeholder="Enter Title" id="sp-bi-title">
-                <br>
-                <p> Terms: </p>
-                <textarea id="sp-terms"></textarea>
-                <br>
-                <table id="sp-image-select">
-                    <tr>
-                        <td>
-                            <img src="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="">
-                        </td>
-                    </tr>
-                </table>
 
             </div>
+
+            <div class="spView" id="specialModalList">
+
+
+                <div class="spec_nav-con">
+
+
+                    <span onmousedown="closeSpecialsModals()" class="spec_nav">Close</span>
+                    <!----- <span onmousedown="sendSpecial()" class="spec_nav">Publish</span>---->
+                    <span onmousedown="showAddEditSpecial()" class="spec_nav">Add</span>
+                    <!-------span onmousedown="sendSpecial()" class="spec_nav">Preview</span-------->
+
+
+                </div>
+
+
+                <div id="spmListScroll" class="sp-scroll">
+
+                    <table id="spListTab" class="spListTab">
+
+
+
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+
         </div>
     </div>
     <!--  bcent div --->
