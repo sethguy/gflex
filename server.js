@@ -1,6 +1,6 @@
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
-
+var bodyParser = require('body-parser')
 var fs = require('fs');
 var Mongo = require('mongodb'),
     assert = require('assert');
@@ -121,6 +121,10 @@ var app = express();
 
 // Serve the Parse API on the /parse URL prefix
 app.use(express.static(path.join(__dirname, 'public')));
+self.app.use(bodyParser.json()); // to support JSON-encoded bodies
+self.app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+    extended: true
+}));
 //app.use(mountPath, api);
 
 // Parse Server plays nicely with the rest of your web routes
@@ -1637,6 +1641,8 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
                     if (bres) {
 
+                        delete docs[0].bcryptPassword;
+
                         res.json({
 
                             user: docs[0],
@@ -1697,7 +1703,7 @@ app.get('/getlogin/:user', function(req, res) {
 
     mongogetdb(
 
-        getby('User', { username: user.username }, { bcryptPassword: 0 }, function(docs, err) {
+        getby('User', { email: user.user }, {}, function(docs, err) {
 
             if (docs.length > 0) {
 
@@ -1705,12 +1711,14 @@ app.get('/getlogin/:user', function(req, res) {
 
                     if (bres) {
 
-                        res.json({
+                        delete docs[0].bcryptPassword;
 
-                            user: docs[0],
-                            err: err
+                        res.json(
 
-                        });
+                            docs[0]
+
+
+                        );
 
                     } else {
 

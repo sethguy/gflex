@@ -8,10 +8,11 @@
     "url": "https://github.com/ParsePlatform/parse-server-example"
   },
   "scripts": {
-  "start": "node server.js"
-},
+    "start": "node server.js"
+  },
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "~4.2.x",
     "kerberos": "~0.0.x",
     "parse": "~1.6.12",

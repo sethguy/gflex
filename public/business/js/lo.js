@@ -9,7 +9,7 @@ var pass = paput.value;
 
 if( email!=null && email.length>0  && pass!=null && pass.length>0  ){
 
-var urlstring = PARSE_BASE_URL+"login?username="+email+"&password="+pass;
+var urlstring = loginUrl+"/" + encodeURIComponent(JSON.stringify({ user:email,password:pass}));
 
 getwithkeys(urlstring,function(stuff){
 
@@ -62,6 +62,8 @@ function loginwithuser(user){
 var unot = JSON.stringify(user);
 
 setCookie('user', unot ,1);
+
+console.log('unot @ login',unot)
 
 
 get('linkbox').user = user;

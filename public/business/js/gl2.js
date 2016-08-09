@@ -6,6 +6,7 @@ var HTTPS_QUERYSTRING = "&https=1";
     var PARSE_REST_API_VALUE = "g2sQMnplDFdrtrZbmxiOZndMn09752hFPBvARQ8H";
     var PARSE_SESSION_TOKEN_KEY = "X-Parse-Session-Token";
     var GetBizByNameUrl = "/bizsearch";
+    var loginUrl = "getlogin";
 	var GetFaByNameUrl = "/fasearch";
 	var savebusinessurl = "/newbiz";
     var linkbusinessurl = "/newuserbusiness";
