@@ -21,6 +21,7 @@ var Signupurl = "http://business.greenease.co/?signup";
 var geolib = require('geolib')
 var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
+var request = require("request");
 
 
 var nodemailer = require('nodemailer');
@@ -33,11 +34,11 @@ var relLink = "http://localhost:8000/"
 
 var widgPageUrl = relLink + "widgPage";
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
+var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
 
-var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
+//var databaseUri =  'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -4053,6 +4054,41 @@ app.get('/ulog/:email/:pass', function(req, res) {
 
 });
 
+/*
+{
+    "txn_type": "subscr_signup",
+    "subscr_id": "I-18PR5734NHS2",
+    "last_name": "buyer",
+    "residence_country": "US",
+    "mc_currency": "USD",
+    "item_name": "Greenease_Widget_578458de830d33b7017ee56f",
+    "business": "vferragut-facilitator@msn.com",
+    "amount3": "9.99",
+    "recurring": "1",
+    "address_street": "1 Main St",
+    "verify_sign": "AnNMT7nRteKS2auTkxdsRz9rRvvPAJv2A-xEAf6KSDPWgBuZRetfCxSj",
+    "payer_status": "verified",
+    "test_ipn": "1",
+    "payer_email": "vferragut-buyer@gmail.com",
+    "address_status": "confirmed",
+    "first_name": "test",
+    "receiver_email": "vferragut-facilitator@msn.com",
+    "address_country_code": "US",
+    "payer_id": "WE748PQ66WC2L",
+    "address_city": "San Jose",
+    "reattempt": "1",
+    "address_state": "CA",
+    "subscr_date": "20:05:54 Aug 08, 2016 PDT",
+    "address_zip": "95131",
+    "charset": "windows-1252",
+    "notify_version": "3.8",
+    "period3": "1 D",
+    "address_country": "United States",
+    "mc_amount3": "9.99",
+    "address_name": "test buyer",
+    "ipn_track_id": "bdac9f38a54b3"
+}
+*/
 
 app.post('/gipnl2', function(req, res) {
     //alert(req.query.bid);
