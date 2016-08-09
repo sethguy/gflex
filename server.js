@@ -4127,9 +4127,9 @@ app.post('/gipnl2', function(req, res) {
 
     request.post({ url: urlstring, form: req.body }, function(err, httpResponse, body) {
 
-        console.log(" post res " + httpResponse.text);
+        console.log(" post res " + body);
 
-        var word = httpResponse.text;
+        var word = body;
 
         if (word === "VERIFIED") {
 
