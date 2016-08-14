@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<!-- This page is displayed when someone clicks a valid 'reset password' link.
+       Users should feel free to add to this page (i.e. branding or security widgets)
+       but should be sure not to delete any of the form inputs or the javascript from the
+       template file. This javascript is what adds the necessary values to authenticate
+       this session with Parse.
+       The query params 'username' and 'app' hold the friendly names for your current user and
+       your app. You should feel free to incorporate their values to make the page more personal.
+       If you are missing form parameters in your POST, Parse will navigate back to this page and
+       add an 'error' query parameter.
+  -->
+
+<head>
+    <title>Greenease</title>
+
+</head>
+
+<body>
+
+
+    <!---------
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=949243931828808";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
+
+<div onmousedown="alert('wait')" >
+  <div
+    class="fb-like"
+    data-share="true"
+    data-width="450"
+    data-show-faces="true">
+  </div >
+</div>
+
+
+
+
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '949243931828808',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+/*  
+
+http://localhost/f2?code=AQAylHehLqdpBYqTy1PeMrTSd7g3SS1wKthXPOpuPTy5WJp-3PndlVMl2_6Kjl5RcJDjoG13UKmk2O7niY-jV3mgsT7zKT7P9t0ypwPkd9xOVDTPj8FU5eHppKcaBkMM2S9pb2lQMCqU2Z2uuWG5Gx4I1BxVuRERF769bQ1LNpXRn8JCyW2knCNZz-OU_i_QObkYcIV5x_lwNN-l4hXaBRhrYo_P9umuEdQgwOk_cM4C6z4riDyTB-H2uisK5C_p5gp6k5d7YdDBfEMT7hKeUzxxHo8SOCE_sS1NvbzxL14K-2KdGK4SfYeTZeAkWqXLABM#_=_
+
+FB.login(function(response) {
+    if (response.authResponse) {
+     console.log('Welcome!  Fetching your information.... ');
+     FB.api('/me', function(response) {
+       console.log('Good to see you, ' + response.name + '.');
+     });
+    } else {
+     console.log('User cancelled login or did not fully authorize.');
+    }
+});
+*/
+</script>
+
+------>
+
+    <script type="text/javascript">
+
+    var states = function() {
+
+            this.post = function(params) {
+
+                    console.log(JSON.stringify(params));
+
+                    if (!params['access_token']) {
+
+                        var url = 'https://www.facebook.com/dialog/oauth?client_id=949243931828808&response_type=token&redirect_uri='+window.location.origin+'/f2&state=' + params.state + '&scope=publish_actions';
+                        console.log(url);
+
+                        window.location.href = url;
+
+                    } else {
+
+                        var url2 = "grva://facetok/" + '/' + params['access_token'] + '/' + params['expires_in'] + '/' + 'xPost';
+
+                        console.log(url2);
+
+                        window.location.href = url2;
+
+                    }
+
+                } //post
+
+
+            this.sign = function(params) {
+
+                    console.log(params.length + " and  " + JSON.stringify(params));
+
+                    if (!params['access_token']) {
+
+                        var url = 'https://www.facebook.com/dialog/oauth?client_id=949243931828808&response_type=token&redirect_uri='+window.location.origin+'f2&state=' + params.state + '&scope=publish_actions';
+                        console.log(url);
+
+                        window.location.href = url;
+
+                    } else {
+
+                        var url2 = "grva://facetok/" + '/' + params['access_token'] + '/' + params['expires_in'] + '/' + 'xlogin';
+
+                        console.log(url2);
+
+                        window.location.href = url2;
+
+                    }
+
+                } //post
+
+        } //states
+
+
+    var states0 = new states();
+    </script>
+
+    <script type="text/javascript">
+    loc = window.location.href;
+
+    //window.history.pushState( {"clean":"up"}, "Title", "/");
+
+    var params = {};
+
+    var set = loc.substring(loc.indexOf('#') + 1, loc.length);
+
+    var sp = set.split('&');
+
+    for (var i = 0; i < sp.length; i++) {
+
+        var pr = sp[i];
+
+        var key = pr.substring(0, pr.indexOf('='));
+
+        var val = pr.substring(pr.indexOf('=') + 1, pr.length);
+
+        console.log(key + "  ::  " + val);
+
+
+        params[key] = val;
+
+    };
+
+
+    if (params.state) {
+
+        console.log(params.state);
+
+        console.log(window.location)
+
+       // states0[params.state](params);
+
+
+    } else {
+
+
+        window.location.href = 'http://greenease.co'
+
+    }
+
+    /*
+
+
+    if(loc=='http://localhost/f2'){
+
+
+    }else{
+
+    var urlstring = loc;
+
+    var params = {};
+
+    var set = loc.substring( loc.indexOf('#')+1,loc.length )
+    var sp = set.split('&')
+
+    for (var i = 0; i < sp.length; i++) {
+      var pr = sp[i];
+
+    var key = pr.substring( 0 , pr.indexOf('=') );
+
+    var val =  pr.substring( pr.indexOf('=') + 1 , pr.length  );
+
+    params[key] = val;
+
+    };
+
+    //alert(  ish.hash+"   "+ac1 )
+
+    //var url2 ='grva://faceso/'+ac1;
+    //var url2 = "http://business.greenease.co/www/index.html#wfacetok/"+ac1;
+
+    var url2 = "grva://facetok/"+'/'+params['access_token']+'/'+params['expires_in'];
+
+    console.log( 'gon'+ url2 );
+
+    //window.location.href = url2 ;
+
+    }
+    */
+
+    function urlish(url) {
+        //url = "http://business.greenease.co/wid?thisisseth";
+        var parser = document.createElement('a');
+        parser.href = url;
+
+        parser.protocol; // => "http:"
+        parser.hostname; // => "example.com"
+        parser.port; // => "3000"
+        parser.pathname; // => "/pathname/"
+        parser.search; // => "?search=test"
+        parser.hash; // => "#hash"
+        parser.host; // => "example.com:3000"
+
+        return parser;
+    }
+    </script>
+
+
+
+</body>

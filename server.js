@@ -30,7 +30,9 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-var relLink = "http://localhost:8000/"
+//var relLink = "http://localhost:8000/"
+
+var rellink = "https://gflex-greenease.rhcloud.com/"  
 
 var widgPageUrl = relLink + "widgPage";
 
@@ -91,7 +93,7 @@ var sertobj = function(table, obj, callback) {
             // Get the documents collection
             var collection = msg.db.collection(table);
 
-            collection.insert(obj, function(err, result) {
+            collection.save(obj, function(err, result) {
 
                 msg.result = result;
 
@@ -114,6 +116,8 @@ var api = new ParseServer({
     masterKey: process.env.MASTER_KEY || 'TZCDDLCIFnLySuwOidkAgsaHF5VoXC6g0yrnQTtu', //Add your master key here. Keep it secret!
     serverURL: url // Don't forget to change to https if needed
 });
+
+
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
@@ -469,7 +473,6 @@ app.get('/MigrateUpdateGeoHoods', function(req, res) {
 
 app.get('/MigrateUpdateGeoBusiness', function(req, res) {
 
-
         mongoMsg(getby('Business', { geo: { $exists: true } }, {}, function(msg) {
 
             //console.log(msg.docs)
@@ -630,6 +633,14 @@ app.get('/', function(req, res) {
     res.status(200).send(fs.readFileSync('./index.html'));
 });
 
+
+app.get('/f2', function(req, res) {
+
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(fs.readFileSync('./f2.html'));
+});
+
+
 var inmany = function(colname, ray, calli) {
 
         return function(db) {
@@ -777,6 +788,50 @@ app.get('/MigrateMobileFavorites', function(req, res) {
 
                     })(msg)
                 } //{ mobileAppObjectId: rid },
+            })(msg)
+
+        }); //loop
+
+    })); // getby
+
+    res.json('go');
+});
+
+app.get('/MigrateSpecialsAddGeo', function(req, res) {
+
+    mongoMsg(getby('specials', {}, {}, function(msg) {
+        var favsle = msg.docs.length;
+        count = 0;
+        msg.docs.forEach(function(special) {
+
+            var bid = special.bid;
+
+            getby('Business', { _id: new ObjectId(bid) }, {}, function(msg) {
+
+                if (msg.docs && msg.docs.length > 0) {
+
+                    console.log(msg.docs[0])
+
+                    console.log("----------------------------------------------")
+
+                    special.bid = msg.docs[0]._id.valueOf() + "";
+                    special.geoPoint = msg.docs[0].geoPoint;
+
+                    var sid = special._id;
+
+                    delete special._id;
+
+                    updateDocumentbyid(msg.db, 'specials', sid, special, function(result, err) {
+
+                        // console.log(result)
+
+                        count++;
+                        console.log(favsle + '  ' + count)
+
+                    })
+
+                } //{ mobileAppObjectId: rid },
+
             })(msg)
 
         }); //loop
@@ -1171,6 +1226,42 @@ app.get('/getcount', function(req, res) {
 
 }); //get newbiz
 
+app.get('/ckUserForSpAction/:ckSet', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    var ckSet = JSON.parse(req.params.ckSet);
+
+    query = {
+        sid: ckSet.sid,
+        action: 'press',
+        uid: ckSet.uid
+    }
+
+    mongoMsg(getby('specialAction', query, {}, function(msg) {
+
+        res.json(msg.docs);
+
+    })); // getby
+
+}); // specialAction
+
+app.get('/specialAction/:spAction', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    var spAction = JSON.parse(req.params.spAction);
+
+    mongoMsg(sertobj('specialAction', spAction, function(msg) {
+
+        res.json(msg.result.ops[0]);
+
+    })); // getby
+
+}); // specialAction
+
 
 var findSpecialById = function(special, callback) {
 
@@ -1254,6 +1345,47 @@ app.get('/specialMachine/:spec', function(req, res) {
 
 
 }); //specialMachine
+
+app.get('/getLatestSpecials', function(req, res) {
+
+    /* var query = {
+            geoPoint: {
+                $near: {
+                    $geometry: { type: "Point", coordinates: [mpos.lng, mpos.lat] },
+                    $maxDistance: (1609.34) * 10
+                }
+            }
+        }*/
+
+    query = {
+
+
+    };
+
+    // query.descending('updatedAt');
+
+    mongoMsg(getbySort('specials', {}, {}, { updatedAt: 1 }, function(msg) {
+
+        res.json(msg.docs);
+
+    }));
+
+});
+
+app.get('/getbibyId/:id', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    console.log('id :: ' + req.params.id)
+
+    mongoMsg(getby('Business', {}, {}, function(msg) {
+
+        res.json(msg.docs[0]);
+
+    })); // getby
+
+}); //"/getbusiness"
 
 
 app.get('/getone', function(req, res) {
@@ -1668,7 +1800,7 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
                 res.json({
 
-                    msg: 'no user with that email',
+                    msg: 'no user with that username',
                     err: err
 
                 });
@@ -1899,6 +2031,7 @@ app.get('/tofill', function(req, res) {
 
     query.limit(1000);
 
+
     //query.count({
     query.find({
         success: function(fcounts) {
@@ -1919,226 +2052,155 @@ app.get('/tofill', function(req, res) {
 
 app.get('/isfav/:uid/:bid', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
+    query = {
+        uid: req.params.uid,
+        bid: req.params.bid
+    }
 
-    var Ufav = Parse.Object.extend("userfavs");
 
-    var query = new Parse.Query(Ufav);
+    mongoMsg(getby('userfavs', query, {}, function(msg) {
 
-    query.equalTo('uid', req.params.uid);
+        if (msg.docs.length > 0) {
 
-    query.equalTo('bid', req.params.bid);
+            res.json({ 'msg': true });
+        } else {
 
-    query.find({
-
-        success: function(fndfavs) {
-            // The count request succeeded. Show the count
-            if (fndfavs.length > 0) {
-
-                res.json({ 'msg': true });
-            } else {
-
-                res.json({ 'msg': false });
-
-            }
-
-        },
-        error: function(error) {
-            // The request failed
-            res.json({ 'error': error });
-
+            res.json({ 'msg': false });
 
         }
 
-    });
+    }))
 
 }); //lookforbiz
 
 
 app.get('/rmfav/:uid/:bid', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
+    query = {
+        uid: req.params.uid,
+        bid: req.params.bid
+    }
 
-    var Ufav = Parse.Object.extend("userfavs");
+    mongoMsg(removeby('userfavs', query, {}, function(msg) {
 
-    var query = new Parse.Query(Ufav);
+        console.log(msg)
 
-    query.equalTo('uid', req.params.uid);
+        res.json({ 'msg': 'Removed from favorites' });
 
-    query.equalTo('bid', req.params.bid);
-
-    query.find({
-
-        success: function(fndfavs) {
-            // The count request succeeded. Show the count
-            if (fndfavs.length > 0) {
-
-                fndfavs[0].destroy({
-                    success: function(myObject) {
-
-                        res.json({ 'msg': 'Removed from favorites' });
-
-                        // The object was deleted from the Parse Cloud.
-                    },
-                    error: function(myObject, error) {
-                        // The delete failed.
-                        // error is a Parse.Error with an error code and message.
-                    }
-                });
-
-
-            } else {
-
-                res.json({ 'msg': 'no favorites found' });
-
-            }
-
-        },
-        error: function(error) {
-            // The request failed
-            res.json({ 'error': error });
-
-        }
-
-    });
+    }))
 
 }); //rmfav
 
 
 app.get('/adduserfav/:uid/:bid', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
-    var Ufav = Parse.Object.extend("userfavs");
-
-    var biz = Parse.Object.extend("Business");
-
     var add = function() {
 
-            var query = new Parse.Query(biz);
+            query = {
+                _id: new ObjectId(req.params.bid)
+            };
 
-            query.get(req.params.bid, {
+            mongoMsg(getby('Business', query, {}, function(msg) {
 
-                success: function(fndbiz) {
-                    // The count request succeeded. Show the count
+                if (msg.docs.length > 0) {
 
+                    fndbiz = msg.docs[0];
                     console.log("found biz" + JSON.stringify(fndbiz));
 
-                    var bi = new biz();
+                    var bi = {
+                        _id: req.params.bid,
+                        'business': fndbiz['business'],
 
-                    bi.set('objectId', req.params.bid);
+                        'cuisine': fndbiz['cuisine'],
 
-                    bi.set('business', fndbiz.get('business'));
+                        'address': fndbiz['address']
+                    }
 
-                    bi.set('cuisine', fndbiz.get('cuisine'));
+                    mongoMsg(sertobj('userfavs', { 'uid': req.params.uid, 'bid': req.params.bid, 'business': bi, 'biname': fndbiz['business'] }, function(msg) {
+                        console.log(msg)
 
-                    bi.set('address', fndbiz.get('address'));
+                        res.json({ 'msg': 'added to favorites!' });
 
-                    var uf = new Ufav();
+                    }));
 
-                    uf.save({ 'uid': req.params.uid, 'bid': req.params.bid, 'business': bi, 'biname': fndbiz.get('business') }, {
 
-                        success: function(fav) {
+                } else {
 
-                            res.json({ 'msg': 'added to favorites!' });
+                    res.json({ 'error': ' no bi found' });
 
-                        },
-                        error: function(relation, error) {
+                } // no bi found
 
-                            res.json(error.message);
-
-                        }
-
-                    });
-
-                },
-                error: function(error) {
-
-                    res.json({ 'error': 'somthing went wrong' });
-                    console.log('error:' + error);
-
-                    // The request failed
-                }
-            });
-
+            }));
 
         } // add
 
-    var fq = new Parse.Query(Ufav);
 
-    fq.equalTo('uid', req.params.uid);
+    query = {
+        uid: req.params.uid,
+        bid: req.params.bid
+    };
 
-    fq.equalTo('bid', req.params.bid);
+    mongoMsg(getby('userfavs', query, {}, function(msg) {
 
-    fq.find({
-        success: function(results) {
+        results = msg.docs;
 
-            if (results.length > 0) {
+        if (results.length > 0) {
 
-                res.json({ 'msg': 'already a favorite' });
+            res.json({ 'msg': 'already a favorite' });
 
-            } else {
+        } else {
 
-                add();
-
-            }
-
-        },
-        error: function(error) {
-
-
-            res.json({ 'error': 'somthing went wrong' });
-
-            console.log(JSON.stringify(error) + "   ::: " + error);
-
+            add();
 
         }
-    });
 
+    }))
 
 }); //adduserfav
 
 
 app.get('/getuserfav/:uid', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
+    query = {
+        uid: req.params.uid
+    };
 
-    var Ufav = Parse.Object.extend("userfavs");
+    mongoMsg(getbySort('userfavs', query, {}, { biname: 1 },
 
-    var uf = new Ufav();
+        function(msg) {
+            favs = msg.docs;
 
-    var query = new Parse.Query(Ufav);
+            businessQuery = {
+                '_id': {
+                    $in: favs.map(function(fav) {
+                        return new ObjectId(fav.bid)
+                    })
+                }
+            };
 
-    query.include('business');
-    //query.include('business.business');
-    query.ascending('biname');
+            getby('Business', businessQuery, {}, function(msg) {
 
-    //query.sort('business.business');
-    query.find({
+                business = msg.docs;
 
-        success: function(fndfavs) {
-            // The count request succeeded. Show the count
-            var fson = [];
+                console.log(business.length)
 
-            for (var i = 0; i < fndfavs.length; i++) {
+                result = favs.map(function(fav) {
 
-                var ff = fndfavs[i];
+                    bi = business.filter(function(bi) {
 
-                var bi = ff.get('business');
+                        return bi._id.valueOf() + '' == fav.bid;
 
-                fson.push({ 'favob': ff, 'biz': bi });
+                    })[0] || {};
 
-            }; //fndfav loop
+                    return { favob: fav, biz: bi };
 
-            res.json(fson);
+                })
 
-        },
-        error: function(error) {
-            // The request failed
-        }
+                res.json(result);
 
-    });
+            })(msg)
 
+        }));
 
 }); //getuserfav
 
@@ -2847,42 +2909,37 @@ res.json(user);
 app.get('/getlinkedbybid/:bid', function(req, res) {
     // get user relations base on uid
     var myclass = Parse.Object.extend("userbusiness");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-    query.limit(1000);
-    query.include('bi');
-    query.equalTo('bid', req.param('bid'));
-    query.equalTo('linked', true);
-    query.find({
-        success: function(results) {
 
 
-            //var term = req.param('term');
+    var query = {
+        bid: req.params.bid,
+        linked: true
+    }
 
-            var matches = [];
 
-            for (var i = 0; i < results.length; i++) {
-                //urel is user/biz relation table record
+    mongoMsg(getby('userbusiness', query, {}, function(msg) {
 
-                var urel = results[i];
+        var results = msg.docs;
 
-                //if(urel.get("email").toLowerCase().indexOf(term.toLowerCase()) > - 1 ){
+        var matches = [];
 
-                matches.push({ 'rel': urel, 'bi': urel.get('bi') });
+        for (var i = 0; i < results.length; i++) {
+            //urel is user/biz relation table record
 
-                //}//old macthing if 
+            var urel = results[i];
 
-            }; //f loop
+            //if(urel.get("email").toLowerCase().indexOf(term.toLowerCase()) > - 1 ){
 
-            res.json(matches);
+            matches.push({ 'rel': urel, 'bi': { _id: req.params.bid } });
 
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
+            //}//old macthing if 
 
-    console.log(query.toJSON());
+        }; //f loop
+
+        res.json(matches);
+
+    }));
+
 
 }); // crm user for email
 
@@ -2898,7 +2955,6 @@ app.get('/getlinked/:email', function(req, res) {
     query.equalTo('linked', true);
     query.find({
         success: function(results) {
-
 
             //var term = req.param('term');
 
@@ -2925,7 +2981,6 @@ app.get('/getlinked/:email', function(req, res) {
         }
     });
 
-    console.log(query.toJSON());
 
 }); // crm user for email
 
@@ -3099,129 +3154,81 @@ app.get('/crmuforemail/:term', function(req, res) {
         }
     });
 
-    console.log(query.toJSON());
 
 }); // crm user for email
 
 
 app.get('/newuserbusiness/:bid/:email', function(req, res) {
+    // The current user is now set to user.
 
-    var ses = req.headers['x-parse-session-token'];
+    query = {
+        bid: req.param('bid'),
+        email: req.param('email')
+    };
 
-    Parse.User.become(ses).then(function(user) {
+    //query.equalTo("linked",false );
+    mongoMsg(getby('userbusiness', query, {}, function(msg) {
 
-        console.log("user is " + JSON.stringify(user));
+        urels = msg.docs;
 
-        // The current user is now set to user.
-        Parse.Cloud.useMasterKey();
+        if (urels.length == 0) {
+            // if no urels present
+            makeuserbiz(req.param('bid'), req.param('email'));
 
-        var query = new Parse.Query("userbusiness");
-        query.equalTo("bid", req.param('bid'));
-        query.equalTo("email", req.param('email'));
+        } else {
+            // look for unlinked urels should only be one
+            for (var i = 0; i < urels.length; i++) {
+                var rel = urels[i];
 
-        //query.equalTo("linked",false );
-        query.include('bi');
-        query.find({
-            success: function(urels) {
+                if (rel['linked']) {
 
-                if (urels.length == 0) {
-                    // if no urels present
-                    makeuserbiz(req.param('bid'), req.param('email'));
+                    var msgstring = 'business linked to this email';
+
+                    res.json({ 'msg': msgstring, 'urel': rel });
 
                 } else {
-                    // look for unlinked urels should only be one
 
-                    for (var i = 0; i < urels.length; i++) {
-                        var rel = urels[i];
+                    // if a urel exist but it is set to false
+                    rel['linked'] = true;
 
-                        if (rel.get('linked')) {
+                    sertobj('userbusiness', rel, function(msg) {
 
-                            var msgstring = 'business linked to this email';
+                        var msgstring = 'business linked';
 
-                            res.json({ 'msg': msgstring, 'urel': rel });
+                        console.log(msg)
 
+                        res.json({ 'msg': msgstring, 'urel': msg });
 
-                        } else {
+                    })(msg);
 
-                            // if a urel exist but it is set to false
-                            rel.set('linked', true);
+                } /// lnked = false check
 
-                            rel.save(null, {
+            }; ///urel loop
 
-                                success: function(userbusiness) {
-                                    // Execute any logic that should take place after the object is saved.
-                                    var msgstring = 'business linked';
+        } //if urels length 
 
-                                    // alert('New object created with objectId: ' + userbusiness.id);
-                                    res.json({ 'msg': msgstring, 'urel': userbusiness });
-                                },
-                                error: function(userbusiness, error) {
-                                    // Execute any logic that should take place if the save fails.
-                                    // error is a Parse.Error with an error code and message.
-                                    alert('Failed to create new object, with error code: ' + error.message);
-                                }
-                            }); // save urell 
-
-                        } /// lnked = false check
-
-                    }; ///urel loop
-
-                } //if urels length 
-
-            },
-            error: function(error) {
-                // The request failed
-            }
-
-        }); // user biz query
-
-    }, function(error) {
-
-        res.json(error);
-
-        // The token could not be validated.
-    });
+    })); // getby
 
     ///////////////////////////////////////////////////////
     function makeuserbiz(bid, email) {
 
-        var business = Parse.Object.extend("Business");
-        var biz = new business();
-        biz.set('objectId', bid);
-        biz.set('owner_email', email);
+        var userbusiness = {}
 
+        userbusiness["bid"] = bid;
 
-        biz.set('objectId', bid);
-        //biz.set('owner_email', email);
+        userbusiness["email"] = email;
 
-        var userbusiness = Parse.Object.extend("userbusiness");
-        var userbusiness = new userbusiness();
+        userbusiness["linked"] = true;
 
-        userbusiness.set("bid", bid);
+        // userbusiness["bi"] = biz;
 
-        userbusiness.set("email", email);
+        mongoMsg(sertobj('userbusiness', userbusiness, function(msg) {
 
-        userbusiness.set("linked", true);
+            var msgstring = 'business linked';
 
-        biz.set('islinked', true);
+            res.json({ 'msg': msgstring, 'urel': msg.result });
 
-        userbusiness.set("bi", biz);
-
-        userbusiness.save(null, {
-
-            success: function(userbusiness) {
-                // Execute any logic that should take place after the object is saved.
-                var msgstring = 'business linked';
-
-                // alert('New object created with objectId: ' + userbusiness.id);
-                res.json({ 'msg': msgstring, 'urel': userbusiness });
-            },
-            error: function(userbusiness, error) {
-                // Execute any logic that should take place if the save fails.
-                // error is a Parse.Error with an error code and message.
-                alert('Failed to create new object, with error code: ' + error.message);
-            }
-        });
+        }));
 
     } //make user biz sub function
 
@@ -3490,7 +3497,6 @@ app.get('/findlost', function(req, res) {
         }
     });
 
-    console.log(query.toJSON());
 
 });
 
@@ -3741,7 +3747,6 @@ app.get('/business/sort/:by', function(req, res) {
         }
     });
 
-    console.log(query.toJSON());
 
 }); //"/getbusiness/sort"
 
@@ -3868,7 +3873,6 @@ app.get('/business', function(req, res) {
         }
     });
 
-    console.log(query.toJSON());
 
 }); //"/getbusiness"
 
@@ -4134,7 +4138,7 @@ app.post('/gipnl2', function(req, res) {
         if (word === "VERIFIED") {
             console.log(uid)
 
-            mongoMsg(getby('User',  { _id: new ObjectId(uid) } , {}, function(msg) {
+            mongoMsg(getby('User', { _id: new ObjectId(uid) }, {}, function(msg) {
                 console.log(msg.docs)
 
                 fnduser = msg.docs[0];
@@ -4151,7 +4155,7 @@ app.post('/gipnl2', function(req, res) {
 
                     res.end("");
 
-                   // res.json('VERIFIED');
+                    // res.json('VERIFIED');
 
                 });
 
@@ -5299,85 +5303,32 @@ Parse.Cloud.define('getCurrentUser', function(request, response) {
     }
 });
 
-/**
- * Delete a buying relationship
- */
-Parse.Cloud.define('removeBuysFromRelationship', function(request, response) {
-    var currentUser = Parse.User.current();
-    console.log(currentUser);
-    console.log("jack");
-    if (currentUser) {
-        var buysFromQuery = new Parse.Query("BuysFrom");
-        buysFromQuery.equalTo("objectId", request.params.buysFromId);
-        buysFromQuery.first({
-            success: function(to_delete) {
-                to_delete.destroy({
-                    success: function(myObject) {
-                        response.success("Deleted " + myObject.id);
-                    },
-                    error: function(myObject, error) {
-                        response.error(error.message);
-                    }
-                });
-            },
-            error: function(r_error) {
-                response.error(r_error.message);
-            }
-        });
-    } else {
-        response.error("You must be logged in!");
-    }
-});
 
 app.get('/ckforUser/:email', function(req, res) {
-    // get user relations base on uid
-    var myclass = Parse.Object.extend("User");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-    query.limit(1000);
 
-    query.equalTo('email', req.param('email'));
+    var query = {
+        email: req.param('email')
+    };
 
-    query.find({
-        success: function(results) {
+    mongoMsg(getby('User', query, {}, function(msg) {
 
+        //var term = req.param('term');
 
-            //var term = req.param('term');
+        var results = msg.docs;
 
-            if (results.length == 0) {
+        if (results.length == 0) {
 
 
-                Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
+            sendintro(req, res);
 
-                    success: function(sendres) {
-                        // ratings should be 4.5
+        } else {
 
-                        res.json(sendres);
-
-                    },
-                    error: function(error) {
-                        res.send(JSON.stringify(error));
-
-                    }
-                });
+            res.json(results[0]);
 
 
-            } else {
+        } // if user is or not there 
 
-
-                res.json(results[0]);
-
-
-            } // if user is or not there 
-
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-    console.log(query.toJSON());
+    }));
 
 }); // ckforUser 
 
@@ -5420,7 +5371,7 @@ app.get('/emailUserUpdate/:update', function(req, res) {
 
     var mailOptions = {
         from: '" Greenease " <info@greenease.co>', // sender address
-        to: 'isethguy@gmail.com', // list of receivers
+        to: 'vanessa@greenease.co , isethguy@gmail.com', // list of receivers
         subject: update.bid, // Subject line
 
 
@@ -5444,221 +5395,60 @@ app.get('/emailUserUpdate/:update', function(req, res) {
 }); // ckforUser 
 
 
-Parse.Cloud.define('sendintro', function(request, response) {
-    var currentUser = Parse.User.current();
+var sendintro = function(req, res) {
 
-    // var email =  request.params.email;
-    //console.log("sendintro"+email);
+    var toemail = req.params.email
 
-    var toemail = request.params.email
+    //  var uemail = currentUser.get("email");
 
-    if (true /*currentUser*/ ) {
-        //  var uemail = currentUser.get("email");
+    var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + toemail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "You may also add notes to your update if you like. " + "\n" + "To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
 
-        if (true /*uemail=="vanessa@greenease.co" ||  uemail=="isethguy@gmail.com"*/ ) {
+    +"\n" + "\n" + "Thank you for buying local and being part of our community."
 
+    + "\n" + "\n" + "Locally yours,"
 
-            var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + toemail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
-
-            +"\n" + "\n" + "Thank you for buying local and being part of our community."
-
-            + "\n" + "\n" + "Locally yours,"
-
-            + "\n" + "\n" + "The Greenease Team";
+    + "\n" + "\n" + "The Greenease Team";
 
 
-            // create reusable transporter object using the default SMTP transport
-            var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
-            // setup e-mail data with unicode symbols
+    // setup e-mail data with unicode symbols
 
-            var mailOptions = {
-                from: '" Greenease " <info@greenease.co>', // sender address
-                to: toemail, // list of receivers
-                subject: 'Welcome to Greenease Business', // Subject line
+    var mailOptions = {
+        from: '" Greenease " <info@greenease.co>', // sender address
+        to: toemail, // list of receivers
+        subject: 'Welcome to Greenease Business', // Subject line
 
+        text: text, // plaintext body
 
-                text: text, // plaintext body
+    };
 
-            };
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info) {
 
-            // send mail with defined transport object
-            transporter.sendMail(mailOptions, function(error, info) {
-                if (error) {
-                    response.success(error);
+        if (error) {
 
-                    return console.log(error);
-                }
-                console.log('Message sent: ' + info.response);
+            res.json(error);
 
-                response.success(info);
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
 
-            });
-            /*
+        res.json(info);
 
-                        Parse.Cloud.useMasterKey();
-                        console.log("inthere");
-
-                        var ToEmail = request.params.email;
-
-                        console.log("Params are: " + ToEmail);
-
-                        var Mandrill = require('mandrill');
-                        // TODO: don't save API key in source control
-                        Mandrill.initialize(mandrillApiKey);
-                        Mandrill.sendEmail({
-                            message: {
-                                text: "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + ToEmail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "     Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "     On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "     You may also add notes to your update if you like. " + "\n" + "     To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "     If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "     The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "     The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "     All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
-
-                                    + "\n" + "\n" + "Thank you for buying local and being part of our community."
-
-                                    + "\n" + "\n" + "Locally yours,"
-
-                                    + "\n" + "\n" + "The Greenease Team",
-
-                                subject: "Welcome to Greenease Business",
-                                from_email: "info@greenease.co",
-                                from_name: "Greenease",
-                                to: [{
-                                    email: ToEmail,
-                                }]
-                            },
-                            async: true
-                        }, {
-                            success: function(httpResponse) {
-                                console.log(httpResponse);
-                                console.log("email went to " + ToEmail);
-                                response.success("Email sent!");
-                            },
-                            error: function(httpResponse) {
-                                console.error(httpResponse);
-                                response.error("Uh oh, something went wrong");
-                            }
-                        });
-
-            */
-        } // if admin
-
-
-    } //if current user 
-
-});
-
-/*
-Parse.Cloud.define('test', function (request, response) {
-  
-      Parse.Cloud.useMasterKey();
-
-        var Query = new Parse.Query("Business");
-       
-         Query.greaterThan( "createdAt" , new Date(2015, 4 , 22) );
-
-        Query.limit(1000);
-
-
-        Query.find({
-            success: function (hit) {
-            console.log("hit length"+hit.length);
-for (var i = 0; i < hit.length; i++) {
-
-var custom_acl = new Parse.ACL();
-
-custom_acl.setPublicReadAccess(true);
-
-custom_acl.setPublicWriteAccess(true);
-    hit[i].setACL(custom_acl);
-console.log( hit[i].get("business")+" : "+i );
+    });
 
 }
 
-Parse.Object.saveAll(hit);
-          
-           response.success("done");
 
-           
-            },
-            error: function (r_error) {
-                response.error(r_error.message);
-            }
-       
-        });
+app.get('sendintro/:uemail', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    sendintro(req, res);
 
 });
-*/
-
-
-Parse.Cloud.define('addPurchaseRecord', function(request, response) {
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        console.log("Adding purchase histroy record with data:");
-        console.log(request);
-        var BuysFrom = Parse.Object.extend("PurchaseHistory");
-        var parseACL = new Parse.ACL();
-        parseACL.setPublicReadAccess(true);
-        var buysFrom = new BuysFrom({
-            ACL: parseACL
-        });
-        buysFrom.set("business", {
-            __type: "Pointer",
-            className: "Business",
-            objectId: request.params.bizId
-        });
-        buysFrom.set("farm", {
-            __type: "Pointer",
-            className: "Farm",
-            objectId: request.params.farmId
-        });
-        buysFrom.set("actionCode", request.params.actionCode);
-        buysFrom.set("category", request.params.category);
-        buysFrom.set("note", request.params.note);
-
-        var rawdate = request.params.actionEffectiveDate;
-
-        var iset = new Date();
-
-        var ish = iset.getHours();
-
-        var ism = iset.getMinutes();
-
-        var iss = iset.getSeconds();
-
-        var ismil = iset.getMilliseconds();
-
-        rawdate = iset.setHours(ish);
-
-        rawdate = iset.setMinutes(ism);
-
-        rawdate = iset.setSeconds(iss);
-
-        rawdate = iset.setMilliseconds(ismil);
-
-        console.log(" this is rawdate " + rawdate);
-
-        //var timedate ;
-
-        var effectiveDate = new Date(rawdate);
-        console.log("effective date is");
-        console.log(effectiveDate);
-        buysFrom.set("actionEffectiveDate", effectiveDate);
-        buysFrom.save(null, {
-            success: function(relation) {
-                response.success(relation);
-            },
-            error: function(relation, error) {
-                response.error(error.message);
-            }
-        });
-
-
-    } else {
-        response.error("You must be logged in!");
-    }
-
-});
-/**
- * Update a buying relationship (categories)
- */
-//mongogetdb
 
 
 app.get('/getFarmById/:fid', function(req, res) {

@@ -613,7 +613,6 @@ function trytolink(smrel) {
 
     var urlstring = linkbusinessurl + "/" + bi['_id'] + "/" + get('ebfemailtoadd').value;
 
-
     newuserbiz(urlstring, function(stuff) {
         if (stuff.msg) {
 
