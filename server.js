@@ -32,7 +32,7 @@ var url = 'http://' + ip + ':' + port + '' + mountPath;
 
 //var relLink = "http://localhost:8000/"
 
-var rellink = "https://gflex-greenease.rhcloud.com/"  
+var relLink = "https://gflex-greenease.rhcloud.com/"  
 
 var widgPageUrl = relLink + "widgPage";
 
