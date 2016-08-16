@@ -12,16 +12,19 @@ var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
     process.env.OPENSHIFT_INTERNAL_PORT || 8000;
 var bcrypt = require('bcrypt');
+var randtoken = require('rand-token');
+
 
 var querystring = require('querystring');
 var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
 
-var Signupurl = "http://business.greenease.co/?signup";
+
 var geolib = require('geolib')
 var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
 var request = require("request");
+var saltRounds = 10;
 
 
 var nodemailer = require('nodemailer');
@@ -30,11 +33,14 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-//var relLink = "http://localhost:8000/"
+var relLink = "http://localhost:8000/"
 
-var relLink = "https://gflex-greenease.rhcloud.com/"  
+//var relLink = "https://gflex-greenease.rhcloud.com/"
 
 var widgPageUrl = relLink + "widgPage";
+
+
+var Signupurl = relLink + "?signup";
 
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
@@ -634,11 +640,200 @@ app.get('/', function(req, res) {
 });
 
 
+app.get('/gtwit', function(req, res) {
+
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(fs.readFileSync('./gtwit.html'));
+
+});
+
+
 app.get('/f2', function(req, res) {
 
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(fs.readFileSync('./f2.html'));
 });
+
+app.get('/appPasswordReset', function(req, res) {
+
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(fs.readFileSync('./appForgot.html'));
+});
+
+
+app.get('/biPasswordReset', function(req, res) {
+
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(fs.readFileSync('./biFogot.html'));
+});
+
+
+app.post('/newMobileUser', function(req, res) {
+
+        console.log(req)
+
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+        console.log("next:" + JSON.stringify(req.body));
+
+
+        query = {
+            $or: [
+                { username: req.body.username },
+                { email: req.body.email }
+            ]
+        }
+
+
+        mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+            console.log(msg.docs.length)
+
+            if (msg.docs.length == 0) {
+
+                bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+
+                    user = {
+                        username: req.body.username,
+                        createdAt: new Date().getTime(),
+                        email: req.body.email,
+                        bcryptPassword: hash
+                    }
+                    console.log(user)
+                    sertobj('mobileUsers', user, function(msg) {
+                        console.log('sertrespone');
+
+                        console.log(msg);
+
+                        //res.setHeader('Content-Type', 'text/html');
+                        // res.redirect('/appPasswordReset');
+
+                        var newuser = msg.result.ops[0];
+
+                        if (newuser.bcryptPassword) {
+
+                            newuser.bcryptPassword = null;
+                            delete newuser.bcryptPassword
+                        }
+                        res.json({ msg: 'user added ', user: newuser })
+
+                    })(msg)
+
+                });
+
+            } else {
+
+                res.json({ msg: 'email or username already in system' })
+
+            }
+
+        }))
+    }) ///password_reset
+
+app.post('/appPassword_reset', function(req, res) {
+
+        console.log("next:" + JSON.stringify(req.body));
+
+        query = {
+            PasswordResetToken: req.body.token
+        }
+
+        mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+            if (msg.docs.length > 0) {
+
+                user = msg.docs[0];
+
+                bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
+
+
+                    user.PasswordResetToken = null;
+                    delete user.PasswordResetToken
+
+                    user.bcryptPassword = hash
+
+                    sertobj('mobileUsers', user, function(msg) {
+
+                        console.log(msg);
+
+                        res.setHeader('Content-Type', 'text/html');
+                        res.redirect('/appPasswordReset');
+                    })(msg)
+
+                });
+
+            } else {
+
+                res.json({ msg: 'invalid token ' })
+            }
+
+        }))
+    }) ///password_reset
+
+
+app.get('/appForgot/:email', function(req, res) {
+
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        var email = req.params.email;
+
+        mongoMsg(getby('mobileUsers', { email: email }, {}, function(msg) {
+
+            if (msg.docs.length > 0) {
+
+                user = msg.docs[0];
+
+                user.PasswordResetToken = randtoken.generate(16);
+
+                sertobj('mobileUsers', user, function(msg) {
+
+                    // console.log('sert token  forgot', msg.result)
+
+                    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+                    // setup e-mail data with unicode symbol
+
+                    resetEmailLink = relLink + 'appPasswordReset?token=' + user.PasswordResetToken + '&username=' + user.username
+
+                    var forgotEmailText = 'click here to reset password \n' + resetEmailLink;
+
+                    var mailOptions = {
+                        from: '" Greenease " <info@greenease.co>', // sender address
+                        to: email, // list of receivers
+                        subject: 'Greenease Password Reset', // Subject line
+                        text: forgotEmailText, // plaintext body
+
+                    };
+
+                    // send mail with defined transport object
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            res.json(error);
+
+                            return console.log(error);
+                        }
+                        console.log('Message sent: ' + info.response);
+
+                        if (info.rejected.length == 0) {
+
+                            res.json({ info: info, msg: 'Email sent to ' + email });
+
+                        }
+
+                    });
+
+                })(msg)
+
+            } else {
+
+                res.json({ msg: 'Email Not Found in our system ' });
+
+            }
+
+        }))
+
+    }) //appforgot
 
 
 var inmany = function(colname, ray, calli) {
@@ -986,8 +1181,6 @@ app.get('/editfarm/:fa', function(req, res) {
         }));
 
     }
-
-
     /*
         nfarm.save(faob, {
             success: function(farm) {
@@ -1010,26 +1203,60 @@ app.get('/editfarm/:fa', function(req, res) {
 
 
 app.get('/appface/:fbId/:acc', function(req, res) {
-    Parse.Cloud.useMasterKey();
+    //TO :::  'https://api.parse.com/1/functions/facefind'
 
-    Parse.Cloud.httpRequest({
-        url: 'https://api.parse.com/1/functions/facefind',
-        method: "POST",
-        headers: {
-            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-        },
-        body: { 'fbId': req.params.fbId, 'acc': req.params.acc },
+    //var uid = req.params.uid;
 
-    }).then(function(httpResponse) {
-        console.log(httpResponse.text);
+    query = {
+        'fbId': req.params.fbId
+    };
 
-        res.json(httpResponse.text);
+    mongoMsg(getby('mobileUsers', query, {}, function(msg) {
 
-    }, function(httpResponse) {
+            var results = msg.docs;
 
-        console.error('Request failed with response code ' + httpResponse.status);
-    });
+            if (results.length > 0) {
+
+                var user = results[0];
+
+                user['fbacc'] = req.params.acc;
+
+                sertobj('mobileUsers', user, function(msg) {
+
+                    svuser = msg.result;
+
+                    res.json(user);
+
+                })(msg)
+
+                console.log('user')
+
+
+            } else {
+
+                console.log('new user')
+
+                var user = {};
+
+                user["username"] = req.params.fbId;
+                user['fbId'] = req.params.fbId;
+                user['fbacc'] = req.params.acc;
+
+                // other fields can be set just like with Parse.Object
+                sertobj('mobileUsers', user, function(msg) {
+
+                    svuser = msg.result.ops[0];
+
+                    res.json(svuser);
+
+                })(msg)
+
+
+            }
+
+        })) // find user by fbId
+
+    ///res.json(httpResponse.text);
 
 }); //get newbiz
 
@@ -1762,7 +1989,8 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
             }
 
-        } //getby
+        } //getappface
+
 
     mongogetdb(
 
@@ -2316,23 +2544,32 @@ app.get('/posttotwit/:datas', function(req, res) {
 
     var oauth_consumer_key = "W8UcYW2IcvcCjp7k99w9DS8p8";
 
-    console.log('post to twit');
+    console.log('post to twit', datas);
 
     cb.setConsumerKey(oauth_consumer_key, consumerSecret);
 
-    Parse.Cloud.httpRequest({
-        url: 'https://api.parse.com/1/functions/gettwitacc',
-        method: "POST",
-        headers: {
-            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-        },
-        body: JSON.stringify({ 'uid': datas.uid }),
+    //{"oauth_token":"4828122839-EtGzvWp3QRCyPFLtQbFn66fgWMkzmXN5LKk0PxF","oauth_token_secret":"dIpTAGV94HHzihXclfO3MLOCsWkvAmgUL2NR7Phjttkmw","screen_name":"greenseth2016","user_id":"4828122839","x_auth_expires":"0"}
 
-    }).then(function(httpResponse) {
-        console.log(httpResponse.text);
+    query = {
+        _id: new ObjectId(datas.uid)
+    }
 
-        var result = JSON.parse(httpResponse.text).result;
+    mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+        fnduser = msg.docs[0];
+
+        var sres = {};
+
+        sres.uid = fnduser.id;
+        var accob = fnduser['twitacc'];
+
+        sres.oauth_token = accob.oauth_token;
+
+        sres.oauth_token_secret = accob.oauth_token_secret;
+
+        sres.t_user_id = accob.user_id;
+
+        var result = sres;
 
         cb.setToken(result.oauth_token, result.oauth_token_secret);
 
@@ -2356,11 +2593,7 @@ app.get('/posttotwit/:datas', function(req, res) {
             }
         );
 
-
-    }, function(httpResponse) {
-        console.error('Request failed with response code ' + httpResponse.status);
-    });
-
+    }))
 
 }); //twitpost
 
@@ -2442,12 +2675,10 @@ app.get('/twitsign/:uid', function(req, res) {
     var timestamp = ts.toString();
     var sigmsg = "this is seth";
 
-    //var signa = authlib.HMAC_SHA256_MAC(Consumer_Secret,sigmsg);
     cb.setConsumerKey(oauth_consumer_key, consumerSecret);
 
-
     cb.__call(
-        "oauth_requestToken", { oauth_callback: "http://business.greenease.co/twitauthcall" },
+        "oauth_requestToken", { oauth_callback: relLink + "twitauthcall" },
         function(reply, rate, err) {
             console.log(' call callback fun');
 
@@ -2467,40 +2698,41 @@ app.get('/twitsign/:uid', function(req, res) {
 
                     var key = prm.substring(0, prm.indexOf('='));
 
-
                     var val = prm.substring(prm.indexOf('=') + 1, prm.length);
 
                     params[key] = val;
 
                 };
+                var query = {
+                    _id: new ObjectId(req.params.uid)
+                }
+
+                console.log('twitsign query', query)
 
 
-                Parse.Cloud.httpRequest({
-                    url: 'https://api.parse.com/1/functions/twitsign',
-                    method: "POST",
-                    headers: {
-                        'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-                        'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-                    },
-                    body: JSON.stringify({ 'authob': params, 'uid': req.params.uid }),
+                mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+                    var authob = params;
+
+                    console.log(params);
+
+                    var fnduser = msg.docs[0];
 
 
-                }).then(function(httpResponse) {
-                    console.log(httpResponse.text);
-
-                    console.log(" is this it:: " + JSON.stringify(params));
-
-                    var result = JSON.parse(httpResponse.text).result;
-
-                    var sres = {};
-                    sres.requestToken = result.twittoken;
-
-                    res.json(sres);
+                    console.log('twitsign fnd user ', fnduser)
 
 
-                }, function(httpResponse) {
-                    console.error('Request failed with response code ' + httpResponse.status);
-                });
+                    fnduser['twitauth'] = authob;
+
+                    fnduser['twittoken'] = authob.oauth_token;
+
+                    sertobj('mobileUsers', fnduser, function(msg) {
+
+                        res.json({ requestToken: fnduser.twittoken });
+
+                    })(msg)
+
+                })); //user query
 
             }
         }
@@ -2527,29 +2759,25 @@ app.get('/twitauthcall', function(req, res) {
         // assign stored request token parameters to codebird here
         // ...
 
-
         console.log(req.query.oauth_verifier + "  req.query.oauth_verifier");
 
+        query = {
+            twittoken: req.query.oauth_token
+        }
 
-        Parse.Cloud.httpRequest({
-            url: 'https://api.parse.com/1/functions/gettwit',
-            method: "POST",
-            headers: {
-                'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-                'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-            },
-            body: JSON.stringify({ 'oauth_token': req.query.oauth_token }),
+        mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+            var fnduser = msg.docs[0];
+
+            console.log('twit auth call fnd user ', fnduser)
 
 
-        }).then(function(httpResponse) {
-            console.log(httpResponse.text);
+            var result = fnduser.twitauth;
 
-            // console.log(" is this it:: "+ JSON.stringify( params ) );
-
-            var result = JSON.parse(httpResponse.text).result;
-
+            result.uid = fnduser.uid;
 
             cb.setToken(result.oauth_token, result.oauth_token_secret);
+
 
             cb.__call(
                 "oauth_accessToken", {
@@ -2566,33 +2794,32 @@ app.get('/twitauthcall', function(req, res) {
                     //var tson = {};
                     //tson.oauth_accessToken = 
 
-                    Parse.Cloud.httpRequest({
-                        url: 'https://api.parse.com/1/functions/twitkeep',
-                        method: "POST",
-                        headers: {
-                            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-                            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-                        },
-                        body: JSON.stringify({ 'reply': reply, 'uid': result.uid }),
+                    var preram = reply.split('&');
+
+                    var params = {};
+
+                    for (var i = 0; i < preram.length; i++) {
+                        var prm = preram[i];
+
+                        var key = prm.substring(0, prm.indexOf('='));
 
 
-                    }).then(function(httpResponse2) {
-                        console.log(httpResponse2.text);
+                        var val = prm.substring(prm.indexOf('=') + 1, prm.length);
 
-                        //console.log(" is this it:: "+ JSON.stringify( params ) );
+                        params[key] = val;
 
-                        var result = JSON.parse(httpResponse2.text).result;
+                    };
 
-                        //var sres = {};
-                        //sres.requestToken = result.twittoken;
+                    fnduser['twitacc'] = params;
+
+                                console.log('twit auth call fnd user 222 ', fnduser)
+
+
+                    sertobj('mobileUsers', fnduser, function(msg) {
+
                         res.redirect('grva://twitauthcomplete/');
-                        //res.json(httpResponse2.text );
 
-
-                    }, function(httpResponse2) {
-                        console.error('Request failed with response code ' + httpResponse2.status);
-                    });
-
+                    })(msg);
 
                     // if you need to persist the login after page reload,
                     // consider storing the token in a cookie or HTML5 local storage
@@ -2600,14 +2827,8 @@ app.get('/twitauthcall', function(req, res) {
             );
 
             var sres = {};
-            //sres.requestToken = result.twittoken;
 
-            //  res.json( httpResponse.text );
-
-        }, function(httpResponse) {
-            console.error('Request failed with response code ' + httpResponse.status);
-        });
-
+        }))
 
     } else {
 
@@ -3770,20 +3991,16 @@ app.get('/faceauth/:token', function(req, res) {
 
     var tok = req.params.token;
 
-    Parse.Cloud.httpRequest({
-        url: 'https://graph.facebook.com/oauth/access_token?format=json&grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token=' + tok,
-        success: function(httpResponse) {
+    var faceGraphUrl = 'https://graph.facebook.com/oauth/access_token?format=json&grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token=' + tok;
 
-            res.json(httpResponse);
+    request(faceGraphUrl, function(error, response, body) {
 
-        },
-        error: function(httpResponse) {
+        res.json({ text: body });
 
-            res.json(httpResponse);
-
-            console.error(httpResponse);
-        }
+        console.log(body);
     });
+
+    // url:'https://graph.facebook.com/oauth/access_token?format=json&grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token=' + tok,
 
 }); // aceauth
 
@@ -3792,23 +4009,32 @@ app.get('/facepost/:token/:msg', function(req, res) {
     var tok = req.params.token;
     var msg = req.params.msg;
 
-    Parse.Cloud.httpRequest({
-        method: 'post',
-        //  url:'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token='+tok,
-        url: 'https://graph.facebook.com/v2.5/me/feed',
-        body: { 'access_token': tok, 'format': 'json', 'message': msg },
-        success: function(httpResponse) {
+    request.post({
+                url: 'https://graph.facebook.com/v2.5/me/feed',
+                form: { 'access_token': tok, 'format': 'json', 'message': msg }
+            },
+            function(err, httpResponse, body) {
 
-            res.json(httpResponse);
+                res.json(httpResponse);
 
-        },
-        error: function(httpResponse) {
+            })
+        /*Parse.Cloud.httpRequest({
+                method: 'post',
+                //  url:'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token='+tok,
+                url: 'https://graph.facebook.com/v2.5/me/feed',
+                body: { 'access_token': tok, 'format': 'json', 'message': msg },
+                success: function(httpResponse) {
 
-            res.json(httpResponse);
+                    res.json(httpResponse);
 
-            console.error(httpResponse);
-        }
-    });
+                },
+                error: function(httpResponse) {
+
+                    res.json(httpResponse);
+
+                    console.error(httpResponse);
+                }
+            });*/
 
 }); // facepost
 

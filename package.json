@@ -17,6 +17,7 @@
     "kerberos": "~0.0.x",
     "parse": "~1.6.12",
     "parse-server": "~2.1.4",
+    "rand-token": "^0.2.1",
     "request": "^2.74.0"
   },
   "engines": {

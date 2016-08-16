@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<!-- This page is displayed when someone clicks a valid 'reset password' link.
+       Users should feel free to add to this page (i.e. branding or security widgets)
+       but should be sure not to delete any of the form inputs or the javascript from the
+       template file. This javascript is what adds the necessary values to authenticate
+       this session with Parse.
+       The query params 'username' and 'app' hold the friendly names for your current user and
+       your app. You should feel free to incorporate their values to make the page more personal.
+       If you are missing form parameters in your POST, Parse will navigate back to this page and
+       add an 'error' query parameter.
+  -->
+
+<head>
+    <title>Greenease</title>
+
+</head>
+
+
+<style type="text/css">
+html {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-size: 100% 100%;
+    //background-image: url("../tback.png");
+    background-image: url("images/bigappback.png");
+    background-repeat: no-repeat;
+    overflow: hidden; //scroll;
+    padding: 0px;
+    margin: 0px;
+}
+</style>
+
+<body>
+
+    <script type="text/javascript">
+    var loc = window.location.href;
+
+    //window.history.pushState( {"clean":"up"}, "Title", "/");
+
+    /*  if (loc == window.location.origin + '/gtwit') {*/
+
+    if (window.location.search.length > 0) {
+
+        var terms = window.location.search.replace('?', '').split('=');
+
+        if (terms && terms.length == 2 && terms[0] == 'uid') {
+
+            console.log('uid', terms[1])
+
+            var urlstring = window.location.origin + "/twitsign/" + terms[1]; //eIWLR9TFit
+
+            getstuff(urlstring, function(stuff) {
+
+                var requestToken = stuff.requestToken;
+
+                window.location.href = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + requestToken;
+
+            }); // twitauth post
+        }
+    }
+
+    //window.location.href 
+
+    /* } else {
+
+         var urlstring = loc;
+
+         var ish = urlish(urlstring);
+
+         var hash = ish.hash;
+
+         var ac1 = hash.substring(hash.indexOf('=') + 1, hash.indexOf('&exp'));
+
+         //alert(  ish.hash+"   "+ac1 )
+
+         //var url2 ='grva://faceso/'+ac1;
+         var url2 = window.location.origin + "/www/index.html#wtwittok/" + ac1;
+
+         console.log('gon' + url2);
+
+         //window.location.href = url2 ;
+
+     }*/
+
+    function urlish(url) {
+        //url = window.location.origin+"/wid?thisisseth";
+        var parser = document.createElement('a');
+        parser.href = url;
+
+        parser.protocol; // => "http:"
+        parser.hostname; // => "example.com"
+        parser.port; // => "3000"
+        parser.pathname; // => "/pathname/"
+        parser.search; // => "?search=test"
+        parser.hash; // => "#hash"
+        parser.host; // => "example.com:3000"
+
+        return parser;
+    }
+
+
+    function getstuff(url, callback, extra) {
+        //console.log(url);
+        var xmlhttp;
+        var txt, x, i;
+
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                    var back = xmlhttp.responseText;
+                    var nson = JSON.parse(back);
+                    callback(nson, extra);
+
+                } // ready state = 4
+            } //on ready state 
+
+        xmlhttp.open("GET", url, true);
+
+        xmlhttp.send();
+    } //poststuff
+    </script>
+
+
+
+</body>
