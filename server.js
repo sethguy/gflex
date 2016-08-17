@@ -20,7 +20,8 @@ var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
 
 
-var geolib = require('geolib')
+var geolib = require('geolib');
+
 var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
 var request = require("request");
@@ -33,20 +34,22 @@ var mountPath = '/parse';
 
 var url = 'http://' + ip + ':' + port + '' + mountPath;
 
-var relLink = "http://localhost:8000/"
+//var relLink = "http://localhost:8000/"
 
-//var relLink = "https://gflex-greenease.rhcloud.com/"
+var relLink = "https://gflex-greenease.rhcloud.com/"
 
 var widgPageUrl = relLink + "widgPage";
 
 
 var Signupurl = relLink + "?signup";
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
+var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
 
-var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
+//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+
+//var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -313,15 +316,12 @@ app.get('/side/:terms', function(req, res) {
 
     }
 
-
     mongoMsg(sense("Business", terms, {}, function(msg) {
-
 
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.send(JSON.stringify(msg.docs));
 
     }));
-
 
 });
 
@@ -428,7 +428,6 @@ app.get('/MigrateFixpurhis', function(req, res) {
 
     }
 
-
 });
 
 
@@ -472,7 +471,6 @@ app.get('/MigrateUpdateGeoHoods', function(req, res) {
                 }) //neighborhood foreach
 
         })); // getby
-
 
     }) //
 
@@ -857,34 +855,6 @@ var inmany = function(colname, ray, calli) {
     } //in   many
 
 
-app.get('/userdo', function(req, res) {
-
-    var data = JSON.parse(fs.readFileSync('./gdata/_User.json', "utf8"));
-
-    console.log(JSON.stringify(data.results[0]));
-    //var name = files[i].replace('.json', '');
-    console.log('');
-    // console.log( name );
-    console.log('');
-
-    var sertray = data.results;
-
-    mongogetdb(
-
-        inmany(
-
-            'User',
-
-            sertray,
-
-            function(i) {
-
-                res.send(JSON.stringify(i))
-
-            }));
-
-}); // user do
-
 
 app.get('/readngoMobileData', function(req, res) {
 
@@ -899,6 +869,8 @@ app.get('/readngoMobileData', function(req, res) {
             if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
 
+                if(files[i].indexOf('DS') ==-1 ){
+
                 console.log(files[i], 'files')
 
                 var data = JSON.parse(fs.readFileSync('./mobileGdata/' + files[i], "utf8"));
@@ -912,6 +884,8 @@ app.get('/readngoMobileData', function(req, res) {
                 var col = db.collection(name);
 
                 inmany(col, sertray);
+
+}
 
             }; // files loop
 
@@ -1045,8 +1019,13 @@ app.get('/readngo', function(req, res) {
 
         MongoClient.connect(databaseUri, function(err, db) {
 
+
+
             if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
+
+
+                if(files[i].indexOf('DS') ==-1 ){
 
                 var data = JSON.parse(fs.readFileSync('./gdata/' + files[i], "utf8"));
 
@@ -1059,7 +1038,7 @@ app.get('/readngo', function(req, res) {
                 var col = db.collection(name);
 
                 inmany(col, sertray);
-
+}
             }; // files loop
 
             res.send(files);
