@@ -1871,18 +1871,14 @@ app.get('/newbiz/:bi', function(req, res) {
 
     var Biz = Parse.Object.extend("Business");
 
-    var Business = new Biz();
 
     biob.hours_json = JSON.stringify(biob.hours_json);
+
     console.log(biob.geo + " this is geo ");
+
     var prelo = biob.geo;
 
-    biob.geo = new Parse.GeoPoint(
-
-        { latitude: parseFloat(prelo.lat), longitude: parseFloat(prelo.lng) }
-
-    );
-
+    biob.geoPoint = { type: "Point", coordinates:[ prelo.lng , prelo.lat] }
 
     console.log("biob", JSON.stringify(biob))
 
