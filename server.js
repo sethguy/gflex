@@ -43,11 +43,11 @@ var widgPageUrl = relLink + "widgPage";
 
 var Signupurl = relLink + "?signup";
 
-var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
+//var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 
 //var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
 if (!databaseUri) {
