@@ -11,7 +11,10 @@ var grid = require('gridfs-stream');
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
     process.env.OPENSHIFT_INTERNAL_PORT || 8000;
-var bcrypt = require('bcrypt');
+
+
+var bcrypt = require('bcryptjs');
+
 var randtoken = require('rand-token');
 
 
