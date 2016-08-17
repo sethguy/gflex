@@ -1846,7 +1846,7 @@ app.get('/newbisug/:bi', function(req, res) {
     var newbi = new bisug();
     var bi = req.params.bi;
 
-    var bio = JSON.parse(bi);
+    var biob = JSON.parse(bi);
 
     mongoMsg(sertobj("bisuggestions", biob, function(msg) {
         console.log(msg.result)
