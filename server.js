@@ -5545,7 +5545,7 @@ app.post('/sendUserUpdate', function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     var update = req.body
-    var text = update.msg;
+    var userMsg = update.msg;
 
     var user = update.user;
 
@@ -5556,12 +5556,16 @@ app.post('/sendUserUpdate', function(req, res) {
 
     // setup e-mail data with unicode symbols
 
+
+
+var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
+
     var mailOptions = {
         from: '" Greenease " <info@greenease.co>', // sender address
         to: 'vanessa@greenease.co , isethguy@gmail.com', // list of receivers
         subject:  update.bi.business, // Subject line
 
-        text:'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ text+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address, // plaintext body
+        text: emailMsg  // plaintext body
 
     };
 
