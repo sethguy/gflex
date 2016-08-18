@@ -5551,8 +5551,6 @@ app.post('/sendUserUpdate', function(req, res) {
 
     var bi = update.bi;
 
-
-
     // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
@@ -5563,7 +5561,7 @@ app.post('/sendUserUpdate', function(req, res) {
         to: 'vanessa@greenease.co , isethguy@gmail.com', // list of receivers
         subject:  update.bi.business, // Subject line
 
-        text:'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ text+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+')', // plaintext body
+        text:'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ text+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address, // plaintext body
 
     };
 
