@@ -228,16 +228,6 @@ function adfazult(fa) {
 } //bizult
 
 
-function newfarm(fa) {
-
-    grabstuff("http://business.greenease.co/newfarm/" + JSON.stringify(fa), function(stuff) {
-
-        console.log(stuff);
-
-    });
-
-} //newfarm
-
 
 function adfirefarmselection(fa) {
     console.log(JSON.stringify(fa));
@@ -249,7 +239,6 @@ function adfirefarmselection(fa) {
 
 function firefarmselection(fa) {
 
-    alert("seth")
 
     get("wpcontainer").appendChild(get('FarmInfodiv'));
 
@@ -534,7 +523,7 @@ function savefarmupdate() {
 
         } // new note / no buysfrom change catcher
 
-        createPurHistRec(bid, fid, newprolist, note, time, function() {
+        createPurHistRec(bid, fid, newprolist, note, time, function(createPurHistRecResult) {
 
             grabstuff(urlstring, function(stuff) {
 

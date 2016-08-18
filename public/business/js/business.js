@@ -124,7 +124,7 @@ get('bizultscon').stprop('display','none').inn("");
 
 function newbiz(bi){
 
-grabstuff("http://business.greenease.co/newbiz/"+ encodeURIComponent(JSON.stringify(bi)),function(stuff){
+grabstuff(savebusinessurl+"/"+ encodeURIComponent(JSON.stringify(bi)),function(stuff){
 
 console.log(stuff);
 

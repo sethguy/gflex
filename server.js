@@ -16,6 +16,7 @@ var port = process.env.OPENSHIFT_NODEJS_PORT ||
 var bcrypt = require('bcryptjs');
 
 var randtoken = require('rand-token');
+var mandrillApiKey = 'r3VbHExcpNGbq-m2j1TP0Q';
 
 
 var querystring = require('querystring');
@@ -29,8 +30,6 @@ var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
 var request = require("request");
 var saltRounds = 10;
-
-
 
 
 var nodemailer = require('nodemailer');
@@ -860,7 +859,6 @@ var inmany = function(colname, ray, calli) {
     } //in   many
 
 
-
 app.get('/readngoMobileData', function(req, res) {
 
     fs.readdir('./mobileGdata', function(err, files) {
@@ -874,23 +872,23 @@ app.get('/readngoMobileData', function(req, res) {
             if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
 
-                if(files[i].indexOf('DS') ==-1 ){
+                if (files[i].indexOf('DS') == -1) {
 
-                console.log(files[i], 'files')
+                    console.log(files[i], 'files')
 
-                var data = JSON.parse(fs.readFileSync('./mobileGdata/' + files[i], "utf8"));
+                    var data = JSON.parse(fs.readFileSync('./mobileGdata/' + files[i], "utf8"));
 
-                console.log(JSON.stringify(data.results[0]));
-                var name = files[i].replace('.json', '');
-                console.log('');
-                console.log(name);
-                console.log('');
-                var sertray = data.results;
-                var col = db.collection(name);
+                    console.log(JSON.stringify(data.results[0]));
+                    var name = files[i].replace('.json', '');
+                    console.log('');
+                    console.log(name);
+                    console.log('');
+                    var sertray = data.results;
+                    var col = db.collection(name);
 
-                inmany(col, sertray);
+                    inmany(col, sertray);
 
-}
+                }
 
             }; // files loop
 
@@ -1025,25 +1023,24 @@ app.get('/readngo', function(req, res) {
         MongoClient.connect(databaseUri, function(err, db) {
 
 
-
             if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
 
 
-                if(files[i].indexOf('DS') ==-1 ){
+                if (files[i].indexOf('DS') == -1) {
 
-                var data = JSON.parse(fs.readFileSync('./gdata/' + files[i], "utf8"));
+                    var data = JSON.parse(fs.readFileSync('./gdata/' + files[i], "utf8"));
 
-                console.log(JSON.stringify(data.results[0]));
-                var name = files[i].replace('.json', '');
-                console.log('');
-                console.log(name);
-                console.log('');
-                var sertray = data.results;
-                var col = db.collection(name);
+                    console.log(JSON.stringify(data.results[0]));
+                    var name = files[i].replace('.json', '');
+                    console.log('');
+                    console.log(name);
+                    console.log('');
+                    var sertray = data.results;
+                    var col = db.collection(name);
 
-                inmany(col, sertray);
-}
+                    inmany(col, sertray);
+                }
             }; // files loop
 
             res.send(files);
@@ -1862,29 +1859,30 @@ app.get('/newbisug/:bi', function(req, res) {
 
 
 app.get('/newbiz/:bi', function(req, res) {
-    Parse.Cloud.useMasterKey();
-    //
-    //
 
     var biob = JSON.parse(req.param('bi'));
-
-
-    var Biz = Parse.Object.extend("Business");
-
 
     biob.hours_json = JSON.stringify(biob.hours_json);
 
     console.log(biob.geo + " this is geo ");
 
+
     var prelo = biob.geo;
 
-    biob.geoPoint = { type: "Point", coordinates:[ prelo.lng , prelo.lat] }
+
+
+    if(biob.geo && biob.geo.lat && biob.geo.lng )biob.geoPoint = { type: "Point", coordinates: [prelo.lng, prelo.lat] }
+
+    biob.geo = null;
+
+    delete biob.geo;
 
     console.log("biob", JSON.stringify(biob))
 
     if (biob._id) {
 
         var idToPlace = biob._id;
+
         console.log("id", idToPlace)
 
         mongogetdb(function(db) {
@@ -1895,14 +1893,11 @@ app.get('/newbiz/:bi', function(req, res) {
 
             updateDocumentbyid(db, "Business", idToPlace, biob, function(result, err) {
 
-
                 console.log("res", JSON.stringify(err));
 
                 res.json(result);
 
-
             })
-
 
         })
 
@@ -1916,27 +1911,6 @@ app.get('/newbiz/:bi', function(req, res) {
         }));
 
     }
-
-
-    /*
-
-        Business.save(biob, {
-            success: function(Business) {
-                // Execute any logic that should take place after the object is saved.
-
-
-                alert('New object created with objectId: ' + Business.id);
-              
-            },
-            error: function(Business, error) {
-                // Execute any logic that should take place if the save fails.
-                // error is a Parse.Error with an error code and message.
-                alert('Failed to create new object, with error code: ' + error.message);
-            }
-        });
-
-
-    */
 
 
 }); //get newbiz
@@ -2792,7 +2766,7 @@ app.get('/twitauthcall', function(req, res) {
 
                     fnduser['twitacc'] = params;
 
-                                console.log('twit auth call fnd user 222 ', fnduser)
+                    console.log('twit auth call fnd user 222 ', fnduser)
 
 
                     sertobj('mobileUsers', fnduser, function(msg) {
@@ -4629,6 +4603,8 @@ app.get('/getFarms/:bid', function(req, res) {
 
         //        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
 
+        console.log(farm_id_ray.length)
+
         var farmterms = { '_id': { $in: farm_id_ray } };
 
         getby('Farm', farmterms, {}, function(msg) {
@@ -4647,7 +4623,8 @@ app.get('/getFarms/:bid', function(req, res) {
                 for (var j = 0; j < farms.length; j++) {
 
                     var fa = farms[j];
-                    if (fa.objectId == buys[i].farm.objectId) {
+
+                    if (fa._id.valueOf() == buys[i].farm._id) {
                         theFarm = fa;
                     }
 
@@ -5108,18 +5085,18 @@ Parse.Cloud.define('sendAdminEmail', function(req, response) {
     });
 });
 
-Parse.Cloud.define('sendRequestAccessEmail', function(req, response) {
+app.post('/sendRequestAccessEmail', function(req, response) {
 
     //response.header("Access-Control-Allow-Origin", "*");
     // response.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    var bname = req.params.name;
-    var resname = req.params.resname;
-    var city = req.params.city;
-    var bemail = req.params.email;
-    var onefarm = req.params.onefarm;
+    var bname = req.body.name;
+    var resname = req.body.resname;
+    var city = req.body.city;
+    var bemail = req.body.email;
+    var onefarm = req.body.onefarm;
 
-    console.log("Params are: " + bname + " " + resname + " " + bemail + " " + city + " " + onefarm);
+    console.log("body are: " + bname + " " + resname + " " + bemail + " " + city + " " + onefarm);
 
     var Mandrill = require('mandrill');
     // TODO: don't save API key in source control
@@ -5178,7 +5155,7 @@ Parse.Cloud.define('sendRequestAccessEmail', function(req, response) {
 
                     console.log(" 20nd Email sent!");
 
-                    response.success(" 2nd Email sent!");
+                    response.json({msg:' Thanks !'});
 
                 },
                 error: function(httpResponse) {
@@ -5562,13 +5539,19 @@ app.get('/ckforUser2/:email', function(req, res) {
 }); // ckforUser 
 
 
-app.get('/emailUserUpdate/:update', function(req, res) {
+app.post('/sendUserUpdate', function(req, res) {
     // get user relations base on uid
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    var update = JSON.parse(req.params.update);
-    var text = JSON.parse(req.params.update).msg
+    var update = req.body
+    var text = update.msg;
+
+    var user = update.user;
+
+    var bi = update.bi;
+
+
 
     // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
@@ -5578,10 +5561,9 @@ app.get('/emailUserUpdate/:update', function(req, res) {
     var mailOptions = {
         from: '" Greenease " <info@greenease.co>', // sender address
         to: 'vanessa@greenease.co , isethguy@gmail.com', // list of receivers
-        subject: update.bid, // Subject line
+        subject:  update.bi.business, // Subject line
 
-
-        text: text, // plaintext body
+        text:'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ text+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+')', // plaintext body
 
     };
 
@@ -5594,7 +5576,7 @@ app.get('/emailUserUpdate/:update', function(req, res) {
         }
         console.log('Message sent: ' + info.response);
 
-        res.json(info);
+        res.json({msg:'thanks for the update',info:info});
 
     });
 
@@ -5734,10 +5716,7 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
             //test.equal(null, err);
             //test.equal(2, r.insertedCount);
 
-            res.json({
-                err: err,
-                r: r
-            });
+            res.json({r:r,err:err});
 
             // Finish up test
             db.close();
@@ -5824,6 +5803,8 @@ function actioncode(bo) {
 
 
 app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
+
+    console.log('sendfaupdate')
     //alert(req.query.bid);
 
     var prolist = JSON.parse(req.param('pros'));
@@ -5856,14 +5837,18 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
                 found[pro.name] = pro.value;
 
             }; //pro loop
+console.log('foundbuys rel',found)
 
             var fndbuys_id = found._id;
 
             delete found._id;
 
+
             updateDocumentbyid(msg.db, 'BuysFrom', fndbuys_id, found, function(sertresult) {
 
-                res.json({ 'msg': 'Farm updated', 'rel': sertresult });
+                found._id = fndbuys_id;
+
+                res.json({ 'msg': 'Farm updated', 'rel': found });
 
             }); //updatedocuments
 

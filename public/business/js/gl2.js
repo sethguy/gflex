@@ -19,11 +19,16 @@ var HTTPS_QUERYSTRING = "&https=1";
 var getbizfarmsurl =  "/getFarms";
 var getPurchaseHistoryRecsUrl = "/purhis2";
 var SendFarmUpdateUrl = "/sendfaupdate";
-var createPurHistRecUrl ="/newphrecs";
+var createPurHistRecUrl ="/newphrecs2";
 var ShowFarmsUrl = "/showFarms";
 var widgtextUrl = "/getwidgetlink";
-var sendreqacemailUrl = "functions/sendRequestAccessEmail";
+
+
+var sendreqacemailUrl = "/sendRequestAccessEmail";
+
+
 var sendforgotemailUrl = "functions/sendSetPasswordEmail";
+
 var sendsignupUrl = "functions/usersignup";
 var logoutUrl = "functions/logout";
 var buserfarmsugUrl = "functions/sendAdminEmail";

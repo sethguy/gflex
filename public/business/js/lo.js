@@ -207,12 +207,13 @@ function rasend() {
 
     };
 
-    var urlstring = PARSE_BASE_URL + sendreqacemailUrl;
-    postwithkeys(urlstring, function(stuff) {
+    var urlstring =  sendreqacemailUrl;
 
-        alert(JSON.stringify(stuff))
+    poststuff( urlstring , JSON.stringify(raq)  , function(stuff) {
 
-    }, JSON.stringify(raq)); //post with stuff
+     if(stuff.msg)alert( stuff.msg );
+
+    }); //post with stuff
 
 
 }

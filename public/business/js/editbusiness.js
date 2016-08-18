@@ -458,12 +458,17 @@ function getbifromeditfields(id) {
 
         */
 
-
     // bi.hours_json = newbhours;
 
+geowords = get('ebfgeo').value;
 
-    bi.geo = JSON.parse(get('ebfgeo').value);
+console.log('geoword',geowords)
 
+if(geowords.indexOf('undefined') == -1 ){
+
+    bi.geo = JSON.parse( get('ebfgeo').value  );
+
+}
 
     for (var i = 0; i < gcats.length; i++) {
         var cat = gcats[i];
