@@ -209,7 +209,7 @@ function rasend() {
 
     var urlstring =  sendreqacemailUrl;
 
-    poststuff( urlstring , JSON.stringify(raq)  , function(stuff) {
+    poststuff( urlstring , raq  , function(stuff) {
 
      if(stuff.msg)alert( stuff.msg );
 

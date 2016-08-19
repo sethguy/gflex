@@ -1870,8 +1870,7 @@ app.get('/newbiz/:bi', function(req, res) {
     var prelo = biob.geo;
 
 
-
-    if(biob.geo && biob.geo.lat && biob.geo.lng )biob.geoPoint = { type: "Point", coordinates: [prelo.lng, prelo.lat] }
+    if (biob.geo && biob.geo.lat && biob.geo.lng) biob.geoPoint = { type: "Point", coordinates: [prelo.lng, prelo.lat] }
 
     biob.geo = null;
 
@@ -5085,93 +5084,7 @@ Parse.Cloud.define('sendAdminEmail', function(req, response) {
     });
 });
 
-app.post('/sendRequestAccessEmail', function(req, response) {
 
-    //response.header("Access-Control-Allow-Origin", "*");
-    // response.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    var bname = req.body.name;
-    var resname = req.body.resname;
-    var city = req.body.city;
-    var bemail = req.body.email;
-    var onefarm = req.body.onefarm;
-
-    console.log("body are: " + bname + " " + resname + " " + bemail + " " + city + " " + onefarm);
-
-    var Mandrill = require('mandrill');
-    // TODO: don't save API key in source control
-    Mandrill.initialize(mandrillApiKey);
-    Mandrill.sendEmail({
-        message: {
-            text: bname + " would like to sign up for a greenease business acount\n" +
-                " restaurant resname  :" + resname +
-                "\n  restaurant email  :" + bemail +
-                "\n  restaurant city  :" + city +
-                "\n  restaurant onefarm  :" + onefarm,
-            subject: "Request Access",
-            from_email: "info@greenease.co",
-            from_name: "User_Request_Access",
-            to: [{
-                email: "isethguy@gmail.com",
-                name: "Seth Terry"
-            }, {
-                email: "vanessa@greenease.co",
-                name: "Vanessa Ferragut"
-            }]
-        },
-        async: true
-    }, {
-        success: function(httpResponse) {
-            console.log(httpResponse);
-            // response.success("Email sent!");
-
-            console.log("1st email sent");
-
-            Mandrill.sendEmail({
-                message: {
-                    text: "Thank you for your interest in the Greenease Business software. Note that this is a free service for those chefs, restaurateurs, and buyers who support local farms. " +
-                        "\n\n" + "You will be contacted shortly regarding your access request" + "\n\n" +
-                        "Locally yours,\n\n" +
-
-                        "The Greenease Team\n\n" +
-
-                        "~~~~~~~~~~~~"
-
-                    ,
-                    subject: "Interest in Greenease Business",
-                    from_email: "info@greenease.co",
-                    from_name: "The Greenease Team",
-                    to: [{
-                            email: bemail,
-                            name: bname
-                        }
-
-                    ]
-                },
-                async: true
-            }, {
-                success: function(httpResponse) {
-                    console.log(httpResponse);
-
-                    console.log(" 20nd Email sent!");
-
-                    response.json({msg:' Thanks !'});
-
-                },
-                error: function(httpResponse) {
-                    console.error(httpResponse);
-                    response.error("Uh oh, something went wrong");
-                }
-            });
-
-
-        },
-        error: function(httpResponse) {
-            console.error(httpResponse);
-            response.error("Uh oh, something went wrong");
-        }
-    });
-});
 
 
 Parse.Cloud.define('sendForgotPasswordEmail', function(req, response) {
@@ -5538,6 +5451,103 @@ app.get('/ckforUser2/:email', function(req, res) {
 
 }); // ckforUser 
 
+app.post('/sendRequestAccessEmail', function(req, res) {
+
+    //response.header("Access-Control-Allow-Origin", "*");
+    // response.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    var bname = req.body.name;
+    var resname = req.body.resname;
+    var city = req.body.city;
+    var bemail = req.body.email;
+    var onefarm = req.body.onefarm;
+
+    console.log("body are: " + bname + " " + resname + " " + bemail + " " + city + " " + onefarm);
+
+    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+    // setup e-mail data with unicode symbols
+    //var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
+
+
+    var emailMsg = bname + " would like to sign up for a greenease business acount\n" +
+        " restaurant resname  :" + resname +
+        "\n  restaurant email  :" + bemail +
+        "\n  restaurant city  :" + city +
+        "\n  restaurant onefarm  :" + onefarm
+
+
+    var mailOptions = {
+        from: '" Greenease " <info@greenease.co>', // sender address
+        to: ' vanessa@greenease.co ,isethguy@gmail.com', // list of receivers
+        subject: " user request access mail", // Subject line
+
+        text: emailMsg // plaintext body
+
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            res.json(error);
+
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+
+        //res.json({msg:'thanks for the update',info:info});
+        console.log("1st email sent");
+
+
+        var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+        // setup e-mail data with unicode symbols
+        //var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
+
+
+        var emailMsg = "Thank you for your interest in the Greenease Business software. Note that this is a free service for those chefs, restaurateurs, and buyers who support local farms. " +
+            "\n\n" + "You will be contacted shortly regarding your access request" + "\n\n" +
+            "Locally yours,\n\n" +
+
+            "The Greenease Team\n\n" +
+
+            "~~~~~~~~~~~~"
+
+        var mailOptions = {
+            from: '" Greenease " <info@greenease.co>', // sender address
+            to: bemail, // list of receivers
+            subject: "Hello from Greenease", // Subject line
+
+            text: emailMsg // plaintext body
+
+        };
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+
+
+
+                res.json(error);
+
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
+
+
+                             console.log(" 20nd Email sent!");
+
+                    res.json({ msg: ' Thanks !' });
+
+          //  res.json({ msg: 'thanks for the update', info: info });
+
+
+        });
+
+
+    });
+
+});
 
 app.post('/sendUserUpdate', function(req, res) {
     // get user relations base on uid
@@ -5557,15 +5567,14 @@ app.post('/sendUserUpdate', function(req, res) {
     // setup e-mail data with unicode symbols
 
 
-
-var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
+    var emailMsg = 'user @ username ' + user.username + ' with id ::' + user._id + ' said :: \n\n\n ' + userMsg + '  \n  \n \n   ' + '  about ' + bi.business + '(' + bi._id + ') \n \n' + ' ' + bi.address;
 
     var mailOptions = {
         from: '" Greenease " <info@greenease.co>', // sender address
         to: 'vanessa@greenease.co , isethguy@gmail.com', // list of receivers
-        subject:  update.bi.business, // Subject line
+        subject: update.bi.business, // Subject line
 
-        text: emailMsg  // plaintext body
+        text: emailMsg // plaintext body
 
     };
 
@@ -5578,7 +5587,7 @@ var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said ::
         }
         console.log('Message sent: ' + info.response);
 
-        res.json({msg:'thanks for the update',info:info});
+        res.json({ msg: 'thanks for the update', info: info });
 
     });
 
@@ -5718,7 +5727,7 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
             //test.equal(null, err);
             //test.equal(2, r.insertedCount);
 
-            res.json({r:r,err:err});
+            res.json({ r: r, err: err });
 
             // Finish up test
             db.close();
@@ -5807,7 +5816,7 @@ function actioncode(bo) {
 app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
     console.log('sendfaupdate')
-    //alert(req.query.bid);
+        //alert(req.query.bid);
 
     var prolist = JSON.parse(req.param('pros'));
 
@@ -5839,7 +5848,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
                 found[pro.name] = pro.value;
 
             }; //pro loop
-console.log('foundbuys rel',found)
+            console.log('foundbuys rel', found)
 
             var fndbuys_id = found._id;
 
