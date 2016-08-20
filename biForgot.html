@@ -12,7 +12,7 @@
   -->
 
 <head>
-    <title> Greenease </title>
+    <title>Welcome to Greenease Business</title>
     <style type='text/css'>
     h1 {
         display: block;
@@ -147,7 +147,6 @@
         <br>
 
         <input name='utf-8' type='hidden' value='✓' />
-        <input name="username" id="username" type="hidden" />
         <input name="token" id="token" type="hidden" />
         <button id="button" disabled>Set Password</button>
     </form>
@@ -181,13 +180,11 @@
             pass = document.getElementById("pass");
             retype = document.getElementById("retype");
 
-            document.getElementById('form').setAttribute('action', '/appPassword_reset');
+            document.getElementById('form').setAttribute('action', '/biPassword_reset');
 
-            document.getElementById('username').value = urlParams['username'];
+            document.getElementById('email').value = urlParams['email'];
 
             // document.getElementById('username_label').appendChild(document.createTextNode(urlParams['username']));
-
-            document.getElementById('email').value = urlParams['username'];
 
             document.getElementById('token').value = urlParams['token'];
             if (urlParams['error']) {
@@ -196,7 +193,7 @@
         }else{
 
 
-          window.location.href = "http://greenease.co/"
+          window.location.href = 'http://business.greenease.co/'
         }
     }
 

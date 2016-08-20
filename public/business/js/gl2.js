@@ -6,7 +6,7 @@ var PARSE_REST_API_KEY = "X-Parse-REST-API-Key";
 var PARSE_REST_API_VALUE = "g2sQMnplDFdrtrZbmxiOZndMn09752hFPBvARQ8H";
 var PARSE_SESSION_TOKEN_KEY = "X-Parse-Session-Token";
 var GetBizByNameUrl = "/bizsearch";
-var loginUrl = "getlogin";
+var loginUrl = "/getlogin";
 var GetFaByNameUrl = "/fasearch";
 var savebusinessurl = "/newbiz";
 var linkbusinessurl = "/newuserbusiness";
@@ -23,11 +23,9 @@ var createPurHistRecUrl = "/newphrecs2";
 var ShowFarmsUrl = "/showFarms";
 var widgtextUrl = "/getwidgetlink";
 
-
 var sendreqacemailUrl = "/sendRequestAccessEmail";
 
-
-var sendforgotemailUrl = "functions/sendSetPasswordEmail";
+var sendforgotemailUrl = "/biForgot";
 
 var sendsignupUrl = "/usersignup";
 var logoutUrl = "functions/logout";
@@ -321,10 +319,6 @@ function getwithkeys(url, callback, extra) {
     xmlhttp.open("GET", url, true);
 
     xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    xmlhttp.setRequestHeader('X-Parse-Application-Id', 'l7WfvYKSprD4DnGFMFqbE1VOgfQ6096PB372J3gA');
-
-    xmlhttp.setRequestHeader('X-Parse-REST-API-Key', 'g2sQMnplDFdrtrZbmxiOZndMn09752hFPBvARQ8H');
 
     xmlhttp.send();
 } //grabstuff

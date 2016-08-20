@@ -744,8 +744,112 @@ app.get('/appPasswordReset', function(req, res) {
 app.get('/biPasswordReset', function(req, res) {
 
     res.setHeader('Content-Type', 'text/html');
-    res.status(200).send(fs.readFileSync('./biFogot.html'));
+    res.status(200).send(fs.readFileSync('./biForgot.html'));
 });
+
+app.post('/biForgot', function(req, res) {
+
+
+
+        var email = req.body.email;
+
+        mongoMsg(getby('User', { email: email }, {}, function(msg) {
+
+            if (msg.docs.length > 0) {
+
+                user = msg.docs[0];
+
+                user.PasswordResetToken = randtoken.generate(16);
+
+                sertobj('User', user, function(msg) {
+
+                    // console.log('sert token  forgot', msg.result)
+
+                    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+                    // setup e-mail data with unicode symbol
+
+                    resetEmailLink = relLink + 'biPasswordReset?token=' + user.PasswordResetToken + '&email=' + user.email
+
+                    var forgotEmailText = 'click here to reset password \n' + resetEmailLink;
+
+                    var mailOptions = {
+                        from: '" Greenease " <info@greenease.co>', // sender address
+                        to: email, // list of receivers
+                        subject: 'Greenease Password Reset', // Subject line
+                        text: forgotEmailText, // plaintext body
+
+                    };
+
+                    // send mail with defined transport object
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            res.json(error);
+
+                            return console.log(error);
+                        }
+                        console.log('Message sent: ' + info.response);
+
+                        if (info.rejected.length == 0) {
+
+                            res.json({ info: info, msg: 'Email sent to ' + email });
+
+                        }
+
+                    });
+
+                })(msg)
+
+            } else {
+
+                res.json({ msg: 'Email Not Found in our system ' });
+
+            }
+
+        }))
+
+
+});
+
+app.post('/biPassword_reset', function(req, res) {
+
+        console.log("next:" + JSON.stringify(req.body));
+
+        query = {
+            PasswordResetToken: req.body.token
+        }
+
+        mongoMsg(getby('User', query, {}, function(msg) {
+
+            if (msg.docs.length > 0) {
+
+                user = msg.docs[0];
+
+                bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
+
+                    user.PasswordResetToken = null;
+                    delete user.PasswordResetToken
+
+                    user.bcryptPassword = hash
+
+                    sertobj('User', user, function(msg) {
+
+                        console.log(msg);
+
+                        res.setHeader('Content-Type', 'text/html');
+                        res.redirect('/biPasswordReset?success=true');
+                    })(msg)
+
+                });
+
+            } else {
+
+                res.json({ msg: 'invalid token ' })
+            }
+
+        }))
+    }) ///password_reset
+
 
 
 app.post('/newMobileUser', function(req, res) {
@@ -809,7 +913,7 @@ app.post('/newMobileUser', function(req, res) {
             }
 
         }))
-    }) ///password_reset
+    }) ///new mobile user
 
 app.post('/appPassword_reset', function(req, res) {
 
@@ -5116,57 +5220,7 @@ Parse.Cloud.define('sendAdminEmail', function(req, response) {
 });
 
 
-Parse.Cloud.define('sendForgotPasswordEmail', function(req, response) {
 
-    var ToEamil = req.params.ToEmail;
-
-    console.log("Params are: " + ToEmail);
-
-    var Mandrill = require('mandrill');
-    // TODO: don't save API key in source control
-    Mandrill.initialize(mandrillApiKey);
-    Mandrill.sendEmail({
-        message: {
-            text: "Woops ! please follow the link below to reset your password \n" +
-                " http://greenease-business.parseapp.com/welcome.html ",
-            subject: "Forgot Password",
-            from_email: "info@greenease.co",
-            from_name: "ForgotPassword",
-            to: [{
-                email: ToEmail,
-            }]
-        },
-        async: true
-    }, {
-        success: function(httpResponse) {
-            console.log(httpResponse);
-            response.success("Email sent!");
-        },
-        error: function(httpResponse) {
-            console.error(httpResponse);
-            response.error("Uh oh, something went wrong");
-        }
-    });
-
-});
-
-
-Parse.Cloud.define('sendSetPasswordEmail', function(req, res) {
-    console.log("Params are: " + req.params.email);
-    Parse.User.requestPasswordReset(req.params.email, {
-        success: function() {
-
-            res.success("Sent password reset email to " + req.params.email + "!");
-            // Password reset request was sent successfully
-
-        },
-        error: function(error) {
-            // Show the error message somewhere
-            res.error("Error: " + error.code + " " + error.message);
-            alert("Error: " + error.code + " " + error.message);
-        }
-    });
-});
 
 /**
  * Allow admins to create user accounts for Business owners

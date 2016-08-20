@@ -182,15 +182,13 @@ function foback() {
 
 function fosend() {
 
+    var urlstring = sendforgotemailUrl;
 
-    var urlstring = PARSE_BASE_URL + sendforgotemailUrl;
-    alert(get('foemail').value)
+    poststuff( urlstring , {email:get('foemail').value}  , function(stuff) {
 
-    postwithkeys(urlstring, function(stuff) {
+        if(stuff.msg)alert(stuff.msg)
 
-        alert(JSON.stringify(stuff))
-
-    }, JSON.stringify({ 'email': get('foemail').value })); //post with stuff
+    }); //post with stuff
 
 }
 
