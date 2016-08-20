@@ -99,6 +99,27 @@ var mongoMsg = function(calli) {
 
 };
 
+
+var updatemany = function(table, filter, set, callback) {
+
+    return function(msg) {
+
+        var collection = msg.db.collection(table);
+
+        collection.updateMany(filter, { $set: set }, function(err, r) {
+
+            msg.result = r;
+
+            msg.err = err;
+
+            callback(msg)
+
+        });
+
+    }
+
+}
+
 var sertobj = function(table, obj, callback) {
 
         return function(msg) {
@@ -3325,7 +3346,7 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
 
     function paid(paiddate) {
 
-        if(!paiddate)return false;
+        if (!paiddate) return false;
 
         var pn = new Date(paiddate.iso).getTime();
 
@@ -3479,8 +3500,6 @@ app.get('/newuserbusiness/:bid/:email', function(req, res) {
 
 
 app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
-    Parse.Cloud.useMasterKey();
-
 
     console.log("unlinked stuff   ::   " + req.param('bid') + "    " + req.param('email'))
 
@@ -3491,56 +3510,45 @@ app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
     query.equalTo("linked", true);
 
     query.include('bi');
-    query.find({
-        success: function(urels) {
-            // The count request succeeded. Show the count
-
-            for (var i = 0; i < urels.length; i++) {
-                var urel = urels[i];
-
-                if (urel.get('email') === req.param('email')) {
-
-                    if (urels.length === 1) {
-
-                        urel.get('bi').set('islinked', false);
-                        urel.get('bi').save();
-
-                    } //if to determin if business is unlinked base on if this is the last urel linked
 
 
-                    urel.set("objectId", urel.get('objectId'));
-                    urel.set("linked", false);
-                    console.log("here");
-                    urel.save(null, {
-                        success: function(userbusinessres) {
-                            // Execute any logic that should take place after the object is saved.
-
-                            var msgstring = 'business unlinked';
-                            console.log("bus");
-                            res.json({ 'msg': msgstring, 'urel': userbusinessres });
-
-                            alert('New object created with objectId: ' + userbusinessres.id);
-
-                        },
-                        error: function(userbusiness, error) {
-                            // Execute any logic that should take place if the save fails.
-                            // error is a Parse.Error with an error code and message.
-                            alert('Failed to create new object, with error code: ' + error.message);
-                        }
-                    });
+    var userbusinessQuery = {
+        linked: true,
+        bid: req.params.bid,
+        email: req.params.email
+    };
 
 
-                }
+    mongoMsg(getby('userbusiness', userbusinessQuery, {}, function(msg) {
+        var urels = msg.docs;
 
 
-            }; //urel loop
+        mongoMsg(updatemany('userbusiness', userbusinessQuery, { linked: false }, function() {
 
 
-        },
-        error: function(error) {
-            // The request failed
-        }
-    }); // user biz query
+            if (urels.length === 1) {
+
+                mongoMsg(updatemany('Business', {_id:new ObjectId(urels[0].bid)}, { islinked: false }, function() {
+
+
+                    res.json({ 'msg': 'business unlinked' });
+
+
+                }))
+
+            } else {
+
+
+                res.json({ 'msg': 'business unlinked' });
+
+
+            }
+
+
+        }))
+
+
+    }));
 
 
 }); //"/unlink userbusiness rel  get"
@@ -4390,7 +4398,7 @@ app.post('/gipnl2', function(req, res) {
 
                 fnduser = msg.docs[0];
 
-                fnduser["paiddate"] = {iso:new Date() };
+                fnduser["paiddate"] = { iso: new Date() };
 
                 fnduser["txn_info"] = { 'date': new Date(), 'txn_id': txn_id, 'payer_email': payer_email };
 
@@ -4420,7 +4428,6 @@ app.post('/gipnl2', function(req, res) {
     })
 
 }); //gipnl 2 
-
 
 
 app.get('/getFarms2', function(req, res) {
