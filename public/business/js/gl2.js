@@ -29,7 +29,7 @@ var sendreqacemailUrl = "/sendRequestAccessEmail";
 
 var sendforgotemailUrl = "functions/sendSetPasswordEmail";
 
-var sendsignupUrl = "functions/usersignup";
+var sendsignupUrl = "/usersignup";
 var logoutUrl = "functions/logout";
 var buserfarmsugUrl = "functions/sendAdminEmail";
 var ckforuserurl = "/ckforUser";
@@ -635,31 +635,23 @@ function Showsignup(email) {
         var pass = get('formput1').value;
 
         if (passck())
-            var urlstring = PARSE_BASE_URL + sendsignupUrl;
+ 
+        poststuff(sendsignupUrl, { 'email': email, 'password': pass }  , function(stuff) {
 
-        postwithkeys(urlstring, function(stuff) {
+            var user = stuff.user;
 
-            var com = stuff.result;
-            var user = com.user;
-
-            if (com.user) {
+            if (stuff.user) {
                 bcent.removeChild(signbox);
 
-                //user.isadmin=true;
                 loginwithuser(user);
-
-                //firebizselection({'business':'seth','isadmin':true});
-
-                //helpadviews();
 
             } else {
 
-                alert(JSON.stringify(stuff));
+                if(stuff.msg)alert(stuff.msg);
 
             }
 
-
-        }, JSON.stringify({ 'email': email, 'password': pass })); //post with keys
+        } ); //post stuff for new user password
 
     });
 
@@ -668,7 +660,6 @@ function Showsignup(email) {
     signbox.pend(signformbox);
 
     bcent.pend(signbox);
-
 
     ///
 

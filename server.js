@@ -330,6 +330,63 @@ app.get('/side/:terms', function(req, res) {
 });
 
 
+app.get('/MigrateUserBusiness', function(req, res) {
+
+
+    var query = {
+
+
+    };
+
+    mongoMsg(getby('userbusiness', query, {}, function(msg) {
+
+            console.log()
+
+            ublinks = msg.docs;
+
+            var count = 0;
+
+            ublinks.forEach(function(link) {
+
+
+                    var biQuery = {
+                        objectId: link.bid
+                    };
+
+
+                    getby('Business', biQuery, {}, function(msg) {
+
+
+                        if (msg.docs && msg.docs.length > 0) {
+
+
+                            link.bid = msg.docs[0]._id.valueOf();
+
+
+                            sertobj('userbusiness', link, function(msg) {
+
+                                count++;
+
+                                console.log(link);
+
+                                console.log(ublinks.length, count)
+
+                            })(msg)
+
+                        }
+
+
+                    })(msg)
+
+                }) // ublink each
+
+
+        })) // 
+
+
+}); // MigrateUserBusiness
+
+
 app.get('/MigrateFixpurhis', function(req, res) {
 
     var terms = {};
@@ -3120,42 +3177,59 @@ app.get('/getlinkedbybid/:bid', function(req, res) {
 
 app.get('/getlinked/:email', function(req, res) {
     // get user relations base on uid
-    var myclass = Parse.Object.extend("userbusiness");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-    query.limit(1000);
-    query.include('bi');
-    query.equalTo('email', req.param('email'));
-    query.equalTo('linked', true);
-    query.find({
-        success: function(results) {
 
-            //var term = req.param('term');
 
-            var matches = [];
+    var userbusinessQuery = {
 
-            for (var i = 0; i < results.length; i++) {
-                //urel is user/biz relation table record
+        email: req.params.email
 
-                var urel = results[i];
+    }
 
-                //if(urel.get("email").toLowerCase().indexOf(term.toLowerCase()) > - 1 ){
+    mongoMsg(getby('userbusiness', userbusinessQuery, {}, function(msg) {
 
-                matches.push({ 'rel': urel.get('user'), 'bi': urel.get('bi') });
+        links = msg.docs;
 
-                //}//old macthing if 
+        console.log(links)
 
-            }; //f loop
 
-            res.json(matches);
+        console.log(links.map(function(link) {
+            return link._id;
+        }))
 
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
+
+        var businessQuery = {
+
+            _id: {
+                $in: links.map(function(link) {
+                    return new ObjectId(link.bid);
+                })
+
+            }
+
         }
-    });
 
 
+        mongoMsg(getby('Business', businessQuery, {}, function(msg) {
+                /* fndBis.
+
+                links.map(function(link){
+
+                    return{rel,}
+
+                })*/
+
+
+                fndBis = msg.docs;
+                res.json(fndBis.map(function(bi) {
+
+                    return { bi: bi }
+
+                }));
+
+
+            })) //
+
+    }));
 }); // crm user for email
 
 
@@ -3175,14 +3249,6 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
     var email = req.param('email');
     var bid = req.param('bid');
     var pic = req.param('pic');
-
-    var User = Parse.Object.extend("User");
-
-    var query = new Parse.Query(User);
-
-    Parse.Cloud.useMasterKey();
-
-    query.equalTo('email', email);
 
     var term = req.param('term');
 
@@ -3258,6 +3324,8 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
 
 
     function paid(paiddate) {
+
+        if(!paiddate)return false;
 
         var pn = new Date(paiddate.iso).getTime();
 
@@ -4322,7 +4390,7 @@ app.post('/gipnl2', function(req, res) {
 
                 fnduser = msg.docs[0];
 
-                fnduser["paiddate"] = new Date();
+                fnduser["paiddate"] = {iso:new Date() };
 
                 fnduser["txn_info"] = { 'date': new Date(), 'txn_id': txn_id, 'payer_email': payer_email };
 
@@ -4353,50 +4421,6 @@ app.post('/gipnl2', function(req, res) {
 
 }); //gipnl 2 
 
-
-app.post('/gipnl', function(req, res) {
-    //alert(req.query.bid);
-
-    console.log("next:" + JSON.stringify(req.body));
-
-    var mc_gross = req.body.mc_gross;
-    var payment_status = req.body.payment_status;
-    var payer_email = req.body.payer_email;
-    var item_name = req.body.item_name;
-    var txn_id = req.body.txn_id;
-    var bid = item_name.replace("Greenease Widget_", "");
-
-    console.log("howdy bid is " + item_name);
-
-    console.log("howdy bid is +" + bid + "+");
-
-    Parse.Cloud.useMasterKey();
-    var Business = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(Business);
-
-    query.get(bid, {
-        success: function(bi) {
-
-            var myResults = { result: "seth" };
-
-            bi.set("paiddate", new Date());
-            bi.save();
-
-            res.json(myResults);
-            // The object was retrieved successfully.
-        },
-        error: function(object, error) {
-            console.error(error);
-
-            //res.error(error.message);
-
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-        }
-    });
-
-});
 
 
 app.get('/getFarms2', function(req, res) {
@@ -5085,8 +5109,6 @@ Parse.Cloud.define('sendAdminEmail', function(req, response) {
 });
 
 
-
-
 Parse.Cloud.define('sendForgotPasswordEmail', function(req, response) {
 
     var ToEamil = req.params.ToEmail;
@@ -5225,88 +5247,96 @@ function qset() {
 }
 
 
-Parse.Cloud.define('usersignup', function(req, response) {
-    Parse.Cloud.useMasterKey();
+app.post('/usersignup', function(req, res) {
 
-    var email = req.params.email;
-    var pass = req.params.password;
+    var email = req.body.email;
+    var pass = req.body.password;
 
+    userQuery = {
+        email: email
+    }
 
-    var UsrBiz = Parse.Object.extend("userbusiness");
+    mongoMsg(getby('User', userQuery, {}, function(msg) {
 
-    var usrbizq = new Parse.Query(UsrBiz);
+        console.log(msg.docs.length)
 
-    usrbizq.equalTo('email', email);
+        if (msg.docs.length == 0) {
 
-    usrbizq.find({
-        success: function(ublinks) {
-            Parse.Cloud.useMasterKey();
+            userbusinessQuery = {
+                email: email
+            }
 
-            if (ublinks.length > 0) {
+            getby('userbusiness', userbusinessQuery, {}, function(msg) {
 
-                var User = Parse.Object.extend("User");
+                links = msg.docs;
 
-                var nu = new User();
-                nu.set('username', email);
-                nu.set('email', email);
-                nu.set('password', pass);
+                if (links.length > 0) {
 
-                nu.save(null, {
-                    success: function(user) {
+                    bcrypt.hash(pass, saltRounds, function(err, hash) {
 
+                        var newUser = {
+                            username: email,
+                            email: email,
+                            bcryptPassword: hash
+                        }
 
-                        console.log(' links 1  ' + JSON.stringify(ublinks));
+                        sertobj('User', newUser, function(msg) {
 
-                        for (var i = 0; i < ublinks.length; i++) {
-                            var ubl = ublinks[i];
+                            console.log(msg);
 
-                            ubl.set('uid', user.id);
+                            saveduser = msg.result.ops[0];
 
-                            //console.log(JSON.stringify(user)+"    and "+user.objectId+"   and   "+user.get('objectId')   );
-                        }; // link loop
+                            links.forEach(function(link) {
 
-                        console.log(' links 2  ' + JSON.stringify(ublinks));
+                                link.uid = saveduser._id.valueOf();
 
+                            }); //
 
-                        UsrBiz.saveAll(ublinks, {
-                            success: function(relations) {
+                            var db = msg.db;
+                            // Get the collection
 
+                            if (err) res.json(err);
 
-                                response.success({ 'rels': relations, 'user': user });
+                            var col = db.collection('userbusiness');
 
-
-                            }, //usr biz savall
-                            error: function(relation, error) {
-                                response.success(relation);
+                            UpdateFilter = {
+                                '_id': {
+                                    $in: links.map(function(link) {
+                                        return new ObjectId(link._id);
+                                    })
+                                },
 
                             }
 
+                            col.updateMany(UpdateFilter, { $set: { "uid": saveduser._id.valueOf() } }, function(err, r) {
 
-                        });
+                                saveduser.bcryptPassword = null;
+                                delete saveduser.bcryptPassword;
+
+                                res.json({ 'rels': links, 'user': saveduser })
+
+                            });
+
+                        })(msg)
+
+                    }); // bcrypt hashing
 
 
-                    }, // user save
-                    error: function(relation, error) {
+                } else {
 
-                        response.error(error.message);
+                    res.json({ msg: ' no links found !' })
 
+                }
 
-                    }
-                });
+            })(msg)
 
+        } else {
 
-            } else {
-                response.success(["no link found"]);
-            } // ck if admin assign this email a business yet  
+            res.json({ msg: 'email or username already in system' })
 
-        }, //userbiz look up
-        error: function(object, error) {
-            response.error(error.message);
         }
-    });
 
-
-    //   var query = new Parse.Query(Business);
+    }))
 
 }); //usersignup
 
@@ -5527,7 +5557,6 @@ app.post('/sendRequestAccessEmail', function(req, res) {
             if (error) {
 
 
-
                 res.json(error);
 
                 return console.log(error);
@@ -5535,11 +5564,11 @@ app.post('/sendRequestAccessEmail', function(req, res) {
             console.log('Message sent: ' + info.response);
 
 
-                             console.log(" 20nd Email sent!");
+            console.log(" 20nd Email sent!");
 
-                    res.json({ msg: ' Thanks !' });
+            res.json({ msg: ' Thanks !' });
 
-          //  res.json({ msg: 'thanks for the update', info: info });
+            //  res.json({ msg: 'thanks for the update', info: info });
 
 
         });
