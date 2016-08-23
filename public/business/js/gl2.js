@@ -183,60 +183,30 @@ function gl2go() {
 
         if (getCookie('user') != null) {
 
-            /*
-
-            curl -X GET 
-            -H "X-Parse-Application-Id: application-id-here" 
-            -H "X-Parse-REST-API-Key: rest-api-key-here" 
-            -H "X-Parse-Session-Token: session-token-here" 
-            https://api.parse.com/1/users/me
-
-            */
-
             user = JSON.parse(getCookie('user'));
 
             if (user) {
 
-                var ses = user.sessionToken;
                 id = user._id;
 
-                if (ses) {
-                    var urlstring = "/ckses" + "/" + ses + "/" + id;
+                    var urlstring = "/ckses"  + "/" + id;
 
                     console.log(urlstring);
 
                     grabstuff(urlstring, function(stuff) {
 
-                        console.log("this is stuff at login" + JSON.stringify(stuff));
-                        stuff.sessionToken = ses;
+                        console.log("this is stuff at ses login" + JSON.stringify(stuff));
 
                         loginwithuser(stuff);
 
                     });
 
-                }
 
             } //if user
 
         } // if cookie
 
-        /*
-        var urlstring = PARSE_BASE_URL+"login?username="+"grow@greenease.co"+"&password="+"eatgreen";
-
-        getwithkeys(urlstring,function(stuff){
-
-        var user = stuff;
-        //user.isadmin=true;
-        loginwithuser(user);
-
-        //firebizselection({'business':'seth','isadmin':true});
-        });// force user
-
-        */
-
-
     }
-
 
 } //gl2go
 

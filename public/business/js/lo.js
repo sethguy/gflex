@@ -77,6 +77,9 @@ function loginwithuser(user) {
 
 
         if (user.lv === 0) {
+
+
+            get('specialsButton').style.display='block'
             helpadviews();
             showadminviews(user);
 

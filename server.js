@@ -750,63 +750,62 @@ app.get('/biPasswordReset', function(req, res) {
 app.post('/biForgot', function(req, res) {
 
 
+    var email = req.body.email;
 
-        var email = req.body.email;
+    mongoMsg(getby('User', { email: email }, {}, function(msg) {
 
-        mongoMsg(getby('User', { email: email }, {}, function(msg) {
+        if (msg.docs.length > 0) {
 
-            if (msg.docs.length > 0) {
+            user = msg.docs[0];
 
-                user = msg.docs[0];
+            user.PasswordResetToken = randtoken.generate(16);
 
-                user.PasswordResetToken = randtoken.generate(16);
+            sertobj('User', user, function(msg) {
 
-                sertobj('User', user, function(msg) {
+                // console.log('sert token  forgot', msg.result)
 
-                    // console.log('sert token  forgot', msg.result)
+                var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
-                    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+                // setup e-mail data with unicode symbol
 
-                    // setup e-mail data with unicode symbol
+                resetEmailLink = relLink + 'biPasswordReset?token=' + user.PasswordResetToken + '&email=' + user.email
 
-                    resetEmailLink = relLink + 'biPasswordReset?token=' + user.PasswordResetToken + '&email=' + user.email
+                var forgotEmailText = 'click here to reset password \n' + resetEmailLink;
 
-                    var forgotEmailText = 'click here to reset password \n' + resetEmailLink;
+                var mailOptions = {
+                    from: '" Greenease " <info@greenease.co>', // sender address
+                    to: email, // list of receivers
+                    subject: 'Greenease Password Reset', // Subject line
+                    text: forgotEmailText, // plaintext body
 
-                    var mailOptions = {
-                        from: '" Greenease " <info@greenease.co>', // sender address
-                        to: email, // list of receivers
-                        subject: 'Greenease Password Reset', // Subject line
-                        text: forgotEmailText, // plaintext body
+                };
 
-                    };
+                // send mail with defined transport object
+                transporter.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        res.json(error);
 
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, function(error, info) {
-                        if (error) {
-                            res.json(error);
+                        return console.log(error);
+                    }
+                    console.log('Message sent: ' + info.response);
 
-                            return console.log(error);
-                        }
-                        console.log('Message sent: ' + info.response);
+                    if (info.rejected.length == 0) {
 
-                        if (info.rejected.length == 0) {
+                        res.json({ info: info, msg: 'Email sent to ' + email });
 
-                            res.json({ info: info, msg: 'Email sent to ' + email });
+                    }
 
-                        }
+                });
 
-                    });
+            })(msg)
 
-                })(msg)
+        } else {
 
-            } else {
+            res.json({ msg: 'Email Not Found in our system ' });
 
-                res.json({ msg: 'Email Not Found in our system ' });
+        }
 
-            }
-
-        }))
+    }))
 
 
 });
@@ -849,7 +848,6 @@ app.post('/biPassword_reset', function(req, res) {
 
         }))
     }) ///password_reset
-
 
 
 app.post('/newMobileUser', function(req, res) {
@@ -1160,7 +1158,7 @@ app.get('/MigrateSpecialsAddGeo', function(req, res) {
 
             var bid = special.bid;
 
-            getby('Business', { _id: new ObjectId(bid) }, {}, function(msg) {
+            getby('Business', { objectId: bid }, {}, function(msg) {
 
                 if (msg.docs && msg.docs.length > 0) {
 
@@ -1681,62 +1679,36 @@ var findSpecialById = function(special, callback) {
 
 var saveSpecial = function(special, callback) {
 
-        var SPEC = Parse.Object.extend("specials");
-
         var stuff = {};
 
-        var specialParseObj = new SPEC();
-        console.log('save time')
+        mongoMsg(sertobj('specials', special, function(msg) {
 
+            console.log('saved specials ', msg)
 
-        specialParseObj.save(special, {
+            callback({ msg: ' special saved ' });
 
-            success: function(res) {
-                console.log('res')
-                    // The fcounts request succeeded. Show the fcounts
-
-                callback(res);
-
-            },
-            error: function(error) {
-                // The request failed
-
-                callback(error);
-
-                console.log('erro')
-
-            }
-        }); // save
+        })); //
 
     } // saveSpecial
 
-
 app.get('/specialMachine/:spec', function(req, res) {
 
-    var special = req.params.spec
-
-    var SPEC = Parse.Object.extend("specials");
+    var special = JSON.parse(req.params.spec);
 
     console.log('in mahcine time')
 
-
     var stuff = {};
-
-
-    //query.count({
 
     saveSpecial(special, function(saveRes) {
 
-
         res.json(saveRes);
-
 
     }); // save Special
 
-
 }); //specialMachine
 
-app.get('/getLatestSpecials', function(req, res) {
+
+app.get('/getLatestSpecials/:lat/:lng', function(req, res) {
 
     /* var query = {
             geoPoint: {
@@ -1747,20 +1719,41 @@ app.get('/getLatestSpecials', function(req, res) {
             }
         }*/
 
-    query = {
+
+    getNear(req, function(closeBi) {
+
+        var busis = closeBi.ray;
 
 
-    };
+        query = {
+
+            bid: {
+
+                $in: busis.map(function(obj) {
+
+                    return obj.bi._id + "";
+
+                })
+
+            }
+
+        };
+
+
+        console.log('llok', query)
+        mongoMsg(getbySort('specials', query, {}, { updatedAt: 1 }, function(msg) {
+
+            res.json(msg.docs);
+
+        }));
+
+
+    }); // get near
 
     // query.descending('updatedAt');
 
-    mongoMsg(getbySort('specials', {}, {}, { updatedAt: 1 }, function(msg) {
-
-        res.json(msg.docs);
-
-    }));
-
 });
+
 
 app.get('/getbibyId/:id', function(req, res) {
 
@@ -1769,7 +1762,7 @@ app.get('/getbibyId/:id', function(req, res) {
 
     console.log('id :: ' + req.params.id)
 
-    mongoMsg(getby('Business', {}, {}, function(msg) {
+    mongoMsg(getby('Business', {_id:new ObjectId(req.params.id)}, {}, function(msg) {
 
         res.json(msg.docs[0]);
 
@@ -3632,7 +3625,7 @@ app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
 
             if (urels.length === 1) {
 
-                mongoMsg(updatemany('Business', {_id:new ObjectId(urels[0].bid)}, { islinked: false }, function() {
+                mongoMsg(updatemany('Business', { _id: new ObjectId(urels[0].bid) }, { islinked: false }, function() {
 
 
                     res.json({ 'msg': 'business unlinked' });
@@ -3698,57 +3691,69 @@ app.get('/catsearch', function(req, res) {
 }); //catsearch
 
 
-app.get('/getnear/:lat/:lng', function(req, res) {
+var getNear = function(req, calli) {
 
-    var lat = req.param('lat');
-    var lng = req.param('lng');
+        var lat = req.param('lat');
+        var lng = req.param('lng');
 
-    var query = {
-        geoPoint: {
-            $near: {
-                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
-                $maxDistance: (1609.34) * 5
+        var query = {
+            geoPoint: {
+                $near: {
+                    $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                    $maxDistance: (1609.34) * 5
+                }
             }
         }
-    }
 
-    console.log('query :', query);
+        console.log('query :', query);
 
-    mongoMsg(getby('Business', query, {}, function(msg) {
+        mongoMsg(getby('Business', query, {}, function(msg) {
 
-        // if(msg.err) res.json(msg.err);
+            // if(msg.err) res.json(msg.err);
 
-        var back = {};
-        back.top = { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] };
+            var back = {};
+            back.top = { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] };
 
-        back.ray = [];
-        if (msg.docs) {
-            var po = msg.docs;
+            back.ray = [];
+            if (msg.docs) {
+                var po = msg.docs;
 
-            for (var i = 0; i < po.length; i++) {
-                var p = po[i];
+                for (var i = 0; i < po.length; i++) {
+                    var p = po[i];
 
-                var geo = p['geoPoint'];
+                    var geo = p['geoPoint'];
 
-                var meters = geolib.getDistance({ latitude: parseFloat(lat), longitude: parseFloat(lng) }, { latitude: geo.coordinates[1], longitude: geo.coordinates[0] });
+                    var meters = geolib.getDistance({ latitude: parseFloat(lat), longitude: parseFloat(lng) }, { latitude: geo.coordinates[1], longitude: geo.coordinates[0] });
 
-                var num = meters / (1609.34);
-                var thing = {};
+                    var num = meters / (1609.34);
+                    var thing = {};
 
-                thing.num = num;
-                thing.bi = p;
-                //thing.geo = geo;
-                //thing.address = p.get('address');
+                    thing.num = num;
+                    thing.bi = p;
+                    //thing.geo = geo;
+                    //thing.address = p.get('address');
 
-                back.ray.push(thing)
+                    back.ray.push(thing)
 
-            };
-        }
-        res.json(back);
+                };
 
-    })); // getby
+                calli(back);
+            }
 
-    // Final list of objects
+        })); // getby
+
+        // Final list of objects
+
+    } // get near function;
+
+
+app.get('/getnear/:lat/:lng', function(req, res) {
+
+    getNear(req, function(closeBi) {
+
+        res.json(closeBi);
+
+    });
 
 });
 
@@ -4236,13 +4241,28 @@ app.get('/business', function(req, res) {
 }); //"/getbusiness"
 
 
-app.get('/ckses/:ses/:id', function(req, res) {
-    //alert(req.query.bid);
+app.get('/getSpecialsByBid/:bid', function(req, res) {
 
-    var ses = req.params.ses;
+    var bid = req.params.bid;
+
+    query = {
+        bid: bid
+    };
+
+    mongoMsg(getby('specials', query, {}, function(msg) {
+
+        var specials = msg.docs;
+
+        res.json(specials);
+
+    })); // 
+
+}); //getSpecialsByBid
+
+
+app.get('/ckses/:id', function(req, res) {
 
     var id = req.params.id;
-
 
     var mongoget = function(table, terms, ops, calli) {
 
@@ -4258,105 +4278,13 @@ app.get('/ckses/:ses/:id', function(req, res) {
 
         } //getby
 
-
-    mongogetdb(mongoget('User', { sessionToken: ses, "_id": new ObjectId(id) }, { bcryptPassword: 0 }, function(docs, err) {
+    mongogetdb(mongoget('User', { "_id": new ObjectId(id) }, { bcryptPassword: 0 }, function(docs, err) {
 
         var fnduser = docs[0];
 
-
-        var fuses = fnduser.sessionToken;
-
-        console.log(fuses + "this iss ese");
-        console.log(fuses);
-        console.log(ses);
-        console.log(fuses + "this iss ese");
-
-        //
-        if (fuses && fuses === ses) {
-
-            fnduser.sessionToken = fuses;
-            res.json(fnduser);
-
-        } else {
-
-            res.json({ 'msg': 'no match' });
-
-        }
-
+        res.json(fnduser);
 
     }));
-
-
-    console.log("next:" + JSON.stringify(req.params));
-
-    Parse.Cloud.useMasterKey();
-
-
-    /*
-
-                  var fuses = fnduser.getSessionToken();
-
-    console.log(fuses+"this iss ese");
-    console.log(fuses);
-    console.log(ses);
-    console.log(fuses+"this iss ese");
-
-    //
-    if(fuses  &&  fuses===ses  ){
-
-    fnduser.sessionToken =fuses;
-     res.json( fnduser );
-      
-      }else{
-
-    res.json({'msg':'no match'});
-
-      }
-
-         
-
-    */
-
-
-    /*
-
-    query.get(id, {
-      success: function(fnduser) {
-            
-
-                  var fuses = fnduser.getSessionToken();
-
-    console.log(fuses+"this iss ese");
-    console.log(fuses);
-    console.log(ses);
-    console.log(fuses+"this iss ese");
-
-    //
-    if(fuses  &&  fuses===ses  ){
-
-    fnduser.sessionToken =fuses;
-     res.json( fnduser );
-      
-      }else{
-
-    res.json({'msg':'no match'});
-
-      }
-
-              
-        // The object was retrieved successfully.
-      },
-      error: function(object ) {
-                  // console.error(error);
-
-                //res.error(error.message);
-     res.json({'msg':'no match'});
-        // The object was not retrieved successfully.
-        // error is a Parse.Error with an error code and message.
-      }
-        });
-
-    */
 
 });
 
@@ -5218,8 +5146,6 @@ Parse.Cloud.define('sendAdminEmail', function(req, response) {
         }
     });
 });
-
-
 
 
 /**

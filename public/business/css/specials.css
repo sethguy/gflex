@@ -17,6 +17,12 @@
     font-family: 'Oxygen', sans-serif;
 }
 
+#specialsButton{
+
+display: none;
+
+}
+
 #sp-scroll {
     position: relative;
     overflow: scroll;
@@ -98,7 +104,7 @@
 }
 
 .spCatTd {
-    background-image: url('../business/images/specials/GreenFlag.png');
+    background-image: url('../images/specials/GreenFlag.png');
     background-repeat: no-repeat;
     background-position: center;
     text-align: center;
