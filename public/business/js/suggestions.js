@@ -104,7 +104,7 @@ var sgtoptions = [
     }
 }, {
 
-    name: 'Deline/Remove',
+    name: 'Decline/Remove',
 
     action: function(bi) {
 

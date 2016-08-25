@@ -978,7 +978,7 @@ app.get('/appForgot/:email', function(req, res) {
 
                     resetEmailLink = relLink + 'appPasswordReset?token=' + user.PasswordResetToken + '&username=' + user.username
 
-                    var forgotEmailText = 'click here to reset password \n' + resetEmailLink;
+                    var forgotEmailText = 'Sorry to hear you forgot your password. Please click here to reset your password and start eating local today!  \n' + resetEmailLink;
 
                     var mailOptions = {
                         from: '" Greenease " <info@greenease.co>', // sender address
@@ -2008,12 +2008,9 @@ app.get('/setbisugtoverified/:bio', function(req, res) {
 
 
 app.get('/newbisug/:bi', function(req, res) {
-    Parse.Cloud.useMasterKey();
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    var bisug = Parse.Object.extend("bisuggestions");
 
     var newbi = new bisug();
     var bi = req.params.bi;
@@ -2024,7 +2021,7 @@ app.get('/newbisug/:bi', function(req, res) {
         console.log(msg.result)
 
         res.json({
-            msg: "thanks for your suggestion",
+            msg: "Thank you for that delicious suggestion",
             ob: msg.result.ops[0]
         });
 
@@ -2119,10 +2116,9 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
         } //getappface
 
-
     mongogetdb(
 
-        getby('mobileUsers', { username: user.username }, { bcryptPassword: 0 }, function(docs, err) {
+        getby('mobileUsers', { username: user.username }, { bcryptPassword: 0 } , function(docs, err) {
 
             if (docs.length > 0) {
 
@@ -4082,32 +4078,7 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
 }); // get close hoods
 
 
-app.get('/business/sort/:by', function(req, res) {
 
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-
-
-    query.limit(100);
-    query.ascending(req.params.by);
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-
-}); //"/getbusiness/sort"
 
 
 /*
@@ -4142,37 +4113,26 @@ app.get('/faceauth/:token', function(req, res) {
 
 }); // aceauth
 
-app.get('/facepost/:token/:msg', function(req, res) {
+app.post('/facepost', function(req, res) {
 
-    var tok = req.params.token;
-    var msg = req.params.msg;
+    var tok = req.body.token;
+    var msg = req.body.msg;
+
+    var link = req.body.link;
+
+    var form = { 'access_token': tok, 'format': 'json', 'message': msg };
+
+    if(msg.link) form.link =link;
 
     request.post({
                 url: 'https://graph.facebook.com/v2.5/me/feed',
-                form: { 'access_token': tok, 'format': 'json', 'message': msg }
+                form: form
             },
             function(err, httpResponse, body) {
 
                 res.json(httpResponse);
 
             })
-        /*Parse.Cloud.httpRequest({
-                method: 'post',
-                //  url:'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=949243931828808&client_secret=a30d1c940a494f85aa9677b14e36ef65&fb_exchange_token='+tok,
-                url: 'https://graph.facebook.com/v2.5/me/feed',
-                body: { 'access_token': tok, 'format': 'json', 'message': msg },
-                success: function(httpResponse) {
-
-                    res.json(httpResponse);
-
-                },
-                error: function(httpResponse) {
-
-                    res.json(httpResponse);
-
-                    console.error(httpResponse);
-                }
-            });*/
 
 }); // facepost
 
