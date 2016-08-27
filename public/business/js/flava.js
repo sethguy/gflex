@@ -12,8 +12,6 @@ function flava(dio) {
     };
 
 
-    
-
     dio.pend = function(elt, key) {
 
         dio.appendChild(elt);
@@ -127,6 +125,25 @@ function flava(dio) {
     };
 
 
+    dio.Adrop = function(name, func) {
+        // var rep = func.toString()
+        //var depNameRay = rep.subString( rep.indexOf('(') , rep.indexOf(')') ).split(',')
+        dio.regDrop({
+            id: name,
+            drop: function(res) {
+                var deps = [res, dio]
+                func.apply(dio, deps);
+            }
+        })
+        return dio;
+    }
+
+
+    dio.regDrop = function(dropObj) {
+        dio.drops[dropObj.id] = dropObj.drop;
+        return dio;
+    }
+
     dio.async = function(config) {
 
             var method = config.post ? 'POST' : 'GET';
@@ -173,19 +190,24 @@ function flava(dio) {
             return dio;
         } //async
 
-    return dio;
+
+    return dio.props({
+        drops: {}
+    });
+
+
 } ////flava
 
 function div() {
-    return flava( document.createElement('div'));
+    return flava(document.createElement('div'));
 } ////div
 
 function get(id) {
 
-   // if (document.getElementById(id)) 
+    // if (document.getElementById(id)) 
     //console.log('id :: ' + id + 'not found refernce dumb div');
 
-    return flava( document.getElementById(id) );//;document.getElementById(id)
+    return flava(document.getElementById(id)); //;document.getElementById(id)
 
 } ////get
 

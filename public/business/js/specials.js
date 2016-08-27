@@ -61,9 +61,9 @@ var getSpecialsList = function() {
                 get('spListTab').inn('').pendray(res, function(spe, dex, ray) {
 
                     return el('tr').props({
-                        onmousedown: function() {
+                        onmousedown: function(event) {
 
-                            openSpecialInEditMode(spe);
+                            if (event.target.className !== "deletebutton") openSpecialInEditMode(spe);
 
                         }
 
@@ -100,6 +100,22 @@ var getSpecialsList = function() {
 
                         )
 
+                    ).pend(
+
+                        el('td').cl('spCatListTd').pend(
+
+                            el('img').cl("deletebutton")
+                            .props({
+                                src: 'business/images/delete.svg',
+                                onmousedown: function() {
+
+                                        deleteSpecial(spe)
+
+                                    } //
+                            })
+
+                        )
+
                     );
 
                 }, 'specials')
@@ -108,6 +124,22 @@ var getSpecialsList = function() {
 
     } //getSpecialsList
 
+
+var deleteSpecial = function(spe) {
+
+
+    div().async({
+        url: deleteSpecialUrl + '/' + spe._id,
+        drop: function(res) {
+            console.log(res);
+            getSpecialsList();
+
+        }
+    })
+
+
+}
+
 var showspecialmodal = function() {
 
         console.log('show specials')
@@ -115,7 +147,7 @@ var showspecialmodal = function() {
         get('specialModal').style.display = "block"
 
         get('sp-bi-name').inn(get("wpcontainer").biz.business);
-        
+
         get('sp-image-select').inn('').pend(el('tr')
 
             .pendray(specialImgs,

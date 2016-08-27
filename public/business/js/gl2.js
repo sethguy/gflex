@@ -26,7 +26,7 @@ var widgtextUrl = "/getwidgetlink";
 var sendreqacemailUrl = "/sendRequestAccessEmail";
 
 var sendforgotemailUrl = "/biForgot";
-
+var deleteSpecialUrl = "/deleteSpecial"
 var sendsignupUrl = "/usersignup";
 var logoutUrl = "functions/logout";
 var buserfarmsugUrl = "functions/sendAdminEmail";

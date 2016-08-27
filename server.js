@@ -1386,6 +1386,10 @@ app.get('/appface/:fbId/:acc', function(req, res) {
 
                     svuser = msg.result;
 
+                    user.bcryptPassword = null;
+
+                    delete user.bcryptPassword;
+
                     res.json(user);
 
                 })(msg)
@@ -1407,6 +1411,10 @@ app.get('/appface/:fbId/:acc', function(req, res) {
                 sertobj('mobileUsers', user, function(msg) {
 
                     svuser = msg.result.ops[0];
+
+                    svuser.bcryptPassword = null;
+
+                    delete svuser.bcryptPassword;
 
                     res.json(svuser);
 
@@ -1651,6 +1659,21 @@ app.get('/specialAction/:spAction', function(req, res) {
 }); // specialAction
 
 
+app.get('/deleteSpecial/:id', function(req, res) {
+
+    //res.header("Access-Control-Allow-Origin", "*");
+    //  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+
+    mongoMsg(removeby('specials', { _id: new ObjectId(req.params.id) }, {}, function(msg) {
+
+        res.json(msg.docs);
+
+    })); // getby
+
+}); // specialAction
+
+
 var findSpecialById = function(special, callback) {
 
         var SPEC = Parse.Object.extend("specials");
@@ -1762,7 +1785,7 @@ app.get('/getbibyId/:id', function(req, res) {
 
     console.log('id :: ' + req.params.id)
 
-    mongoMsg(getby('Business', {_id:new ObjectId(req.params.id)}, {}, function(msg) {
+    mongoMsg(getby('Business', { _id: new ObjectId(req.params.id) }, {}, function(msg) {
 
         res.json(msg.docs[0]);
 
@@ -2118,7 +2141,7 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
     mongogetdb(
 
-        getby('mobileUsers', { username: user.username }, { bcryptPassword: 0 } , function(docs, err) {
+        getby('mobileUsers', { username: user.username }, { bcryptPassword: 0 }, function(docs, err) {
 
             if (docs.length > 0) {
 
@@ -4078,9 +4101,6 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
 }); // get close hoods
 
 
-
-
-
 /*
  Parse.Cloud.httpRequest({
             url:'https://graph.facebook.com/me?fields=email,name,username&access_token='+user.get('authData').facebook.access_token,
@@ -4122,17 +4142,17 @@ app.post('/facepost', function(req, res) {
 
     var form = { 'access_token': tok, 'format': 'json', 'message': msg };
 
-    if(msg.link) form.link =link;
+    if (msg.link) form.link = link;
 
     request.post({
-                url: 'https://graph.facebook.com/v2.5/me/feed',
-                form: form
-            },
-            function(err, httpResponse, body) {
+            url: 'https://graph.facebook.com/v2.5/me/feed',
+            form: form
+        },
+        function(err, httpResponse, body) {
 
-                res.json(httpResponse);
+            res.json(httpResponse);
 
-            })
+        })
 
 }); // facepost
 
@@ -5396,7 +5416,12 @@ app.get('/ckforUser/:email', function(req, res) {
 
         } else {
 
-            res.json(results[0]);
+            //  results[0].bcryptPassword = null;
+
+            // delelte results[0].bcryptPassword;
+
+
+            res.json(results);
 
 
         } // if user is or not there 
@@ -5594,7 +5619,6 @@ var sendintro = function(req, res) {
         from: '" Greenease " <info@greenease.co>', // sender address
         to: toemail, // list of receivers
         subject: 'Welcome to Greenease Business', // Subject line
-
         text: text, // plaintext body
 
     };
