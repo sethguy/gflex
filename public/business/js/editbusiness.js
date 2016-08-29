@@ -376,9 +376,9 @@ function showbiztoedit(bi) {
 
             console.log('bi is :  ' + JSON.stringify(bi));
 
-            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
+            var urlstring = savebusinessurl //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-            grabstuff(urlstring, function(stuff) {
+            poststuff(urlstring, bi,function(stuff) {
 
                 console.log(stuff);
 
@@ -405,9 +405,9 @@ function showbiztoedit(bi) {
 
             bi.removed = true;
 
-            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
+            var urlstring = savebusinessurl;// + "/" + encodeURIComponent(JSON.stringify(bi));
 
-            grabstuff(urlstring, function(stuff) {
+            poststuff(urlstring,bi ,function(stuff) {
 
                 console.log(stuff);
                 get('adBisSuggestBox').value = "";

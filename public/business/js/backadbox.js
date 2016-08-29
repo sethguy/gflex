@@ -106,9 +106,9 @@ function helpadviews() {
 
                             console.log('bi is :  ' + JSON.stringify(bi));
 
-                            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
+                            var urlstring = savebusinessurl; //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-                            grabstuff(urlstring, function(stuff) {
+                            poststuff(urlstring,bi ,function(stuff) {
 
                                 console.log(stuff);
 
@@ -137,9 +137,9 @@ function helpadviews() {
 
                             console.log('bi is :  ' + JSON.stringify(bi));
 
-                            var urlstring = savebusinessurl + "/" + encodeURIComponent(JSON.stringify(bi));
+                            var urlstring = savebusinessurl; //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-                            grabstuff(urlstring, function(stuff) {
+                            poststuff(urlstring, bi,function(stuff) {
 
                                 console.log(stuff);
 

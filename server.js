@@ -2030,32 +2030,42 @@ app.get('/setbisugtoverified/:bio', function(req, res) {
 }); // new bi sug
 
 
-app.get('/newbisug/:bi', function(req, res) {
+app.post('/newbisug', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    mongoMsg(getby('Business', { "place_id": req.body.place_id }, {}, function(msg) {
 
-    var newbi = new bisug();
-    var bi = req.params.bi;
 
-    var biob = JSON.parse(bi);
+        if (msg.docs.length > 0) {
+            res.json({
+                msg: "Already an existing business"
+            });
 
-    mongoMsg(sertobj("bisuggestions", biob, function(msg) {
-        console.log(msg.result)
+        } else {
 
-        res.json({
-            msg: "Thank you for that delicious suggestion",
-            ob: msg.result.ops[0]
-        });
+            sertobj("bisuggestions", req.body, function(msg) {
+                console.log(msg.result)
+
+                res.json({
+                    msg: "Thank you for that delicious suggestion",
+                    ob: msg.result.ops[0]
+                });
+
+            })(msg)
+
+        }
+
 
     }));
+
 
 }); // new bi sug
 
 
-app.get('/newbiz/:bi', function(req, res) {
+app.post('/newbiz', function(req, res) {
 
-    var biob = JSON.parse(req.param('bi'));
+    var biob = req.body;
 
     biob.hours_json = JSON.stringify(biob.hours_json);
 
