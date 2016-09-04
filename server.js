@@ -44,7 +44,6 @@ var relLink = "https://gflex-greenease.rhcloud.com/"
 
 var widgPageUrl = relLink + "widgPage";
 
-
 var Signupurl = relLink + "?signup";
 
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
@@ -69,7 +68,6 @@ var mongogetdb = function(calli) {
     }); //mongo connect
 
 };
-
 
 var updateDocumentbyid = function(db, table, id, set, callback) {
     // Get the documents collection
@@ -323,6 +321,32 @@ app.get('/flight', function(req, res) {
 
 
 });
+
+app.get('/placeDetails/:place_id', function(req, res) {
+
+    var place_id = req.params.place_id;
+    //'ChIJrTLr-GyuEmsRBfy61i59si0'
+    var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo';
+
+    Parse.Cloud.httpRequest({
+
+        url: url,
+        method: "GET",
+
+
+    }).then(function(httpResponse) {
+        console.log(httpResponse);
+
+        res.json(httpResponse);
+
+    }, function(httpResponse) {
+        console.error('Request failed with response code ' + httpResponse.status);
+    });
+
+}); //getSpecialsByBid
+
+
+
 
 
 app.get('/side/:terms', function(req, res) {
@@ -2120,13 +2144,6 @@ app.post('/newbiz', function(req, res) {
 }); //get newbiz
 
 
-app.get('/apeazzy', function(req, res) {
-
-    res.set('Content-Type', 'text/html');
-
-    res.send(fs.readFileSync('./apeazzy.html'));
-
-});
 
 
 app.get('/getMobileLogin/:user', function(req, res) {
