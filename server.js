@@ -346,9 +346,6 @@ app.get('/placeDetails/:place_id', function(req, res) {
 }); //getSpecialsByBid
 
 
-
-
-
 app.get('/side/:terms', function(req, res) {
 
     console.log(req.param('terms'));
@@ -2144,8 +2141,6 @@ app.post('/newbiz', function(req, res) {
 }); //get newbiz
 
 
-
-
 app.get('/getMobileLogin/:user', function(req, res) {
 
     var user = JSON.parse(req.param('user'));
@@ -3301,16 +3296,43 @@ res.json(user);
 */
 
 
+app.get('/quickfix', function(req, res) {
+    // get user relations base on uid
+
+    var query = {
+
+        uid: { $type: "objectId" }
+    }
+
+    mongoMsg(getby('userbusiness', query, {}, function(msg) {
+
+       console.log(msg.docs)
+
+        msg.docs.forEach(function(doc){
+
+                doc.uid = doc.uid.valueOf()+"";
+
+                sertobj('userbusiness',doc,function(msg){
+
+                    console.log('save at',doc);
+
+                })(msg)
+
+        })
+
+    }))
+
+}); // crm user for email
+
+
 app.get('/getlinkedbybid/:bid', function(req, res) {
     // get user relations base on uid
     var myclass = Parse.Object.extend("userbusiness");
-
 
     var query = {
         bid: req.params.bid,
         linked: true
     }
-
 
     mongoMsg(getby('userbusiness', query, {}, function(msg) {
 
@@ -3335,26 +3357,25 @@ app.get('/getlinkedbybid/:bid', function(req, res) {
 
     }));
 
-
 }); // crm user for email
-
 
 app.get('/getlinked/:email', function(req, res) {
     // get user relations base on uid
 
-
     var userbusinessQuery = {
 
-        email: req.params.email
+        email: req.params.email,
+        linked: true
 
     }
+
+    console.log(userbusinessQuery);
 
     mongoMsg(getby('userbusiness', userbusinessQuery, {}, function(msg) {
 
         links = msg.docs;
 
         console.log(links)
-
 
         console.log(links.map(function(link) {
             return link._id;
@@ -3654,45 +3675,34 @@ app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
 
     query.include('bi');
 
-
     var userbusinessQuery = {
         linked: true,
         bid: req.params.bid,
         email: req.params.email
     };
 
-
     mongoMsg(getby('userbusiness', userbusinessQuery, {}, function(msg) {
         var urels = msg.docs;
 
-
         mongoMsg(updatemany('userbusiness', userbusinessQuery, { linked: false }, function() {
-
 
             if (urels.length === 1) {
 
                 mongoMsg(updatemany('Business', { _id: new ObjectId(urels[0].bid) }, { islinked: false }, function() {
 
-
                     res.json({ 'msg': 'business unlinked' });
-
 
                 }))
 
             } else {
 
-
                 res.json({ 'msg': 'business unlinked' });
-
 
             }
 
-
         }))
 
-
     }));
-
 
 }); //"/unlink userbusiness rel  get"
 
@@ -4725,12 +4735,9 @@ app.get('/getFarms/:bid', function(req, res) {
 
         })(msg);
 
-
     }));
 
-
 }); //getFarms/:bid
-
 
 app.get('/showFarms/:uid/:bid', function(req, res) {
 
@@ -4742,16 +4749,20 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
 
     console.log(uid + "    " + bid);
 
-    var userbusinessTerms = { uid: uid, bid: bid };
+    var userbusinessTerms = { uid: uid, bid: bid , linked:true };
+
+    if(uid == '57b3aa33fe93ce8a393ade66' || uid =='57b3aa33fe93ce8a393ade76')  userbusinessTerms = { uid: uid, bid: bid };
+
+    console.log('userbusinessTerms',userbusinessTerms)
 
     mongoMsg(getby('userbusiness', userbusinessTerms, {}, function(msg) {
+
 
         var links = msg.docs;
 
         //links.length > 0 || (req.param('uid') == 'Aup1bxd3il') || req.param('uid') == 'ne45W7MzvZ'
 
         if (true) {
-
 
             userTerms = { '_id': new ObjectId(uid) }
 
@@ -4768,7 +4779,6 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
                 //console.log(user.get('))
 
                 if ((user && paid) || ADMINEMAIL(email)) {
-
 
                     var today = new Date();
 
@@ -4788,7 +4798,7 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
                     }
                     console.log(" diff in time between paid date and right now  " + diff);
 
-                    if ((diff < millis) || ADMINEMAIL(email)) {
+                    if ( ( (diff < millis) && links.length>0  ) || ADMINEMAIL(email) ) {
 
                         BuysFromTerms = { 'business._id': bid };
 
@@ -4808,7 +4818,7 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
 
                             };
 
-                            //        console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
+                            //console.log(JSON.stringify(farm_id_ray) + "at getfarms/:bid farmray")
 
                             var farmterms = { '_id': { $in: farm_id_ray } };
 
@@ -4860,24 +4870,17 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
 
                             })(msg);
 
-
                         })(msg);
-
 
                     }
 
-
                 }
-
 
             })(msg)
 
-
         }
 
-
     }));
-
 
 }); // show farms method for widget view
 
@@ -5302,7 +5305,7 @@ app.post('/usersignup', function(req, res) {
 
                             }
 
-                            col.updateMany(UpdateFilter, { $set: { "uid": saveduser._id.valueOf() } }, function(err, r) {
+                            col.updateMany(UpdateFilter, { $set: { "uid": saveduser._id.valueOf()+"" } }, function(err, r) {
 
                                 saveduser.bcryptPassword = null;
                                 delete saveduser.bcryptPassword;
