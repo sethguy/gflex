@@ -1310,10 +1310,10 @@ restrictedAcl.setPublicWriteAccess(false);
  */
 
 
-app.get('/editfarm/:fa', function(req, res) {
+app.post('/editfarm', function(req, res) {
 
-    console.log(req.param('fa'));
-
+    console.log(req.body);
+/*
     if (req.param('fa').indexOf('<j>') > -1) {
         var find = '<j>';
         var re = new RegExp(find, 'g');
@@ -1327,8 +1327,9 @@ app.get('/editfarm/:fa', function(req, res) {
 
         faob = JSON.parse(req.param('fa'));
         console.log(req.param('fa'));
-    }
+    }*/
 
+    faob = req.body;
 
     if (faob._id) {
 
@@ -2968,10 +2969,10 @@ app.get('/twitauthcall', function(req, res) {
                     var params = {};
 
                     for (var i = 0; i < preram.length; i++) {
+                        
                         var prm = preram[i];
 
                         var key = prm.substring(0, prm.indexOf('='));
-
 
                         var val = prm.substring(prm.indexOf('=') + 1, prm.length);
 

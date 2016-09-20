@@ -943,14 +943,18 @@ function savefarm(rm) {
         if (nava != null) {
 
             if (nava.length > 0) {
+                
                 var fa = getfarmfromfields();
+                
                 fa.removed = rm;
+
                 fa.loname = fa.name.toLowerCase();
 
                 console.log(JSON.stringify(fa));
 
-                var urlstring = EditFarmUrl + "/" + encodeURIComponent(JSON.stringify(fa));
-                grabstuff(urlstring, function(stuff) {
+                var urlstring = EditFarmUrl; //+ "/" + encodeURIComponent(JSON.stringify(fa));
+
+                poststuff(urlstring,fa , function(stuff) {
 
                     get('savefabt').style.display = "block";
 
