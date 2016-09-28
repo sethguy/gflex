@@ -3977,7 +3977,10 @@ app.get('/fasearch/:term', function(req, res) {
 
 app.get('/bizsearch/:term', function(req, res) {
 
-    var bizTerms = { 'business': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
+    var bizTerms = { 
+        'business': { $regex: ".*" + req.param('term') + ".*", $options: "i" } ,
+        'removed':{ $ne: true }
+    }
 
     console.log("@bizsearch :: " + JSON.stringify(bizTerms))
 
