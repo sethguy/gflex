@@ -1313,21 +1313,21 @@ restrictedAcl.setPublicWriteAccess(false);
 app.post('/editfarm', function(req, res) {
 
     console.log(req.body);
-/*
-    if (req.param('fa').indexOf('<j>') > -1) {
-        var find = '<j>';
-        var re = new RegExp(find, 'g');
+    /*
+        if (req.param('fa').indexOf('<j>') > -1) {
+            var find = '<j>';
+            var re = new RegExp(find, 'g');
 
-        str = req.param('fa').replace(re, '/');
-        console.log(str);
+            str = req.param('fa').replace(re, '/');
+            console.log(str);
 
-        faob = JSON.parse(str);
+            faob = JSON.parse(str);
 
-    } else {
+        } else {
 
-        faob = JSON.parse(req.param('fa'));
-        console.log(req.param('fa'));
-    }*/
+            faob = JSON.parse(req.param('fa'));
+            console.log(req.param('fa'));
+        }*/
 
     faob = req.body;
 
@@ -2969,7 +2969,7 @@ app.get('/twitauthcall', function(req, res) {
                     var params = {};
 
                     for (var i = 0; i < preram.length; i++) {
-                        
+
                         var prm = preram[i];
 
                         var key = prm.substring(0, prm.indexOf('='));
@@ -3307,17 +3307,17 @@ app.get('/quickfix', function(req, res) {
 
     mongoMsg(getby('userbusiness', query, {}, function(msg) {
 
-       console.log(msg.docs)
+        console.log(msg.docs)
 
-        msg.docs.forEach(function(doc){
+        msg.docs.forEach(function(doc) {
 
-                doc.uid = doc.uid.valueOf()+"";
+            doc.uid = doc.uid.valueOf() + "";
 
-                sertobj('userbusiness',doc,function(msg){
+            sertobj('userbusiness', doc, function(msg) {
 
-                    console.log('save at',doc);
+                console.log('save at', doc);
 
-                })(msg)
+            })(msg)
 
         })
 
@@ -3725,7 +3725,8 @@ app.get('/catsearch', function(req, res) {
                 $geometry: { type: "Point", coordinates: [mpos.lng, mpos.lat] },
                 $maxDistance: (1609.34) * 10
             }
-        }
+        },
+        'removed': { $ne: true }
     }
 
     var cats = JSON.parse(raw);
@@ -3759,7 +3760,8 @@ var getNear = function(req, calli) {
                     $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                     $maxDistance: (1609.34) * 5
                 }
-            }
+            },
+            'removed': { $ne: true }
         }
 
         console.log('query :', query);
@@ -3977,9 +3979,9 @@ app.get('/fasearch/:term', function(req, res) {
 
 app.get('/bizsearch/:term', function(req, res) {
 
-    var bizTerms = { 
-        'business': { $regex: ".*" + req.param('term') + ".*", $options: "i" } ,
-        'removed':{ $ne: true }
+    var bizTerms = {
+        'business': { $regex: ".*" + req.param('term') + ".*", $options: "i" },
+        'removed': { $ne: true }
     }
 
     console.log("@bizsearch :: " + JSON.stringify(bizTerms))
@@ -4069,7 +4071,8 @@ app.get('/getbibypoint/:lat/:lng/:dist', function(req, res) {
                 $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                 $maxDistance: (1609.34) * parseFloat(req.params.dist)
             }
-        }
+        },
+        'removed': { $ne: true }
     }
 
     mongoMsg(getbySort('Business', query, {}, { name: 1 },
@@ -4097,7 +4100,8 @@ app.get('/getbibypoint/:lat/:lng', function(req, res) {
                 $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                 $maxDistance: (1609.34) * 30
             }
-        }
+        },
+        'removed': { $ne: true }
     }
 
     mongoMsg(getbySort('Business', query, {}, { name: 1 },
@@ -4124,7 +4128,8 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
                 $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                 $maxDistance: (1609.34) * 30
             }
-        }
+        },
+     'removed': { $ne: true }
     }
 
     console.log('query :', query);
@@ -4213,11 +4218,12 @@ app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
                 $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                 $maxDistance: (1609.34) * 5
             }
-        }
+        },
+        'removed': { $ne: true }
     }
 
     query.cuisine = cterm;
-
+                        //STARTEDHERE
     mongoMsg(getbySort('Business', query, {}, { name: 1 }, function(msg) {
 
         res.json(msg.docs);
@@ -4753,11 +4759,11 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
 
     console.log(uid + "    " + bid);
 
-    var userbusinessTerms = { uid: uid, bid: bid , linked:true };
+    var userbusinessTerms = { uid: uid, bid: bid, linked: true };
 
-    if(uid == '57b3aa33fe93ce8a393ade66' || uid =='57b3aa33fe93ce8a393ade76')  userbusinessTerms = { uid: uid, bid: bid };
+    if (uid == '57b3aa33fe93ce8a393ade66' || uid == '57b3aa33fe93ce8a393ade76') userbusinessTerms = { uid: uid, bid: bid };
 
-    console.log('userbusinessTerms',userbusinessTerms)
+    console.log('userbusinessTerms', userbusinessTerms)
 
     mongoMsg(getby('userbusiness', userbusinessTerms, {}, function(msg) {
 
@@ -4802,7 +4808,7 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
                     }
                     console.log(" diff in time between paid date and right now  " + diff);
 
-                    if ( ( (diff < millis) && links.length>0  ) || ADMINEMAIL(email) ) {
+                    if (((diff < millis) && links.length > 0) || ADMINEMAIL(email)) {
 
                         BuysFromTerms = { 'business._id': bid };
 
@@ -5309,7 +5315,7 @@ app.post('/usersignup', function(req, res) {
 
                             }
 
-                            col.updateMany(UpdateFilter, { $set: { "uid": saveduser._id.valueOf()+"" } }, function(err, r) {
+                            col.updateMany(UpdateFilter, { $set: { "uid": saveduser._id.valueOf() + "" } }, function(err, r) {
 
                                 saveduser.bcryptPassword = null;
                                 delete saveduser.bcryptPassword;
