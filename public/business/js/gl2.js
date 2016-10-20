@@ -193,17 +193,17 @@ function gl2go() {
 
                 id = user._id;
 
-                    var urlstring = "/ckses"  + "/" + id;
+                var urlstring = "/ckses" + "/" + id;
 
-                    console.log(urlstring);
+                console.log(urlstring);
 
-                    grabstuff(urlstring, function(stuff) {
+                grabstuff(urlstring, function(stuff) {
 
-                        console.log("this is stuff at ses login" + JSON.stringify(stuff));
+                    console.log("this is stuff at ses login" + JSON.stringify(stuff));
 
-                        loginwithuser(stuff);
+                    loginwithuser(stuff);
 
-                    });
+                });
 
 
             } //if user
@@ -603,8 +603,8 @@ function Showsignup(email) {
         var pass = get('formput1').value;
 
         if (passck())
- 
-        poststuff(sendsignupUrl, { 'email': email, 'password': pass }  , function(stuff) {
+
+            poststuff(sendsignupUrl, { 'email': email, 'password': pass }, function(stuff) {
 
             var user = stuff.user;
 
@@ -615,11 +615,11 @@ function Showsignup(email) {
 
             } else {
 
-                if(stuff.msg)alert(stuff.msg);
+                if (stuff.msg) alert(stuff.msg);
 
             }
 
-        } ); //post stuff for new user password
+        }); //post stuff for new user password
 
     });
 
@@ -636,19 +636,19 @@ function Showsignup(email) {
     ///  SEE PASSWORD TOGGERLER
 
     if(seeck.getPropertyBoolean("checked")){
-                    	get("ckmsg").inn("hide password");
+                        get("ckmsg").inn("hide password");
 
-                    	formput1.setPropertyString("type", "text");
-                    	formput2.setPropertyString("type", "text");
-                		
-                	}else{
-                		
-                		get("ckmsg").inn("show password");
+                        formput1.setPropertyString("type", "text");
+                        formput2.setPropertyString("type", "text");
+                        
+                    }else{
+                        
+                        get("ckmsg").inn("show password");
                     
-                    	formput1.setPropertyString("type", "password");
-                    	formput2.setPropertyString("type", "password");
-                		
-                	}
+                        formput1.setPropertyString("type", "password");
+                        formput2.setPropertyString("type", "password");
+                        
+                    }
     */
 
 
@@ -763,21 +763,23 @@ function cksignuputs(e) {
 
 var getgeo = function(calli) {
 
+        var short = function() {
+                //27.771052,-82.63618300000002
+                var lat1 = 38.9192931; //38.9091421080001; //38.9141319; //40.7295174;//38.9051486;
+                var lng1 = -77.0372175;//-77.0283826239999; // -77.0371799; //-74.0314798;// -76.9995255;
+
+                var mpos = {
+                    lat: lat1,
+                    lng: lng1
+                };
+                console.log('fake geo');
+                return mpos;
+
+            } //short
+
         if (MOCKGEO) {
 
-            var short = function() {
-//27.771052,-82.63618300000002
-                    var lat1 =  27.7741254; ///38.9192931; //38.9091421080001; //38.9141319; //40.7295174;//38.9051486;
-                    var lng1 =  -82.6374976 ; ///-77.0372175;//-77.0283826239999; // -77.0371799; //-74.0314798;// -76.9995255;
 
-                    var mpos = {
-                        lat: lat1,
-                        lng: lng1
-                    };
-                    console.log('fake geo');
-                    return mpos;
-
-                } //short
 
             calli(short());
             return;
@@ -786,24 +788,24 @@ var getgeo = function(calli) {
         if (navigator) {
 
             navigator.geolocation.getCurrentPosition(function(pos) {
-                console.log('real geo');
+                    console.log('real geo');
 
 
-                var mpos = {
-                    lat: pos.coords.latitude,
-                    lng: pos.coords.longitude
-                };
+                    var mpos = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
+                    };
 
 
-                console.log('real geo' + JSON.stringify(pos));
-                calli(mpos);
+                    console.log('real geo' + JSON.stringify(pos));
+                    calli(mpos);
 
-            },
-            function(error){
+                },
+                function(error) {
 
-                alert(JSON.stringify(error))
+                      calli(short());
 
-            },{enableHighAccuracy: true, timeout: 15000} )
+                }, { enableHighAccuracy: true, timeout: 15000 })
 
         } else {
 
