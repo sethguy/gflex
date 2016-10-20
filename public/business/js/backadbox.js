@@ -1,10 +1,12 @@
 var sbos = [
+
     { 'name': 'adb', 'title': 'Add Business' },
     { 'name': 'ebu', 'title': 'Edit Business/User' },
     //{'name':'adu','title':'Greenease CRM'},
     { 'name': 'adf', 'title': 'Add/Edit Farm' },
     //{'name':'avf','title':'Verify Farm'},
-    { 'name': 'avb', 'title': 'Verify Business' }
+    { 'name': 'avb', 'title': 'Verify Business' },
+    { 'name': 'spa', 'title': 'Special Actions' }
 
 ];
 
@@ -15,6 +17,7 @@ var abfields = [
 
     { 'name': 'business', 'title': 'Business Name' },
     { 'name': 'address', 'title': 'Address' },
+    { 'name': 'geoPoint', 'title': 'geoMap', 'view': 'mapForm', 'onlyedit': true },
     { 'name': 'cuisine', 'title': 'Cuisine' },
     { 'name': 'phone', 'title': 'Phone Number' },
     { 'name': 'website', 'title': 'Website' },
@@ -54,7 +57,6 @@ function helpadviews() {
 
         //abform build
 
-
         var adform = get('asformcon');
 
         for (i = 0; i < abfields.length; i++) {
@@ -62,11 +64,13 @@ function helpadviews() {
             var af = abfields[i];
 
             if (af.view == null) {
+
                 var aftd = abfield(af);
 
                 adform[af.name] = aftd;
 
                 adform.pend(aftd);
+
             } else {
 
                 if (!af.onlyedit) {
@@ -81,9 +85,7 @@ function helpadviews() {
 
                 }
 
-
             } // feild placement
-
 
         } // adfield loop
 
@@ -108,16 +110,13 @@ function helpadviews() {
 
                             var urlstring = savebusinessurl; //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-                            poststuff(urlstring,bi ,function(stuff) {
+                            poststuff(urlstring, bi, function(stuff) {
 
                                 console.log(stuff);
 
                                 clearfields();
 
                             }); //save request
-
-
-
 
                         }).inn("Save Business")
 
@@ -139,7 +138,7 @@ function helpadviews() {
 
                             var urlstring = savebusinessurl; //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-                            poststuff(urlstring, bi,function(stuff) {
+                            poststuff(urlstring, bi, function(stuff) {
 
                                 console.log(stuff);
 
@@ -181,7 +180,7 @@ function getbifromfields() {
 
     /*
     for (var i = 0; i < dayray.length; i++) {
-    	var day = dayray[i];
+        var day = dayray[i];
 
     var odput = get(day.short+'_o');
     var cdput = get(day.short+'_c');
@@ -195,16 +194,16 @@ function getbifromfields() {
 
     console.log("here" + get('daytextcon').ohours)
 
-    
 
-    if(get('daytextcon').ohours){
 
-bi.ohours = get('daytextcon').ohours;
+    if (get('daytextcon').ohours) {
 
-//bi.ohours.periods = JSON.parse(bi.ohours.periods)
+        bi.hourList = get('daytextcon').ohours;
 
-console.log(bi.ohours.weekday_text)
-//bi.ohours.weekday_text = JSONbi.ohours.weekday_text)
+        //bi.ohours.periods = JSON.parse(bi.ohours.periods)
+
+        console.log(bi.ohours.weekday_text)
+            //bi.ohours.weekday_text = JSONbi.ohours.weekday_text)
 
     }
     bi.geo = JSON.parse(get('adfgeo').value);
@@ -232,7 +231,6 @@ function abfield(af) {
         ).pend(
 
             put
-
 
         );
 
@@ -291,6 +289,11 @@ function pressideop(sb) {
         loadbisugs();
 
     }
+    if (sb.name === 'spa') {
+
+        loadspActions();
+
+    }
 
     for (var i = 0; i < sbos.length; i++) {
 
@@ -305,6 +308,64 @@ function pressideop(sb) {
     google.maps.event.trigger(map, "resize");
 
 } // side op selection
+
+
+var loadspActions = function() {
+
+        if (get('spaPlace')) {
+
+            get('spaPlace').inn('');
+
+        } else {
+
+            get('spaview').pend(
+
+                div().cl('sugplace').prop('id', 'spaPlace').prop('align', 'left')
+
+            );
+
+        }
+
+        var urlstring = getSpecialsUrl;
+
+        grabstuff(urlstring, function(stuff) {
+
+            get('spaPlace').pendray(stuff, function(special) {
+
+                    return spActionLine(special);
+
+                }) //
+                //placechoices(stuff, sugdiv, get('bsugplace'));
+
+        }); //sug requst
+
+    } //loadspActions
+
+var spActionLine = function(special) {
+
+        var spLine = div().cl('spLine');
+
+        spLine.pend(
+
+            el('span').inn(special.name)
+
+        ).async({
+            id: 'getActions',
+            url: getspActionsUrl.concat('/' + special._id),
+            drop: function(res, dio) {
+
+                dio.pend(
+
+                    el('span').inn('users redeemed : ' + res.length)
+
+                )
+
+            }
+        })
+
+        return spLine;
+
+    } //spActionLine
 
 
 function loadbisugs() {
@@ -348,15 +409,15 @@ function clearfields() {
     get("daytextcon").inn('');
 
     get('adfowner_email').value = "";
-/*
-    for (var i = 0; i < 7; i++) {
+    /*
+        for (var i = 0; i < 7; i++) {
 
-        get(dayray[i].short + '_o').value = "";
+            get(dayray[i].short + '_o').value = "";
 
-        get(dayray[i].short + '_c').value = "";
+            get(dayray[i].short + '_c').value = "";
 
-    }; // day loop
-    */
+        }; // day loop
+        */
 
 } //clear fields
 
@@ -468,28 +529,28 @@ function abfieldvmod() {
 
             for (var i = 0; i < dayray.length; i++){
 
-            	var day = dayray[i];
+                var day = dayray[i];
 
             tr.pend( 
 
-            	el('td').pend(
+                el('td').pend(
 
             div().cl('abhrsdiv').pend(
 
-            		el('p').inn( day.short ).stprop('text-decoration','underline')
+                    el('p').inn( day.short ).stprop('text-decoration','underline')
 
-            		).pend( el('p').inn('open:') ).pend(
+                    ).pend( el('p').inn('open:') ).pend(
 
             el('input').prop('id',day.short+'_o')
 
-            		).pend( el('p').inn('close:') ).pend(
+                    ).pend( el('p').inn('close:') ).pend(
 
             el('input').prop('id',day.short+'_c')
-            		
-            		)  
-            )
+                    
+                    )  
+                            )
 
-            	)
+                )
 
             }//day loop
 
@@ -499,3 +560,92 @@ function abfieldvmod() {
         } //hous
 
 } //fieldmod
+
+var greenMapForm = function(bi) {
+
+        var gmf = mapForm();
+
+        if (bi && bi.geoPoint) {
+
+            var geoPoint = bi.geoPoint;
+
+            var center = new google.maps.LatLng(geoPoint.coordinates[1], geoPoint.coordinates[0]);
+
+        }
+
+        gmf.onGeo('initGeo', function(geo, mF) {
+
+            mF.setMap({
+                center: center || new google.maps.LatLng(geo.lat, geo.lng),
+                zoom: 13,
+                mapTypeControl: false,
+            }).resize()
+
+            if (bi && bi.geoPoint) {
+
+                var geoPoint = bi.geoPoint;
+
+                var gCoords = center;
+
+                mF.addMarker(gCoords);
+
+            }
+
+            mF.pend(
+
+                div().cl('mapMsg'), 'msg'
+
+            );
+
+            mF.map.addListener('mousedown', function(event) {
+
+                google.maps.event.trigger(mF.map, 'resize');
+
+                set = setTimeout(function() {
+
+                    mF.msg.stProps({
+                        opacity: '1',
+                        height: '50%'
+                    }).inn('').inn('point selected').wait({
+                        wait: 1000,
+                        boom: function(msg) {
+
+                            msg.dio.stProps({
+                                opacity: '0',
+                                height: '0%'
+                            })
+
+                        }
+                    });
+
+                    get('ebfgeo').value = JSON.stringify({
+                        lat: event.latLng.lat(),
+                        lng: event.latLng.lng()
+                    });
+
+
+                    mF.clearMarkers();
+
+                     mF.addMarker( new google.maps.LatLng( event.latLng.lat(), event.latLng.lng() )   );
+
+                }, 900)
+
+            });
+
+            mF.map.addListener('mouseup', function(event) {
+
+                clearTimeout(set)
+
+            });
+
+            mF.map.addListener('click', function(event) {
+
+                clearTimeout(set)
+
+            });
+
+        }).getGeo('initGeo')
+
+        return gmf;
+
+    } //greenMapForm

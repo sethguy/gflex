@@ -15,7 +15,6 @@ function initgMap() {
 
     var infowindow = new google.maps.InfoWindow();
 
-
     autocomplete.addListener('place_changed', function() {
         infowindow.close();
        
@@ -26,7 +25,6 @@ function initgMap() {
         pushPlace(place);
 
     });
-
 
 }
 
@@ -93,7 +91,10 @@ var pushPlace = function(place) {
 
         if (place.opening_hours.weekday_text) {
 
-            get('daytextcon').props({ 'ohours': place.opening_hours }).pendray(place.opening_hours.weekday_text, function(weekday_text) {
+
+
+
+            get('daytextcon').props({ 'ohours': place.weekday_text }).pendray(place.opening_hours.weekday_text, function(weekday_text) {
 
                 return el('p').inn( weekday_text );
 

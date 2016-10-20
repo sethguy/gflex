@@ -12,17 +12,14 @@ var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
     process.env.OPENSHIFT_INTERNAL_PORT || 8000;
 
-
 var bcrypt = require('bcryptjs');
 
 var randtoken = require('rand-token');
 var mandrillApiKey = 'r3VbHExcpNGbq-m2j1TP0Q';
 
-
 var querystring = require('querystring');
 var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
-
 
 var geolib = require('geolib');
 
@@ -30,7 +27,6 @@ var Codebird = require('./cloud/module-codebird').Codebird;
 var cb = new Codebird();
 var request = require("request");
 var saltRounds = 10;
-
 
 var nodemailer = require('nodemailer');
 
@@ -49,10 +45,10 @@ var Signupurl = relLink + "?signup";
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
-
 //var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 
 var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
+
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -96,7 +92,6 @@ var mongoMsg = function(calli) {
 
 
 };
-
 
 var updatemany = function(table, filter, set, callback) {
 
@@ -345,6 +340,36 @@ app.get('/placeDetails/:place_id', function(req, res) {
 
 }); //getSpecialsByBid
 
+app.get('/spactions', function(req, res) {
+
+    console.log(req.param('terms'));
+
+    var terms = {}
+
+    mongoMsg(getby("specialAction", terms, {}, function(msg) {
+
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.send(JSON.stringify(msg.docs));
+
+    }));
+
+});
+
+
+app.get('/spactions/:id', function(req, res) {
+
+    console.log(req.params.id);
+
+    var terms = { sid: req.params.id };
+
+    mongoMsg(getby("specialAction", terms, {}, function(msg) {
+
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.send(JSON.stringify(msg.docs));
+
+    }));
+
+});
 
 app.get('/side/:terms', function(req, res) {
 
@@ -372,8 +397,53 @@ app.get('/side/:terms', function(req, res) {
 });
 
 
-app.get('/MigrateUserBusiness', function(req, res) {
+app.get('/createDayHoursList', function(req, res) {
 
+    mongoMsg(getby('Business', {}, {}, function(msg) {
+
+        var bilist = msg.docs;
+
+        var smalllist = [];
+        bilist.forEach(function(bi) {
+
+            bi.hourList = [];
+
+            if (bi.ohours && bi.ohours.weekday_text) {
+
+                if (bi.ohours.weekday_text.length == 7) {
+
+                    bi.hourList = bi.ohours.weekday_text;
+
+                } else if (bi.ohours.weekday_text.length < 7) {
+
+
+                } else {
+
+                    bi.hourList = JSON.parse(bi.ohours.weekday_text)
+                }
+
+            }
+
+            updateDocumentbyid(msg.db, 'Business', bi._id, bi, function(result, err) {
+
+                console.log(result);
+
+            });
+
+        })
+
+        /*res.json(bilist.map(function(bi){
+
+                return bi.hourList;
+
+        }))*/
+
+
+    }))
+
+});
+
+app.get('/MigrateUserBusiness', function(req, res) {
 
     var query = {
 
@@ -390,20 +460,15 @@ app.get('/MigrateUserBusiness', function(req, res) {
 
             ublinks.forEach(function(link) {
 
-
                     var biQuery = {
                         objectId: link.bid
                     };
 
-
                     getby('Business', biQuery, {}, function(msg) {
-
 
                         if (msg.docs && msg.docs.length > 0) {
 
-
                             link.bid = msg.docs[0]._id.valueOf();
-
 
                             sertobj('userbusiness', link, function(msg) {
 
@@ -417,14 +482,11 @@ app.get('/MigrateUserBusiness', function(req, res) {
 
                         }
 
-
                     })(msg)
 
                 }) // ublink each
 
-
         })) // 
-
 
 }); // MigrateUserBusiness
 
@@ -577,7 +639,6 @@ app.get('/MigrateUpdateGeoHoods', function(req, res) {
 
     }) //
 
-
 app.get('/MigrateUpdateGeoBusiness', function(req, res) {
 
         mongoMsg(getby('Business', { geo: { $exists: true } }, {}, function(msg) {
@@ -587,7 +648,9 @@ app.get('/MigrateUpdateGeoBusiness', function(req, res) {
             Business = msg.docs
 
             console.log(Business.length + " :: find buys length");
+
             count = 0;
+
             Business.forEach(function(bi) {
 
                     bi.geoPoint = { type: "Point", coordinates: [bi.geo.longitude, bi.geo.latitude] }
@@ -619,9 +682,7 @@ app.get('/MigrateUpdateGeoBusiness', function(req, res) {
 
         })); // getby
 
-
     }) //
-
 
 app.get('/MigrateFixBuysFrom', function(req, res) {
 
@@ -678,24 +739,15 @@ app.get('/MigrateFixBuysFrom', function(req, res) {
                                 var id = buys._id
                                 delete buys._id;
                                 updateDocumentbyid(msg.db, 'BuysFrom', id, buys, function(result, err) {
-                                    /*
-                                                                        console.log("")
-
-                                                                        console.log( JSON.stringify(start) );
-                                                                        console.log("")
-                                                                       if(farm) fa_id= farm._id.valueOf();
-
-
-
-
-                                                                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
-                                                                        console.log("")
-
-                                                                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
-                                                                        console.log("")
-
-                                                                        //console.log(result)
-                                    */
+                                    /*console.log("")
+                                    console.log( JSON.stringify(start) );
+                                    console.log("")
+                                    if(farm) fa_id= farm._id.valueOf();
+                                    if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
+                                    console.log("")
+                                    if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
+                                    console.log("")
+                                    //console.log(result) */
                                 });
 
                             }) // farm quiery
@@ -729,7 +781,6 @@ app.get('/MigrateFixBuysFrom', function(req, res) {
         res.status(200).send(obj);
 
     }
-
 
 });
 
@@ -1752,6 +1803,15 @@ app.get('/specialMachine/:spec', function(req, res) {
 
 }); //specialMachine
 
+app.get('/specials', function(req, res) {
+
+    mongoMsg(getbySort('specials', {}, {}, { updatedAt: 1 }, function(msg) {
+
+        res.json(msg.docs);
+
+    }));
+
+})
 
 app.get('/getLatestSpecials/:lat/:lng', function(req, res) {
 
@@ -2078,12 +2138,9 @@ app.post('/newbisug', function(req, res) {
 
         }
 
-
     }));
 
-
 }); // new bi sug
-
 
 app.post('/newbiz', function(req, res) {
 
@@ -2093,11 +2150,13 @@ app.post('/newbiz', function(req, res) {
 
     console.log(biob.geo + " this is geo ");
 
-
     var prelo = biob.geo;
 
-
-    if (biob.geo && biob.geo.lat && biob.geo.lng) biob.geoPoint = { type: "Point", coordinates: [prelo.lng, prelo.lat] }
+    //console.log('bi hours list',)
+    if(biob.hourList )biob.hourList = JSON.parse(biob.hourList)
+    else biob.hourList = [];
+    
+    if (biob.geo && biob.geo.lat && biob.geo.lng) biob.geoPoint = biob.geoPoint || { type: "Point", coordinates: [prelo.lng, prelo.lat] }
 
     biob.geo = null;
 
@@ -2138,9 +2197,7 @@ app.post('/newbiz', function(req, res) {
 
     }
 
-
 }); //get newbiz
-
 
 app.get('/getMobileLogin/:user', function(req, res) {
 
@@ -3961,7 +4018,6 @@ app.get('/setgeo', function(req, res) {
 
 });
 
-
 app.get('/fasearch/:term', function(req, res) {
 
     var farmTerms = { removed: { $ne: true }, 'name': { $regex: ".*" + req.param('term') + ".*", $options: "i" } }
@@ -3975,7 +4031,6 @@ app.get('/fasearch/:term', function(req, res) {
     })); // getby
 
 }); //fasearch"
-
 
 app.get('/bizsearch/:term', function(req, res) {
 
@@ -3993,7 +4048,6 @@ app.get('/bizsearch/:term', function(req, res) {
     })); // getby
 
 }); //"/bizsearch"
-
 
 app.get('/business/sort/geo/:lat/:lng', function(req, res) {
 
@@ -4129,7 +4183,7 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
                 $maxDistance: (1609.34) * 30
             }
         },
-     'removed': { $ne: true }
+        'removed': { $ne: true }
     }
 
     console.log('query :', query);
@@ -4223,7 +4277,7 @@ app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
     }
 
     query.cuisine = cterm;
-                        //STARTEDHERE
+    //STARTEDHERE
     mongoMsg(getbySort('Business', query, {}, { name: 1 }, function(msg) {
 
         res.json(msg.docs);

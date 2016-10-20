@@ -38,6 +38,12 @@ var sendSpecialUrl = "/specialMachine";
 var removebisugtourl = "/removebisug";
 var getSpecialsByBid = "/getSpecialsByBid";
 
+var getspActionsUrl = "/spactions"
+
+var getSpecialsUrl = "/specials"
+
+var MOCKGEO = false;
+
 // var placesUrl = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + bio.place_id + '&key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo';
 
 var BigCal = null;
@@ -131,7 +137,6 @@ var gcats = [
 
 ];
 
-
 function touchout() {
 
     get('bizultscon').stprop('display', 'none').inn("");
@@ -141,7 +146,6 @@ function touchout() {
     get('uzultscon').stprop('display', 'none').inn("");
 
 }
-
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -755,6 +759,68 @@ function cksignuputs(e) {
     var kc = e.keyCode;
 
 } //cksignuputs
+
+
+var getgeo = function(calli) {
+
+        if (MOCKGEO) {
+
+            var short = function() {
+//27.771052,-82.63618300000002
+                    var lat1 =  27.7741254; ///38.9192931; //38.9091421080001; //38.9141319; //40.7295174;//38.9051486;
+                    var lng1 =  -82.6374976 ; ///-77.0372175;//-77.0283826239999; // -77.0371799; //-74.0314798;// -76.9995255;
+
+                    var mpos = {
+                        lat: lat1,
+                        lng: lng1
+                    };
+                    console.log('fake geo');
+                    return mpos;
+
+                } //short
+
+            calli(short());
+            return;
+
+        }
+        if (navigator) {
+
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                console.log('real geo');
+
+
+                var mpos = {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude
+                };
+
+
+                console.log('real geo' + JSON.stringify(pos));
+                calli(mpos);
+
+            },
+            function(error){
+
+                alert(JSON.stringify(error))
+
+            },{enableHighAccuracy: true, timeout: 15000} )
+
+        } else {
+
+            var lat1 = 38.9051486;
+            var lng1 = -76.9995255;
+
+            var mpos = {
+                lat: lat1,
+                lng: lng1
+            };
+            console.log('fake geo');
+
+            calli(mpos);
+
+        }
+
+    } //getgeo
 
 /*
 function urlish(url){

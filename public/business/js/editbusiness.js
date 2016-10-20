@@ -2,6 +2,18 @@ var ebtabmod = new ebfieldvmod();
 
 function ebfieldvmod() {
 
+    this.mapForm = function(bi) {
+
+        var geoForm = greenMapForm(bi).stProps({
+            height: '300px',
+            width: '80%'
+        })
+
+
+
+        return geoForm;
+
+    }
 
     this.linkedusers = function(bi) {
 
@@ -95,49 +107,79 @@ function ebfieldvmod() {
 
         } //place_id
 
-
     this.hours = function(bi) {
 
-        if (bi.ohours != null) {
 
-            if (bi.ohours.weekday_text) {
-
-                console.log("weekday text before", bi.ohours.weekday_text)
-
-                weekray = bi.ohours.weekday_text;
-                try {
+        if (bi.hourList && bi.hourList.length > 0) {
 
 
-                    weekray = JSON.parse(bi.ohours.weekday_text)
-                    console.log(weekray)
-                        // generates an exception
-                } catch (e) {
-                    console.log(e)
+            var weekray = bi.hourList;
 
-                    if (e) {
 
-                        weekray = bi.ohours.weekday_text;
+            if (weekray.length > 7) weekray = [];
 
-                    }
+            while (weekray.length < 7) {
 
-                    // statements to handle any exceptions
-
-                }
-                console.log(weekray)
-
-                return el('div').cl('abhourstab').pendray(weekray, function(wtext) {
-
-                    return div().cl('bwlet').pend(
-
-                        el('p').inn(wtext)
-
-                    );
-                });
+                weekray.push("")
 
             }
+
+            /*bi.ohours.weekday_text;
+            try {
+
+                weekray = JSON.parse(bi.ohours.weekday_text)
+                console.log(weekray)
+                    // generates an exception
+            } catch (e) {
+                console.log(e)
+
+                if (e) {
+
+                    weekray = bi.ohours.weekday_text;
+
+                }
+
+                // statements to handle any exceptions
+
+            }
+            console.log(weekray)*/
+
+            return el('div').cl('abhourstab').pendray(weekray, function(wtext, i) {
+
+                return div().cl('bwlet').pend(
+
+                    el('input').cl('hourLinePut').props({
+                        value: wtext,
+                        id: 'hLine_' + i
+                    })
+
+                );
+            });
+
         }
 
-        return el('div').cl('abhourstab').pend(el('p').inn('no hours'));
+        var weekray = [];
+
+        while (weekray.length < 7) {
+
+            weekray.push("")
+
+        }
+
+        return el('div').cl('abhourstab').pendray(weekray, function(wtext, i) {
+
+            return div().cl('bwlet').pend(
+
+                el('input').cl('hourLinePut').props({
+                    value: wtext,
+                    id: 'hLine_' + i
+                })
+
+            );
+        });
+
+
+        //return el('div').cl('abhourstab').pend(el('p').inn('no hours'));
 
     }; //hous
 
@@ -185,7 +227,6 @@ function ebfieldvmod() {
         cv.pend(ct);
         return cv;
     }; //category view
-
 
 } //ebfieldmod
 
@@ -309,9 +350,9 @@ function showbiztoedit(bi) {
 
     var sendid = bi._id;
 
-    console.log(bi.geo + "thi is geo");
+    console.log(bi.geoPoint + "thi is geo");
 
-    if (!bi.geo) {
+    if (!bi.geoPoint) {
 
         bi.geo = { "__type": "GeoPoint", "latitude": 38.9061564, "longitude": -77.04190679999999 };
         console.log("hit");
@@ -336,7 +377,7 @@ function showbiztoedit(bi) {
 
             } else {
 
-                var aftd = ebfield(af, "{\"lat\":" + bi.geo.latitude + ",\"lng\":" + bi.geo.longitude + "}");
+                var aftd = ebfield(af, "{\"lat\":" + bi.geoPoint.coordinates[1] + ",\"lng\":" + bi.geoPoint.coordinates[0] + "}");
 
                 //bec[af.name]=aftd;
 
@@ -378,7 +419,7 @@ function showbiztoedit(bi) {
 
             var urlstring = savebusinessurl //+ "/" + encodeURIComponent(JSON.stringify(bi));
 
-            poststuff(urlstring, bi,function(stuff) {
+            poststuff(urlstring, bi, function(stuff) {
 
                 console.log(stuff);
 
@@ -405,9 +446,9 @@ function showbiztoedit(bi) {
 
             bi.removed = true;
 
-            var urlstring = savebusinessurl;// + "/" + encodeURIComponent(JSON.stringify(bi));
+            var urlstring = savebusinessurl; // + "/" + encodeURIComponent(JSON.stringify(bi));
 
-            poststuff(urlstring,bi ,function(stuff) {
+            poststuff(urlstring, bi, function(stuff) {
 
                 console.log(stuff);
                 get('adBisSuggestBox').value = "";
@@ -417,7 +458,6 @@ function showbiztoedit(bi) {
                 //cleareditfields();
 
             }); //save request
-
 
         }).inn("Remove Business")
 
@@ -459,16 +499,28 @@ function getbifromeditfields(id) {
         */
 
     // bi.hours_json = newbhours;
+    bi.hourList = [];
 
-geowords = get('ebfgeo').value;
+    for (var i = 0; i < 7; i++) {
 
-console.log('geoword',geowords)
+        console.log(' at hline valu ' + get('hLine_' + i).value)
+        bi.hourList.push(get('hLine_' + i).value)
 
-if(geowords.indexOf('undefined') == -1 ){
+        console.log('the houlrs lis as go', bi.hourList)
+    }
 
-    bi.geo = JSON.parse( get('ebfgeo').value  );
 
-}
+    console.log('the houlrs lis after ', bi.hourList);
+
+    geowords = get('ebfgeo').value;
+
+    console.log('geoword', geowords)
+
+    if (geowords.indexOf('undefined') == -1) {
+
+        bi.geo = JSON.parse(get('ebfgeo').value);
+
+    }
 
     for (var i = 0; i < gcats.length; i++) {
         var cat = gcats[i];
@@ -480,8 +532,7 @@ if(geowords.indexOf('undefined') == -1 ){
 
     }; //gcatloop
 
-
-    console.log(JSON.stringify(bi));
+    console.log('bi at get', bi);
 
     return bi;
 } //getbifromfields
@@ -537,7 +588,6 @@ function ebfield(af, value) {
 
     return abf;
 } //abfield
-
 
 function linkedrow(urel, bi) {
 

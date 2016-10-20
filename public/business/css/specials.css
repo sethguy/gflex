@@ -17,9 +17,20 @@
     font-family: 'Oxygen', sans-serif;
 }
 
-#specialsButton{
+#specialsButton {
+    display: none;
+}
 
-display: none;
+.spLine{
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.spLine span{
+    position: relative;
+    margin: 10px;
 
 }
 
@@ -214,12 +225,8 @@ display: none;
     font-family: inherit;
 }
 
-
-#spmListScroll{
-
-text-align: center
-
-
+#spmListScroll {
+    text-align: center
 }
 
 .spListTab {
@@ -227,30 +234,21 @@ text-align: center
     left: 150px;
 }
 
-.spListTab td{
-
-height: 60px;
-
+.spListTab td {
+    height: 60px;
 }
 
-.spListTab .spListImg{
-
-}
+.spListTab .spListImg {}
 
 .spCatListTd {
     text-align: left;
-
-
 }
 
-.spCatListImg{
-
-
+.spCatListImg {
     position: relative;
     background-color: green;
     width: 43px;
     height: 50px;
-
 }
 
 .spTitle {
@@ -330,8 +328,7 @@ height: 60px;
 
 .spListImg {
     position: relative: ;
- height: 50px;
-  
+    height: 50px;
     font-family: inherit;
 }
 
@@ -349,21 +346,7 @@ height: 60px;
     font-family: inherit;
 }
 
-
-
-
-.spListlet{
-
-
-position: relative;
-
-
-cursor: pointer
-
-
-
+.spListlet {
+    position: relative;
+    cursor: pointer
 }
-
-
-
-

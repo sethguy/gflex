@@ -1,235 +1,201 @@
-#backadbox{
-  display:none;
-position:relative;
-height:80%;
-width:80%;
-z-index:10;
-color:darkgreen;
-min-width: 951px;
+#backadbox {
+    display: none;
+    position: relative;
+    height: 80%;
+    width: 80%;
+    z-index: 10;
+    color: darkgreen;
+    min-width: 951px;
 }
 
-.sbo{
-position: relative;
-height:10%;
-width:100%;
-border-bottom: 1px solid green;
-cursor:pointer;
+.hourLinePut {
+    position: relative;
+    width: 80%;
+    text-align: center;
+    border: 0;
+    border: 1px solid green;
+    margin: 5px 0;
 }
 
-
-.sbo:hover{
-background-color: lightblue;
-
-
-
+.mapMsg {
+    position: relative;
+    height: 50%;
+    -webkit-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+    background-color: green;
+    color: white;
+    opacity: 0;
+    height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.sidebar{
-
-position:absolute;
-left: 10px;
-top:100px;
-width: 100px;
-
+.sbo {
+    position: relative;
+    height: 10%;
+    width: 100%;
+    border-bottom: 1px solid green;
+    cursor: pointer;
 }
 
-.subadview{
-position:relative;
-height:100%;
-width:100%;
-
-display: none;
-
-z-index:10;
+.sbo:hover {
+    background-color: lightblue;
 }
 
-.sabtcon{
-position: absolute;
-top:0px;
-height: 5%;
-width: 100%;
-text-align: center;
-border-bottom: 1px solid green;
-color: darkgreen;
-
+.sidebar {
+    position: absolute;
+    left: 10px;
+    top: 100px;
+    width: 100px;
 }
 
-#abtab{
-position:relative;
-top:5%;
-height:95%;
-width:100%;
-table-layout: fixed;
-z-index: 10;
+.subadview {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: none;
+    z-index: 10;
 }
 
-
-
-
-.adsec{
-
-position: relative;
-height:100%;
-width:100%;
-overflow: scroll;
-
+.sabtcon {
+    position: absolute;
+    top: 0px;
+    height: 5%;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid green;
+    color: darkgreen;
 }
 
-.afput{
-
-position: relative;
-height:20%;
-font-size: 150%;
-width:80%;
-color:darkgreen;
-
+#abtab {
+    position: relative;
+    top: 5%;
+    height: 95%;
+    width: 100%;
+    table-layout: fixed;
+    z-index: 10;
 }
 
-.bsavebt{
-
-position: relative;
-height:50px;
-width:100px;
-border: 1px solid green;
-color:darkgreen;
-margin: 3%;
-text-align: center;
-
-cursor:pointer;
+.adsec {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
 }
 
-
-#editbremv{
- 
-
-
+.afput {
+    position: relative;
+    height: 20%;
+    font-size: 150%;
+    width: 80%;
+    color: darkgreen;
 }
 
-.bsavebt:hover{
-
-border:1px solid blue;
+.bsavebt {
+    position: relative;
+    height: 50px;
+    width: 100px;
+    border: 1px solid green;
+    color: darkgreen;
+    margin: 3%;
+    text-align: center;
+    cursor: pointer;
 }
 
+#editbremv {}
 
-
-.abhourstab{
-
-position:relative;
-
-text-align: center;
-
-
+.bsavebt:hover {
+    border: 1px solid blue;
 }
 
-.abhourstab p{
-
-margin: 1px
-
-
+.abhourstab {
+    position: relative;
+    text-align: center;
 }
 
-.abhrsdiv{
-position:relative;
-height:100%;
-width: 100%;
-border: 1px solid darkgreen;
+.abhourstab p {
+    margin: 1px
 }
 
-.abhrsdiv p{
-position:relative;
-margin: 0;
+.abhrsdiv {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border: 1px solid darkgreen;
 }
 
-.abhrsdiv input{
-
-margin: 2px 0px;
-position: relative;
-width:90%;
-color:darkgreen;
-
+.abhrsdiv p {
+    position: relative;
+    margin: 0;
 }
 
-
-
-
-
-.ulinkbox{
-position: relative;
-width:80%;
+.abhrsdiv input {
+    margin: 2px 0px;
+    position: relative;
+    width: 90%;
+    color: darkgreen;
 }
 
-.ulinkbox .afput{
-position: relative;
-height:100%;
-width:100%;
-
+.ulinkbox {
+    position: relative;
+    width: 80%;
 }
 
-
-.ulbt{
-position: relative;
-height:100%;
-width:30%;
-border: 1px solid darkgreen;
-cursor:pointer;
+.ulinkbox .afput {
+    position: relative;
+    height: 100%;
+    width: 100%;
 }
 
-.searchcon{
-top:10%;
-position: relative;
-height:5%;
-z-index:99;
-overflow:visible;
-width:90%;
-color: darkgreen;
-
+.ulbt {
+    position: relative;
+    height: 100%;
+    width: 30%;
+    border: 1px solid darkgreen;
+    cursor: pointer;
 }
 
-#searchmsg{
- 
-position: absolute;
-height:100%;
-top:0;
-left:125px;
-overflow: hidden;
-
+.searchcon {
+    top: 10%;
+    position: relative;
+    height: 5%;
+    z-index: 99;
+    overflow: visible;
+    width: 90%;
+    color: darkgreen;
 }
 
-
-
-
-.searchcon input{
-
-position: relative;
-height:100%;
-width: 350px;
-font-size: 100%;
-z-index: 20;
-color:darkgreen;
-
+#searchmsg {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 125px;
+    overflow: hidden;
 }
 
+.searchcon input {
+    position: relative;
+    height: 100%;
+    width: 350px;
+    font-size: 100%;
+    z-index: 20;
+    color: darkgreen;
+}
 
-.searchcon input:focus{
+.searchcon input:focus {
     outline: 0;
     background-color: transparent;
-    background:transparent!important;
+    background: transparent!important;
     border: 0px;
 }
 
-
-
-.bedicon{
-
-position: relative;
-border: 1px solid darkgreen;
-top:10%;
-height:82%;
-width:100%;
-overflow: scroll;
-
-z-index: 50;
+.bedicon {
+    position: relative;
+    border: 1px solid darkgreen;
+    top: 10%;
+    height: 82%;
+    width: 100%;
+    overflow: scroll;
+    z-index: 50;
 }
-
-
-
