@@ -509,7 +509,6 @@ function getbifromeditfields(id) {
         console.log('the houlrs lis as go', bi.hourList)
     }
 
-
     console.log('the houlrs lis after ', bi.hourList);
 
     geowords = get('ebfgeo').value;

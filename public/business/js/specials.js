@@ -8,6 +8,36 @@ var specialImgs = [
 
 var openSpecialInEditMode = function(spe) {
 
+
+
+        get('sp-bi-title').value = "";
+        get('sp-terms').value = "";
+        get('spCal').currentDate = new Date().getTime();
+        get('spCal').startDate = new Date().getTime();
+
+        get('specialModal').spe = null
+
+        var ray = [
+
+            { act: 'Month', name: 'month', min: "1", max: "12" },
+
+            { act: 'Date', name: 'day', min: "1", max: "31" },
+
+            { act: 'Year', name: 'year', min: "1970", max: "3000" }
+
+        ];
+
+        for (var i = 0; i < ray.length; i++) {
+
+            var id = ray[i].name + '_StartcalField';
+            get(id).value = ""
+
+            id = ray[i].name + '_calField';
+
+            get(id).value = ""
+
+        }
+
         get('specialModal').spe = spe;
 
         get('sp-bi-title').value = spe.name;
@@ -60,14 +90,7 @@ var getSpecialsList = function() {
 
                 get('spListTab').inn('').pendray(res, function(spe, dex, ray) {
 
-                    return el('tr').props({
-                        onmousedown: function(event) {
-
-                            if (event.target.className !== "deletebutton") openSpecialInEditMode(spe);
-
-                        }
-
-                    }).cl('spListlet')
+                    return el('tr').cl('spListlet')
 
                     .pend(
 
@@ -75,7 +98,14 @@ var getSpecialsList = function() {
 
                             el('p').cl('spTitleTd').inn(spe.name)
 
-                        )
+                        ).props({
+                            onmousedown: function(event) {
+
+                                if (event.target.className !== "deletebutton") openSpecialInEditMode(spe);
+
+                            }
+
+                        })
                     )
 
                     .pend(
@@ -87,7 +117,14 @@ var getSpecialsList = function() {
                                 src: 'business/images/specials/' + spe.img + 'Small.png'
                             })
 
-                        )
+                        ).props({
+                            onmousedown: function(event) {
+
+                                if (event.target.className !== "deletebutton") openSpecialInEditMode(spe);
+
+                            }
+
+                        })
 
                     ).pend(
 
@@ -107,14 +144,16 @@ var getSpecialsList = function() {
                             el('img').cl("deletebutton")
                             .props({
                                 src: 'business/images/delete.svg',
-                                onmousedown: function() {
 
-                                        deleteSpecial(spe)
-
-                                    } //
                             })
 
-                        )
+                        ).props({
+                            onmousedown: function() {
+
+                                    deleteSpecial(spe)
+
+                                } //
+                        })
 
                     );
 
@@ -412,7 +451,43 @@ var showSpecialsList = function() {
     } //showSpecialsList
 
 
-var showAddEditSpecial = function() {
+var showAddEditSpecial = function(clear) {
+
+
+        if (clear) {
+
+
+            get('sp-bi-title').value = "";
+            get('sp-terms').value = "";
+            get('spCal').currentDate = new Date().getTime();
+            get('spCal').startDate = new Date().getTime();
+
+            get('specialModal').spe = null
+
+            var ray = [
+
+                { act: 'Month', name: 'month', min: "1", max: "12" },
+
+                { act: 'Date', name: 'day', min: "1", max: "31" },
+
+                { act: 'Year', name: 'year', min: "1970", max: "3000" }
+
+            ];
+
+            for (var i = 0; i < ray.length; i++) {
+
+                var id = ray[i].name + '_StartcalField';
+                get(id).value = ""
+
+                id = ray[i].name + '_calField';
+
+                get(id).value = ""
+
+            }
+
+
+        }
+
 
         get('specialModalList').stProps({ display: 'none' });
         get('specialModalAdd').stProps({ display: 'block' });
@@ -565,6 +640,8 @@ var sendSpecial = function() {
                 get('spCal').currentDate = new Date().getTime();
                 get('spCal').startDate = new Date().getTime();
                 get("wpcontainer").biz;
+
+                get('specialModal').spe = null
 
                 get('selectedCatPart').props({
                     cat: "Dinner",

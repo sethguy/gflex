@@ -45,9 +45,9 @@ var Signupurl = relLink + "?signup";
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 
-var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
+//var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
 
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
@@ -186,7 +186,7 @@ var removeby = function(table, terms, ops, calli) {
 
         return function(msg) {
 
-            msg.db.collection(table).deleteMany(terms, function(err, docs) {
+            msg.db.collection(table).removeMany(terms, function(err, docs) {
 
                 msg.docs = docs;
 
@@ -1737,8 +1737,10 @@ app.get('/deleteSpecial/:id', function(req, res) {
     //res.header("Access-Control-Allow-Origin", "*");
     //  res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
+    console.log(req.params.id)
 
-    mongoMsg(removeby('specials', { _id: new ObjectId(req.params.id) }, {}, function(msg) {
+
+    mongoMsg(removeby('specials', { _id: new ObjectId(req.params.id) }, null, function(msg) {
 
         res.json(msg.docs);
 

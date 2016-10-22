@@ -65,11 +65,13 @@ var pushPlace = function(place) {
 
     var address = '';
     if (place.address_components) {
+
         address = [
             (place.address_components[0] && place.address_components[0].short_name || ''),
             (place.address_components[1] && place.address_components[1].short_name || ''),
             (place.address_components[2] && place.address_components[2].short_name || '')
         ].join(' ');
+        
     }
 
     //{'name':'business','title':'Business Name'},
@@ -90,9 +92,6 @@ var pushPlace = function(place) {
     if (place.opening_hours != null) {
 
         if (place.opening_hours.weekday_text) {
-
-
-
 
             get('daytextcon').props({ 'ohours': place.weekday_text }).pendray(place.opening_hours.weekday_text, function(weekday_text) {
 
