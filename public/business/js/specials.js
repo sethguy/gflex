@@ -8,8 +8,6 @@ var specialImgs = [
 
 var openSpecialInEditMode = function(spe) {
 
-
-
         get('sp-bi-title').value = "";
         get('sp-terms').value = "";
         get('spCal').currentDate = new Date().getTime();

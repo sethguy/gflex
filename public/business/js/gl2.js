@@ -12,6 +12,8 @@ var savebusinessurl = "/newbiz";
 var linkbusinessurl = "/newuserbusiness";
 var unlinkbusinessurl = "/unlinkuserbusiness";
 var getlinkedbybid = "/getlinkedbybid";
+
+var getbibyIdUrl = '/getbibyId';
 var crmsearchurl = "/crmuforemail";
 var getlinkedurl = "/getlinked";
 var GetfaByNameUrl = "/getfabyname";

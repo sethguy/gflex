@@ -1,5 +1,4 @@
 var express = require('express');
-var ParseServer = require('parse-server').ParseServer;
 var bodyParser = require('body-parser')
 var fs = require('fs');
 var Mongo = require('mongodb'),
@@ -136,13 +135,6 @@ var sertobj = function(table, obj, callback) {
     } //sertobj
 
 
-var api = new ParseServer({
-    databaseURI: databaseUri,
-    cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
-    appId: process.env.APP_ID || 'l7WfvYKSprD4DnGFMFqbE1VOgfQ6096PB372J3gA',
-    masterKey: process.env.MASTER_KEY || 'TZCDDLCIFnLySuwOidkAgsaHF5VoXC6g0yrnQTtu', //Add your master key here. Keep it secret!
-    serverURL: url // Don't forget to change to https if needed
-});
 
 
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
@@ -151,7 +143,7 @@ var api = new ParseServer({
 
 var app = express();
 
-// Serve the Parse API on the /parse URL prefix
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
@@ -317,28 +309,6 @@ app.get('/flight', function(req, res) {
 
 });
 
-app.get('/placeDetails/:place_id', function(req, res) {
-
-    var place_id = req.params.place_id;
-    //'ChIJrTLr-GyuEmsRBfy61i59si0'
-    var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo';
-
-    Parse.Cloud.httpRequest({
-
-        url: url,
-        method: "GET",
-
-
-    }).then(function(httpResponse) {
-        console.log(httpResponse);
-
-        res.json(httpResponse);
-
-    }, function(httpResponse) {
-        console.error('Request failed with response code ' + httpResponse.status);
-    });
-
-}); //getSpecialsByBid
 
 app.get('/spactions', function(req, res) {
 
@@ -1330,55 +1300,10 @@ var googleClientSecret = '0p5XWtDwdBbdDStyZ6gNC56h';
  * Endpoint values from https://developers.google.com/accounts/docs/OpenIDConnect#confirmxsrftoken
  */
 
-var googleRedirectEndpoint = 'https://accounts.google.com/o/oauth2/auth?';
-var googleRedirectURI = 'http://greenease-business.parseapp.com/oauthCallback';
-var googleValidateEndpoint = 'https://www.googleapis.com/oauth2/v3/token';
-var googleUserEndpoint = 'https://www.googleapis.com/plus/v1/people/me';
-
-
-/**
- * In the Data Browser, set the Class Permissions for these 2 classes to
- *   disallow public access for Get/Find/Create/Update/Delete operations.
- * Only the master key should be able to query or write to these classes.
- */
-var TokenRequest = Parse.Object.extend("TokenRequest");
-var TokenStorage = Parse.Object.extend("TokenStorage");
-
-/**
- * Create a Parse ACL which prohibits public access.  This will be used
- *   in several places throughout the application, to explicitly protect
- *   Parse User, TokenRequest, and TokenStorage objects.
- */
-var restrictedAcl = new Parse.ACL();
-restrictedAcl.setPublicReadAccess(false);
-restrictedAcl.setPublicWriteAccess(false);
-
-
-/**
- * Main route.
- *
- * When called, render the login.ejs view
- */
-
 
 app.post('/editfarm', function(req, res) {
 
     console.log(req.body);
-    /*
-        if (req.param('fa').indexOf('<j>') > -1) {
-            var find = '<j>';
-            var re = new RegExp(find, 'g');
-
-            str = req.param('fa').replace(re, '/');
-            console.log(str);
-
-            faob = JSON.parse(str);
-
-        } else {
-
-            faob = JSON.parse(req.param('fa'));
-            console.log(req.param('fa'));
-        }*/
 
     faob = req.body;
 
@@ -1415,29 +1340,12 @@ app.post('/editfarm', function(req, res) {
         }));
 
     }
-    /*
-        nfarm.save(faob, {
-            success: function(farm) {
-                // Execute any logic that should take place after the object is saved.
 
-                alert('New object created with objectId: ' + farm.id);
-                res.json({ 'msg': 'Farm updated ', 'farm': farm });
-            },
-            error: function(farm, error) {
-                res.json({ 'msg': error.message });
-
-                // Execute any logic that should take place if the save fails.
-                // error is a Parse.Error with an error code and message.
-                alert('Failed to create new object, with error code: ' + error.message);
-            }
-        });
-        */
 
 }); //get newbiz
 
 
 app.get('/appface/:fbId/:acc', function(req, res) {
-    //TO :::  'https://api.parse.com/1/functions/facefind'
 
     //var uid = req.params.uid;
 
@@ -1480,7 +1388,6 @@ app.get('/appface/:fbId/:acc', function(req, res) {
                 user['fbId'] = req.params.fbId;
                 user['fbacc'] = req.params.acc;
 
-                // other fields can be set just like with Parse.Object
                 sertobj('mobileUsers', user, function(msg) {
 
                     svuser = msg.result.ops[0];
@@ -1503,197 +1410,10 @@ app.get('/appface/:fbId/:acc', function(req, res) {
 }); //get newbiz
 
 
-app.get('/favup', function(req, res) {
-    Parse.Cloud.useMasterKey();
 
-    Parse.Cloud.httpRequest({
-        url: 'https://api.parse.com/1/functions/favtime',
-        method: "POST",
-        headers: {
-            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-        },
-        body: {},
 
 
-    }).then(function(httpResponse) {
-        console.log(httpResponse.text);
 
-        var ray = JSON.parse(httpResponse.text).result;
-
-        console.log(ray.length);
-
-        var newray = [];
-
-        var Favs = Parse.Object.extend("userfavs");
-
-
-        for (var i = 0; i < ray.length; i++) {
-
-            var fa = ray[i];
-
-            var user = fa.user;
-
-            var uid = user.objectId;
-
-            var favor = fa.favorite;
-
-            var fid = favor.objectId;
-
-            console.log(uid + "    fav ray   " + fid);
-
-            var favo = new Favs();
-
-            favo.set('uid', uid);
-
-            favo.set('mid', fid);
-
-            newray.push(favo);
-
-
-        };
-
-        Favs.saveAll(newray, {
-            success: function(hoodob) {
-                // Execute any logic that should take place after the object is saved.
-
-                //  alert('New object created with objectId: ' +  hoodob.id);
-                res.json(hoodob);
-            },
-            error: function(hoodob, error) {
-                // Execute any logic that should take place if the save fails.
-                // error is a Parse.Error with an error code and message.
-                alert('Failed to create new object, with error code: ' + error.message);
-            }
-        });
-
-
-    }, function(httpResponse) {
-
-
-        console.error('Request failed with response code ' + httpResponse.status);
-    });
-
-}); //get newbiz
-
-
-/*
-
-app.get('/clearfavs', function ( req, res) {
-     Parse.Cloud.useMasterKey();
- var fav = Parse.Object.extend("userfavs");
-var query = new Parse.Query( fav );
-
-
-query.exists('mid');
-
-query.limit(1000);
-
-query.find({
-    success:function(results) {
-       
-
-
-for (var i = 0; i < results.length; i++) {
-  var favo = results[i];
-
-
-
-favo.set('business',null);
-favo.set('bid',null);
-
-
-
-};
-
-
-fav.saveAll( results , {
-  success: function( hoodob ) {
-    // Execute any logic that should take place after the object is saved.
-  
-    alert('New object created with objectId: ' +  hoodob.id);
-  res.json( hoodob );
-  },
-  error: function( hoodob , error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    alert('Failed to create new object, with error code: ' + error.message);
-  }
-});
-
-
-
-
-        },error:function(error) {
-        console.log(JSON.stringify(error)+"   ::: "+error);
-        }
-    });
-
-});//get newbiz
-
-
-*/
-
-app.get('/getcount', function(req, res) {
-
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(biz);
-
-    var stuff = {};
-
-    query.doesNotExist('website');
-
-    query.notEqualTo('vis', 0);
-    query.exists('place_id');
-    //query.select([ 'ohours' ,'business' ,'place_id','address' ]);
-
-    //query.limit(1);
-
-    //query.count({
-    query.count({
-        success: function(fcounts) {
-            // The fcounts request succeeded. Show the fcounts
-
-            res.json(fcounts);
-
-
-            // res.send( fcounts.length+""+ JSON.stringify( fcounts ) );
-
-
-            /*
-            biz.saveAll( fcounts , {
-                       success: function (relations) {
-                           
-
-                           res.json( relations   );
-
-
-
-               },//usr biz savall
-                       error: function (relation, error) {
-                          res.json(relation);
-
-                       }
-                 
-
-
-                   });
-            */
-
-
-            //res.send( fcounts );
-
-        },
-        error: function(error) {
-            // The request failed
-        }
-    });
-
-
-}); //get newbiz
 
 app.get('/ckUserForSpAction/:ckSet', function(req, res) {
 
@@ -1749,30 +1469,6 @@ app.get('/deleteSpecial/:id', function(req, res) {
 }); // specialAction
 
 
-var findSpecialById = function(special, callback) {
-
-        var SPEC = Parse.Object.extend("specials");
-
-        var query = new Parse.Query(SPEC);
-
-        var stuff = {};
-
-        query.get(special.id, {
-            success: function(res) {
-                // The fcounts request succeeded. Show the fcounts
-
-                callback(res);
-
-            },
-            error: function(error) {
-                // The request failed
-
-                callback(error);
-
-            }
-        });
-
-    } // findSpecialById
 
 
 var saveSpecial = function(special, callback) {
@@ -1878,133 +1574,7 @@ app.get('/getbibyId/:id', function(req, res) {
 }); //"/getbusiness"
 
 
-app.get('/getone', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(biz);
-
-    var stuff = {};
-
-    query.doesNotExist('website');
-
-    query.notEqualTo('vis', 0);
-    query.exists('place_id');
-    //query.select([ 'ohours' ,'business' ,'place_id','address' ]);
-
-    query.limit(1);
-
-    //query.count({
-    query.find({
-        success: function(fcounts) {
-            // The fcounts request succeeded. Show the fcounts
-
-            res.json(fcounts[0]);
-
-
-            // res.send( fcounts.length+""+ JSON.stringify( fcounts ) );
-
-
-            /*
-            biz.saveAll( fcounts , {
-                       success: function (relations) {
-                           
-
-                           res.json( relations   );
-
-
-
-               },//usr biz savall
-                       error: function (relation, error) {
-                          res.json(relation);
-
-                       }
-                 
-
-
-                   });
-            */
-
-
-        },
-        error: function(error) {
-            // The request failed
-        }
-    });
-
-
-}); //get newbiz
-
-
-app.get('/numi', function(req, res) {
-    Parse.Cloud.useMasterKey();
-
-    var Biz = Parse.Object.extend("Business");
-    var query = new Parse.Query(Biz);
-
-    query.limit(500);
-    query.find({
-        success: function(results) {
-
-
-            console.log(results.length);
-
-            res.json(results[0]);
-
-
-            Parse.Cloud.httpRequest({
-                url: 'https://api.parse.com/1/functions/newmigrate',
-                method: "POST",
-                headers: {
-                    'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-                    'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-                },
-                body: JSON.stringify(tjson),
-            }).then(function(httpResponse) {
-                console.log(httpResponse.text);
-            }, function(httpResponse) {
-                console.error('Request failed with response code ' + httpResponse.status);
-            });
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
-
-}); //get newbiz
-
-
-app.get('/setone/:fstring', function(req, res) {
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("Business");
-
-    var upbiz = new biz();
-    var fstr = req.params.fstring;
-    console.log("at setone:: " + fstr);
-
-    var ob = JSON.parse(fstr);
-    console.log("  at setoneafter " + ob.business);
-
-    upbiz.save(ob, {
-        success: function(hoodob) {
-            // Execute any logic that should take place after the object is saved.
-
-            alert('New object created with objectId: ' + hoodob.id);
-            res.json(hoodob);
-        },
-        error: function(hoodob, error) {
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            alert('Failed to create new object, with error code: ' + error.message);
-        }
-    });
-
-
-}); //get newbiz
 
 app.get('/removebisug/:bio', function(req, res) {
 
@@ -2031,7 +1601,7 @@ app.get('/removebisug/:bio', function(req, res) {
 
 
 app.get('/getbisugs', function(req, res) {
-    Parse.Cloud.useMasterKey();
+    
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -2341,121 +1911,7 @@ app.get('/getlogin/:user', function(req, res) {
 }); //getlogin
 
 
-app.get('/exam', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("neighborhood");
-
-    var query = new Parse.Query(biz);
-
-    query.exists('gob');
-
-    query.doesNotExist('typeck');
-
-    query.limit(1000);
-
-    query.find({
-        success: function(results) {
-
-            var one = results[0];
-            var gob = one.get('gob');
-            //geometry
-            //neighborhood\",\"political locality
-            console.log(gob.types);
-            var types = gob.types;
-
-            if (types.indexOf('neighborhood') > -1 || types.indexOf('political') > -1 || types.indexOf('neighborhood') > -1) {
-
-                one.set('typeck', 'good');
-
-            } else {
-
-                one.set('typeck', JSON.stringify(types));
-
-            }
-
-            one.save(null, {
-                success: function(hoodob) {
-                    // Execute any logic that should take place after the object is saved.
-
-                    alert('New object created with objectId: ' + hoodob.id);
-                    res.json(hoodob);
-                },
-                error: function(hoodob, error) {
-                    // Execute any logic that should take place if the save fails.
-                    // error is a Parse.Error with an error code and message.
-                    alert('Failed to create new object, with error code: ' + error.message);
-                }
-            });
-
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
-
-
-}); //lookforbiz
-
-
-app.get('/biggeoset', function(req, res) {
-
-    Parse.Cloud.useMasterKey();
-
-    var hoods = Parse.Object.extend("neighborhood");
-    var query = new Parse.Query(hoods);
-
-    query.doesNotExist('geo');
-    //query.exists('gob');
-
-    query.limit(1000);
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-
-            /*
-            for (var i = 0; i < results.length; i++) {
-            var hd =   results[i];
-            console.log(" hood loop ::  "+ hd.get('name') );
-            var gson = hd.get('gob');
-
-            var lgeo = gson.geometry;
-
-            var point = new Parse.GeoPoint({latitude: parseFloat(lgeo.location.lat), longitude: parseFloat( lgeo.location.lng )});
-
-            hd.set('geo',point);
-
-            };
-
-
-
-             hoods.saveAll( results , {
-                       success: function (relations) {
-                           
-
-                           res.json( relations  );
-
-               },//usr biz savall
-                       error: function (relation, error) {
-                          res.json(relation);
-
-                       }
-
-                   });
-            */
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
-
-
-}); //lookforbiz
 
 
 app.get('/getzines', function(req, res) {
@@ -2473,38 +1929,7 @@ app.get('/getzines', function(req, res) {
 
 }); //getzines
 
-app.get('/tofill', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("Business");
-
-
-    var query = new Parse.Query(biz);
-
-    query.doesNotExist('ohours');
-    query.exists('place_id');
-    query.select(['ohours', 'business', 'place_id']);
-
-    query.limit(1000);
-
-
-    //query.count({
-    query.find({
-        success: function(fcounts) {
-            // The fcounts request succeeded. Show the fcounts
-
-            //res.send( fcounts.length+""+ JSON.stringify( fcounts ) );
-            res.send(fcounts);
-
-        },
-        error: function(error) {
-            // The request failed
-        }
-    });
-
-
-}); //lookforbiz
 
 
 app.get('/isfav/:uid/:bid', function(req, res) {
@@ -2661,82 +2086,6 @@ app.get('/getuserfav/:uid', function(req, res) {
 
 }); //getuserfav
 
-
-app.get('/bizsitemigetone', function(req, res) {
-
-    Parse.Cloud.useMasterKey();
-
-    var Biz = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(Biz);
-
-    query.doesNotExist('website');
-
-    query.exists('mobileAppObjectId');
-    query.limit(1);
-    //query.sort('business.business');
-    query.find({
-
-        success: function(fndbi) {
-            // The count request succeeded. Show the count
-            var fson = [];
-            var bi = fndbi[0];
-
-
-            var mid = bi.get('mobileAppObjectId');
-            var mc = bi.get('marketCode');
-
-            console.log(bi.get('business') + " bi name");
-            Parse.Cloud.httpRequest({
-                url: 'https://api.parse.com/1/functions/getsite',
-                method: "POST",
-                headers: {
-                    'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-                    'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-                },
-                body: JSON.stringify({ 'mid': mid, 'mc': mc }),
-
-
-            }).then(function(httpResponse) {
-                console.log('from mobdb' + httpResponse.text);
-
-                var ret = JSON.parse(httpResponse.text);
-
-                var mbi = ret.result;
-
-                bi.set('website', mbi.website);
-
-                bi.save(null, {
-
-                    success: function(business) {
-                        // Execute any logic that should take place after the object is saved.
-                        var msgstring = 'business linked';
-
-                        // alert('New object created with objectId: ' + userbusiness.id);
-                        res.json(business);
-                    },
-                    error: function(userbusiness, error) {
-                        // Execute any logic that should take place if the save fails.
-                        // error is a Parse.Error with an error code and message.
-                        alert('Failed to create new object, with error code: ' + error.message);
-                    }
-                }); // save urell 
-
-
-            }, function(httpResponse) {
-                console.error('Request failed with response code ' + httpResponse.status);
-            });
-
-
-        },
-        error: function(error) {
-            // The request failed
-        }
-
-    });
-
-
-}); //getuserfav
 
 
 var getnonce = function() {
@@ -3072,210 +2421,16 @@ app.get('/twitauthcall', function(req, res) {
 }); //lookforbiz
 
 
-app.get('/gettwitacc/:uid', function(req, res) {
 
-    Parse.Cloud.useMasterKey();
-
-    var uid = req.params.uid;
-
-    Parse.Cloud.httpRequest({
-        url: 'https://api.parse.com/1/functions/gettwitacc',
-        method: "POST",
-        headers: {
-            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-        },
-        body: JSON.stringify({ 'uid': uid }),
-
-
-    }).then(function(httpResponse2) {
-        console.log(httpResponse2.text);
-
-        //console.log(" is this it:: "+ JSON.stringify( params ) );
-
-        var result = JSON.parse(httpResponse2.text).result;
-
-        //var sres = {};
-        //sres.requestToken = result.twittoken;
-        //res.redirect('grva://twitauthcomplete/');
-        res.json(httpResponse2.text);
-
-
-    }, function(httpResponse2) {
-        console.error('Request failed with response code ' + httpResponse2.status);
-    });
-
-
-}); //lgettwitauth
-
-
-app.get('/lookforbiz/:email', function(req, res) {
-
-    Parse.Cloud.useMasterKey();
-
-    var biz = Parse.Object.extend("Business");
-
-
-    var query = new Parse.Query(biz);
-    query.equalTo('email', req.param('email'));
-
-    query.limit(1000);
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            console.log(JSON.stringify(error) + "   ::: " + error);
-        }
-    });
-
-}); //lookforbiz
-
-
-app.get('/placehoods/:pack', function(req, res) {
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    Parse.Cloud.useMasterKey();
-
-    var pack = req.params.pack;
-
-    var packray = JSON.parse(JSON.parse(pack));
-
-    console.log(" first hit" + packray.length);
-
-    var back = {};
-    var keys = []
-    for (var key in packray[0]) {
-        if (packray[0].hasOwnProperty(key)) {
-            keys.push(key)
-            console.log("thisis akey" + key);
-        }
-    }
-
-
-    var newfs = [];
-    var hoods = Parse.Object.extend("neighborhood");
-
-    for (var i = 0; i < packray.length; i++) {
-        //console.log("prx :"+JSON.stringify( packray[i]) );
-
-        var pr = packray[i];
-
-        var f0 = new hoods();
-
-        f0.set('state', pr.o.state);
-
-        f0.set('name', pr.o.hood);
-
-        newfs.push(f0);
-
-    };
-
-    back.l = packray.length;
-
-    back.shoot = packray;
-
-    hoods.saveAll(newfs, {
-        success: function(relations) {
-
-            res.json(back);
-
-        }, //usr biz savall
-        error: function(relation, error) {
-            res.json(relation);
-
-        }
-
-    });
-}); //new farms
-
-
-/*
-app.get('/newfarms/:pack', function ( req, res) {
- 
-     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-  Parse.Cloud.useMasterKey();
-
-
-var pack = req.params.pack;
-
-var packray = JSON.parse(pack);
-
-var back = {};
-var keys = []
-for (var key in packray[0]) {
-  if (packray[0].hasOwnProperty(key)) {  
-keys.push(key)
-   console.log("thisis akey"+key);
-  }
-}
-
-
-var newfs = [];
-var farms = Parse.Object.extend("Farm");
-
-
-for (var i = 0; i < packray.length; i++) {
-  var pr = packray[i];
-
-var f0 = new farms(); 
-
-for (var j = 0; j < keys.length; j++) {
-  var k = keys[j];
-
-f0.set( k , pr[k] );
-
-};
-
-newfs.push( f0 );
-
-};
-
-back.l = packray.length;
-
-back.shoot = packray;
-
-var farms = Parse.Object.extend("testnewfarm");
-
- farms.saveAll( newfs, {
-           success: function (relations) {
-               
-
-               res.json( back    );
-
-
-
-   },//usr biz savall
-           error: function (relation, error) {
-              res.json(relation);
-
-           }
-     
-
-
-       });
-
-
-
-});//new farms
-*/
 
 
 app.get('/setfarmvis/:buy_id/:value', function(req, res) {
     //HZL12APiR3/2LGuAOwamN/true
-    var buys = Parse.Object.extend("BuysFrom");
 
     var buy_id = req.params.buy_id;
 
     console.log("buy_id" + buy_id);
 
-    var query = new Parse.Query("BuysFrom");
 
     var msg = "farm is now public";
 
@@ -3331,29 +2486,6 @@ function setres(msg, stuff) {
 }
 
 
-/*
-//quick new user if needed
-app.get('/newuser', function ( req, res) {
-   // get user relations base on uid
-var user = new Parse.User();
-user.set("username", "grow@greenease.co");
-user.set("password", "eatgreen");
-
-// other fields can be set just like with Parse.Object
-user.signUp(null, {
-  success: function(user) {
-res.json(user);
-
-    // Hooray! Let them use the app now.
-  },
-  error: function(user, error) {
-    // Show the error message somewhere and let the user try again.
-    alert("Error: " + error.code + " " + error.message);
-  }
-});
-
-});// crm user for email
-*/
 
 
 app.get('/quickfix', function(req, res) {
@@ -3387,7 +2519,6 @@ app.get('/quickfix', function(req, res) {
 
 app.get('/getlinkedbybid/:bid', function(req, res) {
     // get user relations base on uid
-    var myclass = Parse.Object.extend("userbusiness");
 
     var query = {
         bid: req.params.bid,
@@ -3603,46 +2734,6 @@ app.get('/getfabyname/:term', function(req, res) {
 }); // crm user for email
 
 
-app.get('/crmuforemail/:term', function(req, res) {
-    // look up users by email 
-    // originally used for user search bar 
-    // on the crm view
-    var myclass = Parse.Object.extend("User");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-
-    query.limit(200);
-
-    query.find({
-        success: function(results) {
-
-
-            var term = req.param('term');
-
-            var matches = [];
-
-            for (var i = 0; i < results.length; i++) {
-                var user = results[i];
-
-                if (user.get("email").toLowerCase().indexOf(term.toLowerCase()) > -1) {
-
-                    matches.push(user);
-
-                }
-
-            }; //f loop
-
-
-            res.json(matches);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-
-}); // crm user for email
 
 
 app.get('/newuserbusiness/:bid/:email', function(req, res) {
@@ -3727,7 +2818,6 @@ app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
 
     console.log("unlinked stuff   ::   " + req.param('bid') + "    " + req.param('email'))
 
-    var query = new Parse.Query("userbusiness");
     query.equalTo("bid", req.param('bid'));
     query.equalTo("email", req.param('email'));
 
@@ -3876,149 +2966,11 @@ app.get('/getnear/:lat/:lng', function(req, res) {
 });
 
 
-app.get('/getnear0/:lat/:lng', function(req, res) {
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    var lat = req.param('lat');
-    var lng = req.param('lng');
-
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var query = new Parse.Query("Business");
-
-    query.withinMiles('geo', point, 10);
-
-    // Interested in locations near user.
-    query.near("geo", point);
-    // Limit what could be a lot of points.
-    query.limit(100);
-    // Final list of objects
-    Parse.Cloud.useMasterKey();
-
-    query.find({
-        success: function(placesObjects) {
-
-            res.json(placesObjects);
-
-        },
-        error: function(user, error) {
-
-            res.json("no log");
-            // The login failed. Check error to see why.
-        }
-    });
 
 
-});
 
 
-app.get('/nulog', function(req, res) {
 
-
-    console.log("-------nulog------");
-    console.log(req.param('uname') + "   " + req.param('pass'));
-
-    Parse.User.logIn(req.param('uname'), req.param('pass'), {
-        success: function(user) {
-            console.log(" AND  ");
-
-            //user["ses"]=user._sessionToken;
-            var upay = { "user": user, "ses": user._sessionToken };
-
-            res.json(upay);
-
-            // Do stuff after successful login.
-        },
-        error: function(user, error) {
-
-            res.json("no log" + JSON.stringify(error));
-
-            // The login failed. Check error to see why.
-        }
-    });
-
-
-});
-
-
-app.get('/findlost', function(req, res) {
-
-    /*   
-     var currentUser = Parse.User.current();
-    console.log(" sethtest s: "+Parse.User.current()+"+");
-
-
-    if(currentUser!=null){
-
-    console.log(" here it is");
-
-    }
-    */
-
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-    query.doesNotExist('geo');
-    query.limit(1000);
-    query.find({
-        success: function(results) {
-
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-
-});
-
-
-app.get('/setgeo', function(req, res) {
-
-    var geo = JSON.parse(req.param('geo'));
-
-    var bid = req.param('bid');
-
-    console.log("this is neo" + bid);
-
-    //res.json("seth");
-
-    Parse.Cloud.useMasterKey();
-
-    var Business = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(Business);
-
-    query.get(bid, {
-
-        success: function(bi) {
-
-            var myResults = { result: "seth2" };
-
-            bi.set("geo", geo);
-
-            bi.save();
-
-            res.json(myResults);
-            // The object was retrieved successfully.
-        },
-        error: function(object, error) {
-            console.error(error);
-
-            //res.error(error.message);
-
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-        }
-    });
-
-
-});
 
 app.get('/fasearch/:term', function(req, res) {
 
@@ -4051,39 +3003,6 @@ app.get('/bizsearch/:term', function(req, res) {
 
 }); //"/bizsearch"
 
-app.get('/business/sort/geo/:lat/:lng', function(req, res) {
-
-
-    var lat = req.param('lat');
-    var lng = req.param('lng');
-    Parse.Cloud.useMasterKey();
-
-    var point = new Parse.GeoPoint({ latitude: parseFloat(lat), longitude: parseFloat(lng) });
-
-    var query = new Parse.Query("Business");
-
-    //query.withinMiles( 'geo' , point, 50 ); 
-
-    query.near("geo", point);
-    // Limit what could be a lot of points.
-    query.limit(200);
-
-    // Final list of objects
-    query.find({
-        success: function(po) {
-
-            res.json(po);
-
-        },
-        error: function(user, error) {
-            res.json("no log");
-
-            // The login failed. Check error to see why.
-        }
-    });
-
-
-});
 
 app.get('/getclosehoods/:lat/:lng', function(req, res) {
 
@@ -4203,21 +3122,6 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
 }); // get close hoods
 
 
-/*
- Parse.Cloud.httpRequest({
-            url:'https://graph.facebook.com/me?fields=email,name,username&access_token='+user.get('authData').facebook.access_token,
-            success:function(httpResponse){
-                console.log(httpResponse.data.name);
-                console.log(httpResponse.data.email);
-                 console.log(httpResponse.data.username);
-            },
-            error:function(httpResponse){
-                console.error(httpResponse);
-            }
-        });
-*/
-
-
 app.get('/faceauth/:token', function(req, res) {
 
     var tok = req.params.token;
@@ -4290,38 +3194,6 @@ app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
 }); //"/getbusiness"
 
 
-app.get('/business', function(req, res) {
-
-
-    /*   
-     var currentUser = Parse.User.current();
-    console.log(" sethtest s: "+Parse.User.current()+"+");
-
-
-    if(currentUser!=null){
-
-    console.log(" here it is");
-
-    }
-    */
-
-    var myclass = Parse.Object.extend("Business");
-    var query = new Parse.Query(myclass);
-    Parse.Cloud.useMasterKey();
-    query.limit(1000);
-    query.find({
-        success: function(results) {
-
-            res.json(results);
-
-        },
-        error: function(error) {
-            alert("Error when getting objects!");
-        }
-    });
-
-
-}); //"/getbusiness"
 
 
 app.get('/getSpecialsByBid/:bid', function(req, res) {
@@ -4372,61 +3244,7 @@ app.get('/ckses/:id', function(req, res) {
 });
 
 
-app.get('/ulog/:email/:pass', function(req, res) {
-    //alert(req.query.bid);
 
-    var email = req.params.email;
-
-    var pass = req.params.pass;
-
-    console.log("next:" + JSON.stringify(req.params));
-    Parse.Cloud.useMasterKey();
-
-    Parse.User.logIn(email, pass, {
-        success: function(user) {
-
-            var ses = user.getSessionToken();
-            console.log(" this is user :: " + user.getSessionToken());
-            /*
-            Parse.User.become(ses).then(function (user) {
-            */
-            user.set('authData', { "facebook": { "access_token": "CAAEFVtSNto4BAPx2YIOcpjr1p9MMl9drZC9ktiDPAzAJlShewARvNozN9HjViQU3QHLwjF1ZCFfngUNpdLg4vgY6IRLcXxGZAT03ax2PBoQFYFO6zU7EQKYDJ8DBgcPeoE6hHd0koZBtbI6OkZAoq8IG7VUmLK7aZC1ycjIoNBQZA9Ns3zS6qp6CJ4gfeFLlRDyav6rRJQ0mzo7bhNjqqJ16HnRkuJklkZBjCATda1dHYAZDZD", "expiration_date": "2016-02-27T19:18:08.098Z", "id": "10104136546335020" } });
-
-            user.save(null, {
-                success: function(relation) {
-
-                    res.json(user);
-
-
-                },
-                error: function(relation, error) {
-                    res.json(error.message);
-                }
-            });
-
-
-            /*
-
-              // The current user is now set to user.
-            }, function (error) {
-
-            res.json(error);
-
-              // The token could not be validated.
-            });
-            */
-            // Do stuff after successful login.
-        },
-        error: function(user, error) {
-
-            res.json(error);
-
-            // The login failed. Check error to see why.
-        }
-
-    });
-
-});
 
 /*
 {
@@ -4545,109 +3363,7 @@ app.post('/gipnl2', function(req, res) {
 }); //gipnl 2 
 
 
-app.get('/getFarms2', function(req, res) {
-    //alert(req.query.bid);
 
-    var a = req.query.bid;
-    var pop = req.query.pop
-
-    var BuysFrom = Parse.Object.extend("BuysFrom");
-    var Business = Parse.Object.extend("Business");
-
-    // Create a new instance of that class.
-    var business = new Business();
-    business.id = a;
-    console.log("Farm: ");
-    console.log(business);
-
-    var clear = true;
-
-
-    Parse.Cloud.useMasterKey();
-    var Business = Parse.Object.extend("Business");
-
-    var query = new Parse.Query(Business);
-
-    query.get(a, {
-        success: function(bi) {
-
-
-            var g = bi.get("paiddate");
-
-            console.log("g what " + g);
-
-            console.log("nums" + Date.parse(g) + "   and :  " + Date.parse(new Date()));
-
-            var paidmill = parseInt(Date.parse(g));
-
-            var now = parseInt(Date.parse(new Date()));
-
-            var diff = now - paidmill;
-
-            console.log(diff + "   so " + (diff > 2629743833));
-
-            if (diff > 2629743833) clear = false;
-
-            if (g == null) clear = false;
-
-            //if( pop!=null && ( pop.substring(0, 29) === "https://business.greenease.co" ) ){
-
-            //}
-
-            console.log("clear" + clear + "    :" + pop);
-
-            if (clear) {
-                var buysFromQuery = new Parse.Query(BuysFrom);
-                buysFromQuery.equalTo("business", business);
-                buysFromQuery.include("farm");
-                buysFromQuery.find({
-                    success: function(farms) {
-                        console.log("howdy");
-                        //console.log(farms);
-                        var toReturn = [];
-                        for (var i = 0; i < farms.length; i++) {
-                            // This does not require a network access.
-                            if (farms[i].get("farm") != null) {
-                                var theFarm = farms[i].get("farm");
-                                console.log("thefarm" + theFarm.name + "thefarm.id" + theFarm.id);
-                                var post = {
-                                    meat: farms[i].get("meat"),
-                                    dairy: farms[i].get("dairy"),
-                                    seafood: farms[i].get("seafood"),
-                                    produce: farms[i].get("produce"),
-                                    farm: { name: theFarm.get("name"), state_code: theFarm.get("state_code") }
-                                };
-                                toReturn.push(post);
-
-                            } //null check
-
-                            // console.log(post);
-
-                        }
-                        var myResults = { result: toReturn };
-                        // var longStuff = '{"result":[{"ACL":{"*":{"read":true,"write":true}},"__type":"Object","business":{"__type":"Pointer","className":"Business","objectId":"9e7rzwV6eY"},"className":"BuysFrom","createdAt":"2015-02-24T04:10:34.271Z","farm":{"__type":"Object","category":"Meats","category_meat":true,"className":"Farm","createdAt":"2014-12-29T15:29:28.964Z","name":"Red Row Farm ","objectId":"Hjc93gb8Mw","products":"Chicken Eggs","state":"Virginia","state_code":"VA","updatedAt":"2015-01-14T19:20:25.283Z","website":"http://redrowfarm.com"},"meat":true,"objectId":"YbeB8jRUNm","updatedAt":"2015-02-24T04:10:39.298Z"}';
-                        res.json(myResults);
-                        //response.success(farms);
-                    },
-                    error: function(error) {
-                        res.error(error.message);
-                    }
-                });
-            } //if clear
-
-
-        },
-        error: function(object, error) {
-            console.error(error);
-
-            //res.error(error.message);
-
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-        }
-    });
-
-}); // app.'getfarms'2
 
 
 app.get('/purhis2/:bid/:sort', function(req, res) {
@@ -4957,165 +3673,16 @@ var ADMINEMAIL = function(email) {
 
 }
 
-app.get('/biz_home', function(req, res) {
-    var currentUser = Parse.User.current();
-    console.log(currentUser);
-    console.log('jack!');
-    if (currentUser) {
-        res.render('biz_home', { name: currentUser.get("email") });
-    } else {
-        res.render('biz_home', { name: "no clue" });
-    }
-});
 /**
  * Route for business owner logins
  */
-app.get('/biz_login', function(req, res) {
-    res.render('biz_login', {});
-});
 
-app.post('/biz_login_authorize', function(req, res) {
-    //console.log("jack");
-    //console.log(req.body.username);
-    Parse.User.logIn(req.body.username, req.body.password, {
-        success: function(user) {
-            // Do stuff after successful login.
-            console.log("session is " + user.getSessionToken())
-            res.render('user_auth', { sessionToken: user.getSessionToken() });
-        },
-        error: function(user, error) {
-            // The login failed. Check error to see why.
-            res.render('error', { errorMessage: req.body.username });
-        }
-    });
-});
 
 /**
  * Login with GitHub route.
  *
  * When called, generate a request token and redirect the browser to GitHub.
  */
-app.get('/authorize', function(req, res) {
-
-    var tokenRequest = new TokenRequest();
-    // Secure the object against public access.
-    tokenRequest.setACL(restrictedAcl);
-    /**
-     * Save this request in a Parse Object for validation when GitHub responds
-     * Use the master key because this class is protected
-     */
-    tokenRequest.save(null, { useMasterKey: true }).then(function(obj) {
-        /**
-         * Redirect the browser to GitHub for authorization.
-         * This uses the objectId of the new TokenRequest as the 'state'
-         *   variable in the GitHub redirect.
-         */
-        res.redirect(
-            googleRedirectEndpoint + querystring.stringify({
-                client_id: googleClientId,
-                response_type: 'code',
-                redirect_uri: googleRedirectURI,
-                scope: 'openid profile email',
-                state: obj.id
-            })
-        );
-    }, function(error) {
-        // If there's an error storing the request, render the error page.
-        res.render('error', { errorMessage: 'Failed to save auth request.' });
-    });
-
-});
-
-/**
- * OAuth Callback route.
- *
- * This is intended to be accessed via redirect from GitHub.  The request
- *   will be validated against a previously stored TokenRequest and against
- *   another GitHub endpoint, and if valid, a User will be created and/or
- *   updated with details from GitHub.  A page will be rendered which will
- *   'become' the user on the client-side and redirect to the /main page.
- */
-app.get('/oauthCallback', function(req, res) {
-    var data = req.query;
-    var token;
-    /**
-     * Validate that code and state have been passed in as query parameters.
-     * Render an error page if this is invalid.
-     */
-    if (!(data && data.code && data.state)) {
-        res.render('error', { errorMessage: 'Invalid auth response received.' });
-        return;
-    }
-    var query = new Parse.Query(TokenRequest);
-    /**
-     * Check if the provided state object exists as a TokenRequest
-     * Use the master key as operations on TokenRequest are protected
-     */
-    Parse.Cloud.useMasterKey();
-    Parse.Promise.as().then(function() {
-        return query.get(data.state);
-    }).then(function(obj) {
-        // Destroy the TokenRequest before continuing.
-        return obj.destroy();
-    }).then(function() {
-        // Validate & Exchange the code parameter for an access token from GitHub
-        return getGoogleAccessToken(data.code);
-    }).then(function(access) {
-        /**
-         * Process the response from GitHub, return either the getGitHubUserDetails
-         *   promise, or reject the promise.
-         */
-        var githubData = access.data;
-        if (githubData && githubData.access_token && githubData.token_type) {
-            token = githubData.access_token;
-            console.log("Token is " + token);
-            return getGoogleUserDetails(token);
-        } else {
-            return Parse.Promise.error("Invalid access request.");
-        }
-    }).then(function(userDataResponse) {
-        /**
-         * Process the users GitHub details, return either the upsertGitHubUser
-         *   promise, or reject the promise.
-         */
-        // TODO: make this safe - http://stackoverflow.com/questions/45015/safely-turning-a-json-string-into-an-object
-        var userData = eval("(" + userDataResponse.text + ")");
-        console.log("Variable is " + userData);
-        console.log("Id is " + userData.id);
-        console.log("Condition is " + (userData && userData.id));
-        if (userData && userData.id) {
-            return upsertGoogleUser(token, userData);
-        } else {
-            return Parse.Promise.error("Unable to parse Google data: " + JSON.stringify(userDataResponse));
-        }
-    }).then(function(user) {
-        /**
-         * Render a page which sets the current user on the client-side and then
-         *   redirects to /main
-         */
-        res.render('store_auth', { sessionToken: user.getSessionToken() });
-    }, function(error) {
-        /**
-         * If the error is an object error (e.g. from a Parse function) convert it
-         *   to a string for display to the user.
-         */
-        if (error && error.code && error.error) {
-            error = error.code + ' ' + error.error;
-        }
-        res.render('error', { errorMessage: JSON.stringify(error) });
-    });
-
-});
-
-/**
- * Logged in route.
- *
- * JavaScript will validate login and call a Cloud function to get the users
- *   GitHub details using the stored access token.
- */
-app.get('/main', function(req, res) {
-    res.render('main', {});
-});
 
 /**
  * Attach the express app to Cloud Code to process the inbound request.
@@ -5128,186 +3695,7 @@ app.get('/main', function(req, res) {
  * Will not work a second time by design because the role is already created
  */
 
-Parse.Cloud.define('postwithtest', function(req, res) {
-    var currentUser = Parse.User.current();
-    //console.log("Current user is " + JSON.stringify(currentUser));
 
-    console.log("postwithtese befroe logout--" + JSON.stringify(currentUser));
-
-
-    Parse.User.logOut();
-
-    var currentUser = Parse.User.current();
-    console.log("postwithtese after logout--" + JSON.stringify(currentUser));
-
-
-    res.success("seth" + JSON.stringify(currentUser));
-
-
-});
-
-app.get('/getwithtest', function(req, res) {
-
-    var currentUser = Parse.User.current();
-    //console.log("Current user is " + JSON.stringify(currentUser));
-
-    console.log("postwithseth--" + JSON.stringify(currentUser));
-
-    res.json("seth" + JSON.stringify(currentUser));
-
-});
-
-
-Parse.Cloud.define('makeAdmin', function(req, res) {
-    var currentUser = Parse.User.current();
-    //console.log("Current user is " + JSON.stringify(currentUser));
-    if (currentUser && currentUser.get("email") == "jack@greenease.co") {
-        console.log("User is " + currentUser.get("email"));
-        /*var roleACL = new Parse.ACL();
-         roleACL.setPublicReadAccess(true);
-         var role = new Parse.Role("Administrator", roleACL);
-         role.getUsers().add(currentUser);
-         role.save();*/
-        var Role = Parse.Object.extend("_Role");
-        var query = new Parse.Query(Role);
-        query.equalTo("name", "Administrator");
-        query.first({
-            success: function(role) {
-                console.log("role is " + JSON.stringify(role));
-                console.log(role.getUsers());
-                role.getUsers().add(currentUser);
-
-                role.save();
-                console.log("Save is successful");
-                res.success(currentUser);
-            },
-            error: function(error) {
-                res.error(error.message);
-            }
-        })
-
-    } else {
-        res.error("User not logged in or not allowed:" + JSON.stringify(currentUser));
-    }
-});
-
-Parse.Cloud.define('sendAdminEmail', function(req, response) {
-    console.log("Params are: " + req.params);
-    var Mandrill = require('mandrill');
-    // TODO: don't save API key in source control
-    Mandrill.initialize(mandrillApiKey);
-    Mandrill.sendEmail({
-        message: {
-            text: req.params.mail + " (with unique id '" + req.params.userId + "') has requested that '" + req.params.farmName + "' be added to the database.",
-            subject: "Request to add farm with name: '" + req.params.farmName + "'",
-            from_email: req.params.mail,
-            from_name: req.params.mail,
-            to: [{
-                email: "seth@greenease.co",
-                name: "seth terry"
-            }, {
-                email: "vanessa@greenease.co",
-                name: "Vanessa Ferragut"
-            }]
-        },
-        async: true
-    }, {
-        success: function(httpResponse) {
-            console.log(httpResponse);
-            response.success("Email sent!");
-        },
-        error: function(httpResponse) {
-            console.error(httpResponse);
-            response.error("Uh oh, something went wrong");
-        }
-    });
-});
-
-
-/**
- * Allow admins to create user accounts for Business owners
- *
- * TODO: make this generic for all possible business users
- *
- */
-Parse.Cloud.define('createBusinessAccounts', function(request, response) {
-    Parse.Cloud.useMasterKey();
-    var queryRole = new Parse.Query(Parse.Role);
-    queryRole.equalTo('name', 'Administrator');
-    queryRole.first({
-        success: function(result) { // Role Object
-            var role = result;
-            var adminRelation = new Parse.Relation(role, 'users');
-            var queryAdmins = adminRelation.query();
-            queryAdmins.equalTo('objectId', Parse.User.current().id);
-            queryAdmins.first({
-                success: function(result) { // User Object
-                    var user = result;
-                    if (user) {
-                        var Business = Parse.Object.extend("Business");
-                        var query = new Parse.Query(Business);
-                        query.exists("owner_email");
-                        query.equalTo("owner_created", false);
-                        query.first({
-                            success: function(object) {
-                                var password = new Buffer(24);
-                                _.times(24, function(i) {
-                                    password.set(i, _.random(0, 255));
-                                });
-                                // Sign up the new user with a random password
-                                var user = new Parse.User();
-                                console.log("Owner email is " + object.get("owner_email"));
-                                user.set("username", object.get("owner_email"));
-                                user.set("password", password.toString('base64'));
-
-                                user.set("email", object.get("owner_email"));
-
-                                user.set("created_by_admin", true);
-                                user.signUp(null, {
-                                    success: function(user) {
-                                        var bizACL = new Parse.ACL();
-                                        bizACL.setWriteAccess(user, true);
-                                        bizACL.setWriteAccess(role, true);
-                                        bizACL.setReadAccess(user, true);
-                                        bizACL.setReadAccess(role, true);
-                                        object.setACL(bizACL);
-                                        var relation = object.relation("managedBy");
-                                        relation.add(user);
-                                        object.set("owner_created", true);
-                                        object.save();
-                                        response.success("User " + user.get("email") + " created and linked to " + object.get("business"));
-                                    },
-                                    error: function(user, error) {
-                                        // Show the error message somewhere and let the user try again.
-                                        alert("Error 001: " + error.code + " " + error.message);
-                                        response.error("Error 001: " + error.code + " " + error.message);
-                                    }
-                                });
-                            },
-                            error: function(error) {
-                                alert("Error 002: " + error.code + " " + error.message);
-                                response.error("Error 002: " + error.code + " " + error.message);
-                            }
-                        });
-
-                    } else {
-                        response.error('User not Administrator!');
-                    }
-                }
-            });
-        },
-        error: function(error) {
-            response.error("User not logged in or not administrator");
-        }
-    });
-
-});
-
-
-function qset() {
-
-
-}
 
 
 app.post('/usersignup', function(req, res) {
@@ -5404,94 +3792,6 @@ app.post('/usersignup', function(req, res) {
 }); //usersignup
 
 
-Parse.Cloud.define('setsignup', function(req, response) {
-    Parse.Cloud.useMasterKey();
-
-    var email = req.params.email;
-    var pass = req.params.password;
-    var queryRole = new Parse.Query(Parse.Role);
-    queryRole.equalTo('name', 'Administrator');
-    queryRole.first({
-        success: function(result) { // Role Object
-            var role = result;
-
-            var Business = Parse.Object.extend("Business");
-            var query = new Parse.Query(Business);
-            query.equalTo("owner_email", email);
-            query.first({
-                success: function(object) {
-
-                    // Sign up the new user with a random password
-                    var user = new Parse.User();
-                    user.set("username", object.get("owner_email"));
-                    user.set("password", pass);
-
-                    user.set("email", object.get("owner_email"));
-
-                    user.set("created_by_admin", true);
-                    user.signUp(null, {
-                        success: function(user) {
-                            var bizACL = new Parse.ACL();
-                            bizACL.setWriteAccess(user, true);
-                            bizACL.setWriteAccess(role, true);
-                            bizACL.setReadAccess(user, true);
-                            bizACL.setReadAccess(role, true);
-                            object.setACL(bizACL);
-                            var relation = object.relation("managedBy");
-                            relation.add(user);
-                            object.set("owner_created", true);
-                            object.save();
-
-                            console.log("User " + user.get("email") + " created and linked to " + object.get("business"));
-
-                            response.success("signup");
-                        },
-                        error: function(user, error) {
-                            // Show the error message somewhere and let the user try again.
-                            alert("Error 001: " + error.code + " " + error.message);
-                            response.error("Error 001: " + error.code + " " + error.message);
-                        }
-                    });
-                },
-                error: function(error) {
-                    alert("Error 002: " + error.code + " " + error.message);
-                    response.error("Error 002: " + error.code + " " + error.message);
-                }
-            });
-
-
-        },
-        error: function(error) {
-            response.error("User not logged in or not administrator");
-        }
-    });
-
-});
-
-
-Parse.Cloud.define('logout', function(request, response) {
-    //console.log("user is " + request.user.get("email"));
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        console.log("Logging out user...");
-        Parse.User.logOut();
-        console.log("Current user is now: " + Parse.User.current());
-        response.success("Success");
-    } else {
-        response.success("No user was logged in");
-    }
-});
-
-Parse.Cloud.define('getCurrentUser', function(request, response) {
-    console.log("user is " + request.user);
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        response.success(currentUser);
-    } else {
-        response.error("User not logged in or not allowed:" + JSON.stringify(currentUser));
-    }
-});
-
 
 app.get('/ckforUser/:email', function(req, res) {
 
@@ -5527,27 +3827,6 @@ app.get('/ckforUser/:email', function(req, res) {
 }); // ckforUser 
 
 
-app.get('/ckforUser2/:email', function(req, res) {
-    // get user relations base on uid
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    Parse.Cloud.run('sendintro', { 'email': req.params.email }, {
-
-        success: function(sendres) {
-            // ratings should be 4.5
-
-            res.json(sendres);
-
-        },
-        error: function(error) {
-            res.send(JSON.stringify(error));
-
-        }
-    });
-
-}); // ckforUser 
 
 app.post('/sendRequestAccessEmail', function(req, res) {
 
@@ -5833,73 +4112,6 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
 }); // add new purhis rec
 
 
-app.get('/newphrecs/:bid/:fid/:pros/:note/:milli', function(req, res) {
-    var newphray = [];
-
-
-    console.log("Adding purchase histroy record with data:");
-    console.log(res.params);
-
-    var newphs = JSON.parse(req.param('pros'));
-
-    var PurHis = Parse.Object.extend("PurchaseHistory");
-    var parseACL = new Parse.ACL();
-    parseACL.setPublicReadAccess(true);
-    // may need to add something incase
-    // some one adds a note or changes date but doesnot chang a product status 
-
-    for (var i = 0; i < newphs.length; i++) {
-
-        var phr = newphs[i];
-
-        var newrec = new PurHis({
-            ACL: parseACL
-        });
-
-        newrec.set("business", {
-            __type: "Pointer",
-            className: "Business",
-            objectId: req.param('bid'),
-            _id: req.param('bid')
-        });
-
-        newrec.set("farm", {
-            __type: "Pointer",
-            className: "Farm",
-            objectId: req.param('fid'),
-            _id: req.param('bid')
-
-        });
-
-        console.log("at rec creation   ::  " + phr.name + "   " + phr.value + "  :  ac  :  " + actioncode(phr.value));
-
-        newrec.set("actionCode", actioncode(phr.value));
-        newrec.set("category", phr.name);
-        newrec.set("note", req.param('note'));
-
-        var effectiveDate = new Date();
-
-        effectiveDate.setTime(parseFloat(req.param('milli')));
-
-        console.log("effective date is");
-        console.log(effectiveDate);
-        newrec.set("actionEffectiveDate", effectiveDate);
-        // save all    
-        newphray.push(newrec);
-
-    }; // new purhis rec loop
-
-    Parse.Object.saveAll(newphray, {
-        success: function(relation) {
-            res.json(relation);
-        },
-        error: function(relation, error) {
-            res.send(relation);
-
-        }
-    });
-
-}); // add new purhis rec
 
 function actioncode(bo) {
 
@@ -6004,435 +4216,6 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
 }); // sendfarmupdate
 
-/*
-app.get('/sendfaupdate/:bid/:fid/:pros', function(req,res) {
-    //alert(req.query.bid);
-  
-var prolist = JSON.parse( req.param('pros') );
-
-//var prolist = JSON.parse( "[{\"name\": \"meat\"}, {\"name\": \"produce\"}, {\"name\": \"seafood\", \"value\": true}, {\"name\": \"dairy\"}]" );
-
-console.log(req.param('pros')+"   prolist  "+prolist.length);
-
-console.log(req.param('bid')+"   prolist  "+req.param('fid'));
-
-        var buysFromQuery = new Parse.Query("BuysFrom");
-        buysFromQuery.equalTo("farm", {
-            __type: "Pointer",
-            className: "Farm",
-            objectId: req.param('fid')
-        });
-        buysFromQuery.equalTo("business", {
-            __type: "Pointer",
-            className: "Business",
-            objectId: req.param('bid')
-        });
-        buysFromQuery.first({
-            success: function (results) {
-                if (results) {
-                    console.log("found existing purchase record - returning it!  "+ JSON.stringify(  results ) );
-      
-var found = results;      
-
-               console.log("   big find :: "+ JSON.stringify(found ) );
-
-for (var i = 0; i < prolist.length; i++) {
-  var pro = prolist[i];
-console.log("  proloop 1 "+pro.name+"  : "+pro.value)
-found.set(pro.name,pro.value);
-
-};//pro loop
-
-                          results.save(null, {
-                        success: function (relation) {
-
-                            res.json({'msg':'Farm updated','rel':relation});
-                        },
-                        error: function (relation, error) {
-                            res.error(error.message);
-                        }
-                    });
-
-                }
-                else {
-                    console.log("No existing purchase record found - add one");
-                    // TODO: verify user is adding a purchase record for a farm he/she owns - right now this is handled on the client
-                    var BuysFrom = Parse.Object.extend("BuysFrom");
-                    var parseACL = new Parse.ACL();
-                    parseACL.setPublicReadAccess(true);
-                    parseACL.setPublicWriteAccess(true);
-                    var buysFrom = new BuysFrom({
-                        ACL: parseACL
-                    });
-                    buysFrom.set("business", {
-                        __type: "Pointer",
-                        className: "Business",
-                        objectId: req.param('bid')
-                    });
-                    buysFrom.set("farm", {
-                        __type: "Pointer",
-                        className: "Farm",
-                        objectId: req.param('fid')
-                    });
-
-
-for (var i = 0; i < prolist.length; i++) {
-  var pro = prolist[i];
-console.log("  proloop 2 "+pro.name+"  : "+pro.value)
-
-buysFrom.set(pro.name,pro.value);
-
-};//pro loop
-
-
-                    buysFrom.save(null, {
-                        success: function (relation) {
-
-
-                            res.json({'msg':'Farm updated','rel':relation});
-                        },
-                        error: function (relation, error) {
-                            res.error(error.message);
-                        }
-                    });
-                }
-            },
-            error: function (r_error) {
-                res.error("Couldn't check for existing purchase from record: " + r_error.message);
-            }
-        });
-
-///STOP STOP
-
-
-});// sendfarmupdate
-*/
-
-Parse.Cloud.define('addBuysFromRelationship', function(request, response) {
-    var currentUser = Parse.User.current();
-    console.log("seth addds buys from");
-
-    if (currentUser) {
-        // look for a record that already exists
-        var buysFromQuery = new Parse.Query("BuysFrom");
-        buysFromQuery.equalTo("farm", {
-            __type: "Pointer",
-            className: "Farm",
-            objectId: request.params.farmId
-        });
-        buysFromQuery.equalTo("business", {
-            __type: "Pointer",
-            className: "Business",
-            objectId: request.params.bizId
-        });
-        buysFromQuery.first({
-            success: function(results) {
-                if (results) {
-                    console.log("found existing purchase record - returning it!");
-                    response.success(results);
-                } else {
-                    console.log("No existing purchase record found - add one");
-                    // TODO: verify user is adding a purchase record for a farm he/she owns - right now this is handled on the client
-                    var BuysFrom = Parse.Object.extend("BuysFrom");
-                    var parseACL = new Parse.ACL();
-                    parseACL.setPublicReadAccess(true);
-                    parseACL.setPublicWriteAccess(true);
-                    var buysFrom = new BuysFrom({
-                        ACL: parseACL
-                    });
-                    buysFrom.set("business", {
-                        __type: "Pointer",
-                        className: "Business",
-                        objectId: request.params.bizId
-                    });
-                    buysFrom.set("farm", {
-                        __type: "Pointer",
-                        className: "Farm",
-                        objectId: request.params.farmId
-                    });
-                    buysFrom.save(null, {
-                        success: function(relation) {
-
-
-                            response.success(relation);
-                        },
-                        error: function(relation, error) {
-                            response.error(error.message);
-                        }
-                    });
-                }
-            },
-            error: function(r_error) {
-                response.error("Couldn't check for existing purchase from record: " + r_error.message);
-            }
-        });
-
-
-    } else {
-        response.error("You must be logged in!");
-    }
-});
-
-/**
- * Create a buying relationship
- */
-Parse.Cloud.define('updateBuysFromRelationship', function(request, response) {
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        var buysFromQuery = new Parse.Query("BuysFrom");
-        buysFromQuery.equalTo("objectId", request.params.buysFromId);
-        buysFromQuery.first({
-            success: function(buy_from) {
-                //console.log("Found existing purchase record JACK: " + JSON.stringify(buy_from));
-                if (request.params.category == "meat") {
-                    buy_from.set("meat", request.params.setTo);
-                } else if (request.params.category == "produce") {
-                    buy_from.set("produce", request.params.setTo);
-                } else if (request.params.category == "seafood") {
-                    buy_from.set("seafood", request.params.setTo);
-                } else if (request.params.category == "dairy") {
-                    buy_from.set("dairy", request.params.setTo);
-                } else {
-                    response.error("Unknown purchase category: " + request.params.category);
-                }
-                buy_from.save(null, {
-                    success: function(relation) {
-                        gBiz(buy_from.get("business").id);
-                        console.log("bfarms " + bfarms(buy_from.get("business").id));
-                        // Execute any logic that should take place after the object is saved.
-                        //alert('New object created with objectId: ' + relation.id);
-                        response.success(relation);
-                    },
-                    error: function(relation, error) {
-                        // Execute any logic that should take place if the save fails.
-                        // error is a Parse.Error with an error code and message.
-                        //alert('Failed to create new object, with error code: ' + error.message);
-                        response.error(error.message);
-                    }
-                });
-                //  response.success(request.params.buysFromId + " updated");
-            },
-            error: function(r_error) {
-                response.error("Add relationship with function 'addBuysFromRelationship' before setting purchase " +
-                    "categories: " + r_error.message);
-            }
-        });
-    } else {
-        response.error("You must be logged in!");
-    }
-});
-
-
-var bfarms = function(tbid) {
-        console.log("bfarms")
-
-        Parse.Cloud.run('getFarms', { bid: tbid }, {
-            success: function(farms) {
-                console.log("sethfarms" + farms);
-                response.success(farms);
-
-                return farms;
-            },
-            error: function(error) {}
-        });
-
-
-    } //bfarms
-
-
-var gBiz = function(tbid) {
-        Parse.Cloud.run('getBiz', { bid: tbid }, {
-            success: function(biz) {
-
-            },
-            error: function(error) {}
-        });
-    } //gBiz
-
-
-Parse.Cloud.define('testpay', function(request, response) {
-
-    console.log("testhitseth");
-    var currentUser = Parse.User.current();
-    // if(request.master){
-    response.success("free");
-
-
-});
-
-
-Parse.Cloud.define('lookfor', function(request, response) {
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        // if(request.master){
-        Parse.Cloud.useMasterKey();
-        var BusinessQuery = new Parse.Query("Business");
-        BusinessQuery.matches("business", request.params.qword, "i");
-        BusinessQuery.find({
-            success: function(businesses) {
-
-
-                response.success(businesses);
-            },
-            error: function(object, error) {
-                response.error(error.message);
-            }
-        });
-    }
-});
-
-
-Parse.Cloud.define('getBiz', function(request, response) {
-    // user does NOT have to be logged in! Because this will be on public web sites with anonymous users
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        if (!request.params.bid) {
-            response.error("You must provide a business id");
-        } else {
-
-            var BusinessQuery = new Parse.Query("Business");
-
-            BusinessQuery.get(request.params.bid, {
-                success: function(biz) {
-
-                    var buysFromQuery = new Parse.Query("BuysFrom");
-                    buysFromQuery.equalTo("business", biz);
-                    buysFromQuery.include("farm");
-                    buysFromQuery.find({
-                        success: function(farms) {
-
-                            var FarmsJson = PreparedFarmsJson(farms, biz.get("mobileAppObjectId"), biz.get("marketCode"), biz);
-
-                            handoff(FarmsJson);
-
-                            response.success(farms);
-
-                        },
-                        error: function(error) {
-                            response.error(error.message);
-                        }
-                    });
-                },
-                error: function(object, error) {
-                    response.error(error.message);
-
-                }
-            });
-
-
-        } // has business id 
-    } //user auth
-});
-
-function PreparedFarmsJson(farms, bid, mark, biz) {
-    var flist = new Array();
-    var meat = "";
-    var pro = "";
-    var sea = "";
-    var dairy = "";
-    console.log(" before  " + biz.get("business") + " :: drug " + biz.get("drug_free") + " :: raneg " + biz.get("free_range") + " :: grass " + biz.get("grass_fed") + "  sus :: " + biz.get("sustainable_seafood") + " :: org  " + biz.get("organic"));
-
-    var farmcerts = { drug: 0, range: 0, org: 0, grass: 0, sea: 0 };
-
-    for (var i = 0; i < farms.length; i++) {
-        var buy = farms[i];
-        var ifarm = buy.get("farm");
-        var im = buy.get("meat");
-        var id = buy.get("dairy");
-        var is = buy.get("seafood");
-        var ip = buy.get("produce");
-        var fname = ifarm.get("name");
-        var fst = ifarm.get("state_code");
-
-        var drugfree = ifarm.get("drug_free");
-        var freerange = ifarm.get("free_range");
-        var grassfed = ifarm.get("grass_fed");
-        var sussea = ifarm.get("sustainable_seafood");
-        var org = ifarm.get("organic");
-        var stillbuysfrom = false;
-
-        if (im) {
-
-            meat += fname + "(" + fst + ")" + ", ";
-            stillbuysfrom = true;
-        }
-
-        if (is) {
-            sea += fname + "(" + fst + ")" + ", ";
-            stillbuysfrom = true;
-        }
-
-        if (ip) {
-            pro += fname + "(" + fst + ")" + ", ";
-            stillbuysfrom = true;
-        }
-
-        if (id) {
-            dairy += fname + "(" + fst + ")" + ", ";
-            stillbuysfrom = true;
-        }
-
-        if (stillbuysfrom) {
-            console.log(ifarm.get("name") + "   drugfree: " + drugfree + " freerange::" + freerange + "   grassfed::" + grassfed + "  sussea:" + sussea + " organic:" + org);
-
-            if (drugfree) {
-                farmcerts.drug++;
-            }
-
-            if (freerange) {
-                farmcerts.range++;
-            }
-
-            if (grassfed) {
-                farmcerts.grass++;
-            }
-
-            if (sussea) {
-                farmcerts.sea++;
-            }
-
-            if (org) {
-                farmcerts.org++;
-            }
-
-        } //some business/farm relationships are still in the
-        // buys from but they don't have any of the farm category attibutes
-        //set == true, so that means they don't buy from a certain farm any more
-        //there for they don't have the certification anymore. 
-
-    } //farms reduce/cat loop
-
-
-    biz.set("drug_free", farmcerts.drug > 0);
-    biz.set("free_range", farmcerts.range > 0);
-    biz.set("grass_fed", farmcerts.grass > 0);
-    biz.set("sustainable_seafood", farmcerts.sea > 0);
-    biz.set("organic", farmcerts.org > 0);
-
-    console.log(" after  " + biz.get("business") + " :: drug " + biz.get("drug_free") + " :: raneg " + biz.get("free_range") + " :: grass " + biz.get("grass_fed") + "  sus :: " + biz.get("sustainable_seafood") + " :: org  " + biz.get("organic"));
-
-    Parse.Cloud.useMasterKey();
-    biz.save();
-
-
-    var rson = {
-        drug_free_meats: biz.get("drug_free"),
-        free_range: biz.get("free_range"),
-        grass_fed: biz.get("grass_fed"),
-        sustainable_seafood: biz.get("sustainable_seafood"),
-        organic: biz.get("organic"),
-        passid: bid,
-        mark_code: mark,
-        meat_farms: lstrip(meat),
-        pro_farms: lstrip(pro),
-        sea_farms: lstrip(sea),
-        dairy_farms: lstrip(dairy),
-
-    };
-
-    return rson;
-}
-
 
 function lstrip(word) {
     if (word.indexOf(",") > -1) word = word.substring(0, word.lastIndexOf(","));
@@ -6440,198 +4223,6 @@ function lstrip(word) {
 }
 
 
-function handoff(tjson) {
-    //var set = {"passid":"3q3SC1cq4k","mark_code":"1"};
-
-    var set = JSON.stringify(tjson);
-
-    //'X-Parse-REST-API-Key': 'YzRBFRA2RiZQF2p4lhqnufmXUeirmR9RUqrwDM87',
-    Parse.Cloud.httpRequest({
-        url: 'https://api.parse.com/1/functions/UpdateBusinessFarms',
-        method: "POST",
-        headers: {
-            'X-Parse-Application-Id': 'NPk6q9X5zlhrc8srJvtM2LoNYS8K36G0fUF1eB8W',
-            'X-Parse-Master-Key': 'P1Ehr4dkjtpPYflqKxMxMmlT6Metx3NKoB2PuJuS'
-        },
-        body: JSON.stringify(tjson),
-
-
-    }).then(function(httpResponse) {
-        console.log(httpResponse.text);
-    }, function(httpResponse) {
-        console.error('Request failed with response code ' + httpResponse.status);
-    });
-
-}
-
-
-Parse.Cloud.define('getFarms', function(request, response) {
-    // user does NOT have to be logged in! Because this will be on public web sites with anonymous users
-    if (!request.params.bid) {
-        response.error("You must provide a business id");
-    } else {
-        var BuysFrom = Parse.Object.extend("BuysFrom");
-        var Business = Parse.Object.extend("Business");
-
-        // Create a new instance of that class.
-        var business = new Business();
-        business.id = request.params.bid;
-        console.log("Farm: ");
-        console.log(business);
-
-        var buysFromQuery = new Parse.Query(BuysFrom);
-        buysFromQuery.equalTo("business", business);
-        buysFromQuery.include("farm");
-        buysFromQuery.find({
-            success: function(farms) {
-                response.success(farms);
-            },
-            error: function(error) {
-                response.error(error.message);
-            }
-        });
-    }
-});
-
-/**
- * Cloud function which will load a user's accessToken from TokenStorage and
- * request their details from GitHub for display on the client side.
- */
-Parse.Cloud.define('getGoogleData', function(request, response) {
-    if (!request.user) {
-        return response.error('Must be logged in.');
-    }
-    var query = new Parse.Query(TokenStorage);
-    query.equalTo('user', request.user);
-    query.ascending('createdAt');
-    Parse.Promise.as().then(function() {
-        return query.first({ useMasterKey: true });
-    }).then(function(tokenData) {
-        if (!tokenData) {
-            return Parse.Promise.error('No Google User data found.');
-        }
-        return getGoogleUserDetails(tokenData.get('accessToken'));
-    }).then(function(userDataResponse) {
-        console.log('jack');
-        console.log(userDataResponse);
-        var userData = userDataResponse.data;
-        response.success(userData);
-    }, function(error) {
-        response.error(error);
-    });
-});
-
-/**
- * This function is called when GitHub redirects the user back after
- *   authorization.  It calls back to GitHub to validate and exchange the code
- *   for an access token.
- */
-var getGoogleAccessToken = function(code) {
-    var body = querystring.stringify({
-        client_id: googleClientId,
-        client_secret: googleClientSecret,
-        code: code,
-        grant_type: 'authorization_code',
-        redirect_uri: googleRedirectURI
-    });
-    return Parse.Cloud.httpRequest({
-        method: 'POST',
-        url: googleValidateEndpoint,
-        headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'Parse.com Cloud Code'
-        },
-        body: body
-    });
-}
-
-/**
- * This function calls the githubUserEndpoint to get the user details for the
- * provided access token, returning the promise from the httpRequest.
- */
-var getGoogleUserDetails = function(accessToken) {
-    return Parse.Cloud.httpRequest({
-        method: 'GET',
-        url: googleUserEndpoint,
-        params: { access_token: accessToken },
-        headers: {
-            'User-Agent': 'Parse.com Cloud Code'
-        }
-    });
-}
-
-/**
- * This function checks to see if this GitHub user has logged in before.
- * If the user is found, update the accessToken (if necessary) and return
- *   the users session token.  If not found, return the newGitHubUser promise.
- */
-var upsertGoogleUser = function(accessToken, githubData) {
-    var query = new Parse.Query(TokenStorage);
-    query.equalTo('googleId', githubData.id);
-    query.ascending('createdAt');
-    // Check if this githubId has previously logged in, using the master key
-    return query.first({ useMasterKey: true }).then(function(tokenData) {
-        // If not, create a new user.
-        if (!tokenData) {
-            return newGoogleUser(accessToken, githubData);
-        }
-        // If found, fetch the user.
-        var user = tokenData.get('user');
-        return user.fetch({ useMasterKey: true }).then(function(user) {
-            // Update the accessToken if it is different.
-            if (accessToken !== tokenData.get('accessToken')) {
-                tokenData.set('accessToken', accessToken);
-            }
-            /**
-             * This save will not use an API request if the token was not changed.
-             * e.g. when a new user is created and upsert is called again.
-             */
-            return tokenData.save(null, { useMasterKey: true });
-        }).then(function(obj) {
-            // Return the user object.
-            return Parse.Promise.as(user);
-        });
-    });
-}
-
-/**
- * This function creates a Parse User with a random login and password, and
- *   associates it with an object in the TokenStorage class.
- * Once completed, this will return upsertGitHubUser.  This is done to protect
- *   against a race condition:  In the rare event where 2 new users are created
- *   at the same time, only the first one will actually get used.
- */
-var newGoogleUser = function(accessToken, githubData) {
-    var user = new Parse.User();
-    // Generate a random username and password.
-    var username = new Buffer(24);
-    var password = new Buffer(24);
-    var primaryEmail;
-    _.times(24, function(i) {
-        username.set(i, _.random(0, 255));
-        password.set(i, _.random(0, 255));
-    });
-    user.set("username", username.toString('base64'));
-    user.set("password", password.toString('base64'));
-    for (var i = 0; i < githubData.emails.length; i++) {
-        if (githubData.emails[i].type === 'account') primaryEmail = githubData.emails[i].value;
-    }
-    user.set("email", primaryEmail);
-    // Sign up the new User
-    return user.signUp().then(function(user) {
-        // create a new TokenStorage object to store the user+GitHub association.
-        var ts = new TokenStorage();
-        ts.set('googleId', githubData.id);
-        ts.set('googleLogin', githubData.login);
-        ts.set('accessToken', accessToken);
-        ts.set('user', user);
-        ts.setACL(restrictedAcl);
-        // Use the master key because TokenStorage objects should be protected.
-        return ts.save(null, { useMasterKey: true });
-    }).then(function(tokenStorage) {
-        return upsertGoogleUser(accessToken, githubData);
-    });
-}
 
 
 /********************************************************************************************************/

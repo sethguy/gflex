@@ -358,7 +358,23 @@ var spActionLine = function(special) {
 
                     el('span').inn('users redeemed : ' + res.length)
 
-                )
+                ).async({
+                    id: 'getBusinessInfo',
+                    url: getbibyIdUrl.concat('/' + special.bid),
+                    drop: function(res, dio) {
+
+                        dio.pend(
+
+                            el('span').inn(res.business)
+
+                        ).pend(
+
+                            el('span').inn(res.address)
+
+                        )
+
+                    }
+                })
 
             }
         })
@@ -626,7 +642,7 @@ var greenMapForm = function(bi) {
 
                     mF.clearMarkers();
 
-                     mF.addMarker( new google.maps.LatLng( event.latLng.lat(), event.latLng.lng() )   );
+                    mF.addMarker(new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()));
 
                 }, 900)
 
