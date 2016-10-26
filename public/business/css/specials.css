@@ -21,17 +21,27 @@
     display: none;
 }
 
-.spLine{
+.specialsFade {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    background-color: white;
+    opacity: .8;
+    display: none;
+}
 
+.spLine {
     position: relative;
     display: flex;
     justify-content: center;
 }
 
-.spLine span{
+.spLine span {
     position: relative;
     margin: 10px;
-
 }
 
 #sp-scroll {

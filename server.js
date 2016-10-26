@@ -267,7 +267,6 @@ var sense = function(table, terms, ops, calli) {
 
     } //getby
 
-
 app.get('/mailtest/:toemail', function(req, res) {
 
     var toemail = req.params.toemail
@@ -299,7 +298,6 @@ app.get('/mailtest/:toemail', function(req, res) {
 
 });
 
-
 app.get('/flight', function(req, res) {
 
 
@@ -308,7 +306,6 @@ app.get('/flight', function(req, res) {
 
 
 });
-
 
 app.get('/spactions', function(req, res) {
 
@@ -374,6 +371,7 @@ app.get('/createDayHoursList', function(req, res) {
         var bilist = msg.docs;
 
         var smalllist = [];
+
         bilist.forEach(function(bi) {
 
             bi.hourList = [];
@@ -401,13 +399,6 @@ app.get('/createDayHoursList', function(req, res) {
             });
 
         })
-
-        /*res.json(bilist.map(function(bi){
-
-                return bi.hourList;
-
-        }))*/
-
 
     }))
 
@@ -769,7 +760,6 @@ app.get('/gtwit', function(req, res) {
 
 });
 
-
 app.get('/f2', function(req, res) {
 
     res.setHeader('Content-Type', 'text/html');
@@ -790,7 +780,6 @@ app.get('/biPasswordReset', function(req, res) {
 });
 
 app.post('/biForgot', function(req, res) {
-
 
     var email = req.body.email;
 
@@ -1106,6 +1095,7 @@ app.get('/readngoMobileData', function(req, res) {
                     console.log(name);
                     console.log('');
                     var sertray = data.results;
+                    console.log(' sert ray length', sertray.length)
                     var col = db.collection(name);
 
                     inmany(col, sertray);
@@ -1410,11 +1400,6 @@ app.get('/appface/:fbId/:acc', function(req, res) {
 }); //get newbiz
 
 
-
-
-
-
-
 app.get('/ckUserForSpAction/:ckSet', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -1601,7 +1586,7 @@ app.get('/removebisug/:bio', function(req, res) {
 
 
 app.get('/getbisugs', function(req, res) {
-    
+
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -1725,9 +1710,9 @@ app.post('/newbiz', function(req, res) {
     var prelo = biob.geo;
 
     //console.log('bi hours list',)
-    if(biob.hourList )biob.hourList = JSON.parse(biob.hourList)
+    if (biob.hourList) biob.hourList = JSON.parse(biob.hourList)
     else biob.hourList = [];
-    
+
     if (biob.geo && biob.geo.lat && biob.geo.lng) biob.geoPoint = biob.geoPoint || { type: "Point", coordinates: [prelo.lng, prelo.lat] }
 
     biob.geo = null;
@@ -3008,7 +2993,7 @@ app.get('/getclosehoods/:lat/:lng', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
+    console.log('here')
     var lat = req.param('lat');
     var lng = req.param('lng');
 
@@ -3315,7 +3300,7 @@ app.post('/gipnl2', function(req, res) {
 
     req.body.cmd = "_notify-validate";
 
-    var urlstring = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+    var urlstring = "https://www.paypal.com/cgi-bin/webscr";
 
     request.post({ url: urlstring, form: req.body }, function(err, httpResponse, body) {
 

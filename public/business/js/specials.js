@@ -86,6 +86,11 @@ var getSpecialsList = function() {
 
         grabstuff(listUrl, function(res) {
 
+                get('specialsFade').stProps({
+                    zIndex: '-1',
+                    display: 'none'
+                })
+
                 get('spListTab').inn('').pendray(res, function(spe, dex, ray) {
 
                     return el('tr').cl('spListlet')
@@ -165,9 +170,16 @@ var getSpecialsList = function() {
 var deleteSpecial = function(spe) {
 
 
+    get('specialsFade').stProps({
+        zIndex: '99',
+        display: 'block'
+    })
+
     div().async({
         url: deleteSpecialUrl + '/' + spe._id,
         drop: function(res) {
+
+
             console.log(res);
             getSpecialsList();
 
@@ -613,7 +625,6 @@ var closeSpecialsModals = function() {
 
 var sendSpecial = function() {
 
-
         var specialToSend = {
 
             _id: get('specialModal').spe ? get('specialModal').spe._id : null,
@@ -631,7 +642,17 @@ var sendSpecial = function() {
 
         var url = sendSpecialUrl + '/' + encodeURIComponent(JSON.stringify(specialToSend));
 
+            get('specialsFade').stProps({
+                zIndex: '99',
+                display: 'block'
+            })
+
         grabstuff(url, function(res) {
+
+            get('specialsFade').stProps({
+                zIndex: '-1',
+                display: 'none'
+            })
 
                 get('sp-bi-title').value = "";
                 get('sp-terms').value = "";

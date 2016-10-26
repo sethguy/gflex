@@ -1,0 +1,480 @@
+{ "results": [
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "O8uKmKAB4U"
+        },
+        "bid": "O8uKmKAB4U",
+        "createdAt": "2015-12-14T23:37:55.056Z",
+        "email": "glensmarket@gmail.com",
+        "objectId": "01pbFyQ1tU",
+        "updatedAt": "2015-12-14T23:38:06.224Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "LpqpSDvGR4"
+        },
+        "bid": "LpqpSDvGR4",
+        "createdAt": "2015-12-17T15:08:13.683Z",
+        "email": "andrew@cookshopny.com",
+        "linked": true,
+        "objectId": "1T8JZMV4Ou",
+        "updatedAt": "2015-12-17T15:08:13.683Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "YyNmtTI3KW"
+        },
+        "bid": "YyNmtTI3KW",
+        "createdAt": "2015-12-17T15:15:05.175Z",
+        "email": "vferragut@gmail.com",
+        "linked": false,
+        "objectId": "1XgupqV8fB",
+        "uid": "c9a2Fb9Kzg",
+        "updatedAt": "2016-07-17T19:37:36.513Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "lV1BYntZCT"
+        },
+        "bid": "lV1BYntZCT",
+        "createdAt": "2015-12-14T23:35:18.187Z",
+        "email": "vanessa@greenease.co",
+        "linked": true,
+        "objectId": "2iGCHdZIlf",
+        "updatedAt": "2015-12-17T15:06:14.288Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "Zux0q2XYbN"
+        },
+        "bid": "Zux0q2XYbN",
+        "createdAt": "2015-12-17T15:26:19.081Z",
+        "email": "panoramaatp@gmail.com",
+        "linked": true,
+        "objectId": "4I3WPilmXh",
+        "updatedAt": "2015-12-17T15:26:19.081Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "XqgrB1WUVr"
+        },
+        "bid": "XqgrB1WUVr",
+        "createdAt": "2016-05-26T21:53:17.870Z",
+        "email": "00sethen@gmail.com",
+        "linked": true,
+        "objectId": "CXD5cNpjKe",
+        "uid": "oTum0wurvQ",
+        "updatedAt": "2016-06-02T00:10:53.597Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "qr5w2QOjgh"
+        },
+        "bid": "qr5w2QOjgh",
+        "createdAt": "2015-12-14T23:39:43.847Z",
+        "email": "srossinsky@justsalad.com",
+        "linked": true,
+        "objectId": "DH7FCbwKik",
+        "updatedAt": "2015-12-14T23:39:43.847Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "6TkMeeoXOi"
+        },
+        "bid": "6TkMeeoXOi",
+        "createdAt": "2015-12-17T15:12:09.834Z",
+        "email": "josh@monumentlane.com",
+        "linked": true,
+        "objectId": "E3Zbmc0KH5",
+        "updatedAt": "2015-12-17T15:12:09.834Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "lRzPK0aeZv"
+        },
+        "bid": "lRzPK0aeZv",
+        "createdAt": "2015-12-14T23:40:40.797Z",
+        "email": "leith.hill@ellarysgreens.co",
+        "linked": true,
+        "objectId": "JWPLlh62St",
+        "updatedAt": "2015-12-14T23:40:40.797Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "evhlA8gpzs"
+        },
+        "bid": "evhlA8gpzs",
+        "createdAt": "2015-12-17T15:11:49.937Z",
+        "email": "iyovic76@gmail.com",
+        "linked": true,
+        "objectId": "KuMWIGtkAD",
+        "updatedAt": "2015-12-17T15:11:49.937Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "RYDcZZYpoi"
+        },
+        "bid": "RYDcZZYpoi",
+        "createdAt": "2016-05-26T21:56:59.851Z",
+        "email": "00sethen@gmail.com",
+        "linked": true,
+        "objectId": "OpjNijkE8g",
+        "uid": "oTum0wurvQ",
+        "updatedAt": "2016-06-02T00:10:53.596Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "2LGuAOwamN"
+        },
+        "bid": "2LGuAOwamN",
+        "createdAt": "2016-07-17T19:34:56.881Z",
+        "email": "jtvents@gmail.com",
+        "linked": true,
+        "objectId": "PjqNIep8RH",
+        "updatedAt": "2016-07-17T19:34:56.881Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "qdCCxvjXhJ"
+        },
+        "bid": "qdCCxvjXhJ",
+        "createdAt": "2015-12-17T15:13:00.856Z",
+        "email": "michelle@teaism.com",
+        "linked": true,
+        "objectId": "QTchpgm0GY",
+        "updatedAt": "2015-12-17T15:13:00.856Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "rxxqh624yN"
+        },
+        "bid": "rxxqh624yN",
+        "createdAt": "2016-07-17T19:36:04.232Z",
+        "email": "vferragut@gmail.com",
+        "linked": true,
+        "objectId": "Rh56hsWLUi",
+        "uid": "c9a2Fb9Kzg",
+        "updatedAt": "2016-07-17T19:37:36.513Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "LqLmpFVwm9"
+        },
+        "bid": "LqLmpFVwm9",
+        "createdAt": "2015-11-25T22:37:19.692Z",
+        "email": "seth@greenease.co",
+        "linked": false,
+        "objectId": "ScDiUzZ5Lq",
+        "uid": "",
+        "updatedAt": "2015-12-21T00:40:51.238Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "bmBTAj1Hqq"
+        },
+        "bid": "bmBTAj1Hqq",
+        "createdAt": "2015-12-20T20:17:49.276Z",
+        "email": "seth@greenease.co",
+        "linked": true,
+        "objectId": "V6rCWQVkhp",
+        "updatedAt": "2015-12-20T20:21:01.180Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "2LGuAOwamN"
+        },
+        "bid": "2LGuAOwamN",
+        "createdAt": "2015-12-30T19:53:09.900Z",
+        "email": "00sethen@gmail.com",
+        "linked": true,
+        "objectId": "VA92W9Q4iR",
+        "uid": "oTum0wurvQ",
+        "updatedAt": "2016-06-02T00:10:53.596Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "NdGz94pMPc"
+        },
+        "bid": "NdGz94pMPc",
+        "createdAt": "2015-12-17T15:18:00.662Z",
+        "email": "aphra@sallysmiddlename.com",
+        "linked": true,
+        "objectId": "VWwZqh7UEr",
+        "updatedAt": "2015-12-17T15:18:00.662Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "M3ZbxmZNjl"
+        },
+        "bid": "M3ZbxmZNjl",
+        "createdAt": "2015-12-14T23:40:10.070Z",
+        "email": "franco@barrio47.com",
+        "linked": true,
+        "objectId": "XxtsLG6RBX",
+        "updatedAt": "2015-12-14T23:40:10.070Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "bmBTAj1Hqq"
+        },
+        "bid": "bmBTAj1Hqq",
+        "createdAt": "2015-12-20T20:02:53.990Z",
+        "email": "isethguy@gmail.com",
+        "linked": true,
+        "objectId": "ZVoxhdo0OQ",
+        "updatedAt": "2015-12-20T20:02:53.990Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "rxxqh624yN"
+        },
+        "bid": "rxxqh624yN",
+        "createdAt": "2015-12-14T23:38:56.470Z",
+        "email": "carlos@coppisorganic.com",
+        "linked": true,
+        "objectId": "a1I15QLaH0",
+        "updatedAt": "2015-12-14T23:38:56.470Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "LNwJwsqurZ"
+        },
+        "bid": "LNwJwsqurZ",
+        "createdAt": "2015-12-17T15:11:09.445Z",
+        "email": "david@havenskitchen.com",
+        "linked": true,
+        "objectId": "b3qRJfIH0O",
+        "updatedAt": "2015-12-17T15:11:09.445Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "Ds6BDmYvky"
+        },
+        "bid": "Ds6BDmYvky",
+        "createdAt": "2015-12-14T23:37:10.246Z",
+        "email": "glensmarket@gmail.com",
+        "linked": true,
+        "objectId": "bftYKy6klP",
+        "updatedAt": "2015-12-17T15:07:27.137Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "AxcOdPBFzm"
+        },
+        "bid": "AxcOdPBFzm",
+        "createdAt": "2015-12-10T00:44:42.514Z",
+        "email": "isethguy@gmail.com",
+        "linked": true,
+        "objectId": "fHkePXTTzY",
+        "uid": "ne45W7MzvZ",
+        "updatedAt": "2015-12-11T23:27:27.468Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "Cu0AIrPBD9"
+        },
+        "bid": "Cu0AIrPBD9",
+        "createdAt": "2015-12-17T15:22:23.714Z",
+        "email": "manager@stompdelray.com",
+        "linked": true,
+        "objectId": "gBYYDZGobw",
+        "updatedAt": "2015-12-17T15:22:23.714Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "IvykSxn1gO"
+        },
+        "bid": "IvykSxn1gO",
+        "createdAt": "2015-12-17T15:28:05.009Z",
+        "email": "gareth@boundarystonedc.com",
+        "linked": true,
+        "objectId": "gxwTqa1l9U",
+        "updatedAt": "2015-12-17T15:28:05.009Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "9f0iTKUuaS"
+        },
+        "bid": "9f0iTKUuaS",
+        "createdAt": "2015-12-14T23:42:36.767Z",
+        "email": "jason@almondrestaurant.com",
+        "linked": true,
+        "objectId": "j8X2j9sZuF",
+        "updatedAt": "2015-12-14T23:42:36.767Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "2LGuAOwamN"
+        },
+        "bid": "2LGuAOwamN",
+        "createdAt": "2015-11-25T06:53:15.478Z",
+        "email": "isethguy@gmail.com",
+        "linked": true,
+        "objectId": "jGd1qa8MZf",
+        "uid": "ne45W7MzvZ",
+        "updatedAt": "2015-12-11T23:27:32.461Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "3vmvDEObo4"
+        },
+        "bid": "3vmvDEObo4",
+        "createdAt": "2015-12-17T15:21:00.988Z",
+        "email": "jlmarchbanks@gmail.com",
+        "linked": true,
+        "objectId": "kCK9899xhb",
+        "updatedAt": "2015-12-17T15:21:00.988Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "2LGuAOwamN"
+        },
+        "bid": "2LGuAOwamN",
+        "createdAt": "2015-12-09T01:48:13.852Z",
+        "email": "seth@greenease.co",
+        "linked": true,
+        "objectId": "kue99tYAgI",
+        "uid": "",
+        "updatedAt": "2015-12-21T00:40:49.542Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "lV1BYntZCT"
+        },
+        "bid": "lV1BYntZCT",
+        "createdAt": "2015-12-30T19:57:57.102Z",
+        "email": "00sethen@gmail.com",
+        "linked": false,
+        "objectId": "l07vhv2M9B",
+        "uid": "oTum0wurvQ",
+        "updatedAt": "2016-06-02T00:10:53.597Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "IvBf4S866D"
+        },
+        "bid": "IvBf4S866D",
+        "createdAt": "2015-12-14T23:41:10.092Z",
+        "email": "m.crabtree027@gmail.com",
+        "linked": true,
+        "objectId": "m9ldc5j9Ex",
+        "updatedAt": "2015-12-14T23:41:10.092Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "X5WVlJB32J"
+        },
+        "bid": "X5WVlJB32J",
+        "createdAt": "2015-12-17T15:12:26.041Z",
+        "email": "maxwell@thecoupedc.com",
+        "linked": true,
+        "objectId": "maYbyBCwd5",
+        "updatedAt": "2015-12-17T15:12:26.041Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "LqLmpFVwm9"
+        },
+        "bid": "LqLmpFVwm9",
+        "createdAt": "2015-12-10T00:42:06.279Z",
+        "email": "isethguy@gmail.com",
+        "linked": false,
+        "objectId": "nFNmGSjIvt",
+        "uid": "ne45W7MzvZ",
+        "updatedAt": "2015-12-15T01:31:51.311Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "YyNmtTI3KW"
+        },
+        "bid": "YyNmtTI3KW",
+        "createdAt": "2016-01-12T15:58:07.955Z",
+        "email": "vferragut@msn.com",
+        "linked": true,
+        "objectId": "oxgJAney9J",
+        "updatedAt": "2016-01-12T15:58:07.955Z"
+    },
+	{
+        "bi": {
+            "__type": "Pointer",
+            "className": "Business",
+            "objectId": "R2wXiIyKVd"
+        },
+        "bid": "R2wXiIyKVd",
+        "createdAt": "2015-12-17T15:21:14.549Z",
+        "email": "jlmarchbanks@gmail.com",
+        "linked": true,
+        "objectId": "zpCMcfVofC",
+        "updatedAt": "2015-12-17T15:21:14.549Z"
+    }
+] }
