@@ -1562,8 +1562,6 @@ app.get('/getbibyId/:id', function(req, res) {
 }); //"/getbusiness"
 
 
-
-
 app.get('/removebisug/:bio', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -1621,7 +1619,7 @@ app.get('/placeDetails/:place_id', function(req, res) {
 
     request(goUrl, function(error, response, body) {
 
-        res.json(body );
+        res.json(JSON.parse(body) );
 
         console.log(body);
     });
