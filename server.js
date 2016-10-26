@@ -452,6 +452,9 @@ app.get('/MigrateUserBusiness', function(req, res) {
 }); // MigrateUserBusiness
 
 
+
+
+
 app.get('/MigrateFixpurhis', function(req, res) {
 
     var terms = {};
@@ -1604,6 +1607,26 @@ app.get('/getbisugs', function(req, res) {
     })); // getby
 
 }); // getbisugs
+/*
+
+
+
+*/
+
+app.get('/placeDetails/:place_id', function(req, res) {
+
+    var place_id = req.params.place_id;
+    //'ChIJrTLr-GyuEmsRBfy61i59si0'
+    var goUrl = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyBSmGWirHVLVSTP-ctiUsQI4im4UR5-zqo';
+
+    request(goUrl, function(error, response, body) {
+
+        res.json(body );
+
+        console.log(body);
+    });
+
+}); //getSpecialsByBid
 
 app.get('/setbisugtoverified/:bio', function(req, res) {
 
