@@ -1619,7 +1619,7 @@ app.get('/placeDetails/:place_id', function(req, res) {
 
     request(goUrl, function(error, response, body) {
 
-        res.json(JSON.parse(body) );
+        res.json({ data: JSON.parse(body) });
 
         console.log(body);
     });
