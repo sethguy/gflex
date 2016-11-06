@@ -31,6 +31,22 @@
     align-items: center;
 }
 
+
+.pinPut{
+
+    z-index: 0;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 90%;
+    margin: 5px 5%;
+    background-color: white;
+    border: 0;
+    outline: 0;
+    font-size: 15px;
+    
+}
+
 .sbo {
     position: relative;
     height: 10%;

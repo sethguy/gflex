@@ -1073,6 +1073,48 @@ var inmany = function(colname, ray, calli) {
     } //in   many
 
 
+app.get('/icons', function(req, res) {
+
+    fs.readdir('./dcons', function(err, files) {
+
+        res.setHeader('Content-Type', 'text/html');
+
+        files.forEach(function(file) {
+
+            if (file.indexOf('DS') == -1) {
+
+                // var stream = fs.readFileSync('./mobileGdata/' + files[i], "utf8")
+                goStream(file)
+
+            }
+        })
+
+    }); // FS FILE READ
+
+}); //readngoo
+
+
+var goStream = function(file) {
+
+    var streamer = fs.createReadStream('./newlist/gcon.png');
+
+    var writeStream = fs.createWriteStream('./newlist/' + file);
+
+    // write gzipped image file
+    streamer.on('readable', function() {
+        // stream is ready to read
+        var data = streamer.read();
+        writeStream.write(data);
+    });
+
+    streamer.on('end', function() {
+        writeStream.end();
+    });
+
+
+}
+
+
 app.get('/readngoMobileData', function(req, res) {
 
     fs.readdir('./mobileGdata', function(err, files) {

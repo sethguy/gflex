@@ -595,7 +595,57 @@ var greenMapForm = function(bi) {
                 center: center || new google.maps.LatLng(geo.lat, geo.lng),
                 zoom: 13,
                 mapTypeControl: false,
-            }).resize()
+            }).pend(
+
+                el('input').cl('pinPut'), 'pinPut'
+
+            ).resize()
+
+            mF.map.controls[google.maps.ControlPosition.TOP_LEFT].push(mF.pinPut);
+
+            var options = { /*types: ['(regions)'] */ };
+
+            var autocomplete = new google.maps.places.Autocomplete(mF.pinPut);
+            // autocomplete.bindTo('bounds', map);
+
+            var infowindow = new google.maps.InfoWindow();
+
+            autocomplete.addListener('place_changed', function() {
+                infowindow.close();
+
+                autocomplete.bindTo('bounds', mF.map);
+
+                var place = autocomplete.getPlace();
+
+                var showPlace = function(place) {
+
+                        if (!place.geometry) {
+                            window.alert("Autocomplete's returned place contains no geometry");
+                            return;
+                        }
+
+                        // If the place has a geometry, then present it on a map.
+                       // if (place.geometry.viewport) {
+                          //  mF.map.fitBounds(place.geometry.viewport);
+                        //} else {
+                            mF.map.setCenter(place.geometry.location);
+                            mF.map.setZoom(15); // Why 17? Because it looks good.
+                       // }
+
+                        get('ebfgeo').value = JSON.stringify({
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng()
+                        });
+
+                        mF.clearMarkers();
+
+                        mF.addMarker(new google.maps.LatLng( place.geometry.location.lat() , place.geometry.location.lng() ) );
+
+                    } //showPlace
+
+                showPlace(place);
+
+            });
 
             if (bi && bi.geoPoint) {
 
@@ -638,7 +688,6 @@ var greenMapForm = function(bi) {
                         lat: event.latLng.lat(),
                         lng: event.latLng.lng()
                     });
-
 
                     mF.clearMarkers();
 
