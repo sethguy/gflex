@@ -1736,10 +1736,13 @@ app.post('/newbisug', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+
+
     mongoMsg(getby('Business', { "place_id": req.body.place_id }, {}, function(msg) {
 
 
-        if (msg.docs.length > 0) {
+        if (msg.docs.length > 0 && req.body.place_id && req.body.place_id.length>0) {
             res.json({
                 msg: "Already an existing business"
             });
