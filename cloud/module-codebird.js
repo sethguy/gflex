@@ -28,7 +28,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 
 /**
  * A simple wrapper for the Twitter API
@@ -37,8 +37,8 @@
  * @subpackage codebird-js
  */
 
-var Codebird = function () {
-/* jshint +W098 */
+var Codebird = function() {
+    /* jshint +W098 */
 
     /**
      * The OAuth consumer key of your registered app
@@ -93,21 +93,13 @@ var Codebird = function () {
     /**
      * Use JSONP for GET requests in IE7-9
      */
-    var _use_jsonp = (typeof navigator !== "undefined"
-        && typeof navigator.userAgent !== "undefined"
-        && (navigator.userAgent.indexOf("Trident/4") > -1
-            || navigator.userAgent.indexOf("Trident/5") > -1
-            || navigator.userAgent.indexOf("MSIE 7.0") > -1
-        )
-    );
+    var _use_jsonp = (typeof navigator !== "undefined" && typeof navigator.userAgent !== "undefined" && (navigator.userAgent.indexOf("Trident/4") > -1 || navigator.userAgent.indexOf("Trident/5") > -1 || navigator.userAgent.indexOf("MSIE 7.0") > -1));
 
     /**
      * Whether to access the API via a proxy that is allowed by CORS
      * Assume that CORS is only necessary in browsers
      */
-    var _use_proxy = (typeof navigator !== "undefined"
-        && typeof navigator.userAgent !== "undefined"
-    );
+    var _use_proxy = (typeof navigator !== "undefined" && typeof navigator.userAgent !== "undefined");
 
     /**
      * The Request or access token. Used to sign requests
@@ -132,7 +124,7 @@ var Codebird = function () {
      *
      * @return void
      */
-    var setConsumerKey = function (key, secret) {
+    var setConsumerKey = function(key, secret) {
         _oauth_consumer_key = key;
         _oauth_consumer_secret = secret;
     };
@@ -144,7 +136,7 @@ var Codebird = function () {
      *
      * @return void
      */
-    var setBearerToken = function (token) {
+    var setBearerToken = function(token) {
         _oauth_bearer_token = token;
     };
 
@@ -153,7 +145,7 @@ var Codebird = function () {
      *
      * @return string The version number
      */
-    var getVersion = function () {
+    var getVersion = function() {
         return _version;
     };
 
@@ -165,7 +157,7 @@ var Codebird = function () {
      *
      * @return void
      */
-    var setToken = function (token, secret) {
+    var setToken = function(token, secret) {
         _oauth_token = token;
         _oauth_token_secret = secret;
     };
@@ -177,8 +169,8 @@ var Codebird = function () {
      *
      * @return void
      */
-    var setUseProxy = function (use_proxy) {
-        _use_proxy = !! use_proxy;
+    var setUseProxy = function(use_proxy) {
+        _use_proxy = !!use_proxy;
     };
 
     /**
@@ -188,9 +180,9 @@ var Codebird = function () {
      *
      * @return void
      */
-    var setProxy = function (proxy) {
+    var setProxy = function(proxy) {
         // add trailing slash if missing
-        if (! proxy.match(/\/$/)) {
+        if (!proxy.match(/\/$/)) {
             proxy += "/";
         }
         _endpoint_proxy = proxy;
@@ -218,15 +210,15 @@ var Codebird = function () {
      *
      * @return object
      */
-    var _parse_str = function (str, array) {
+    var _parse_str = function(str, array) {
         var glue1 = "=",
             glue2 = "&",
             array2 = String(str).replace(/^&?([\s\S]*?)&?$/, "$1").split(glue2),
             i, j, chr, tmp, key, value, bracket, keys, evalStr,
-            fixStr = function (str) {
+            fixStr = function(str) {
                 return decodeURIComponent(str).replace(/([\\"'])/g, "\\$1").replace(/\n/g, "\\n").replace(/\r/g, "\\r");
             };
-        if (! array) {
+        if (!array) {
             array = this.window;
         }
 
@@ -301,7 +293,7 @@ var Codebird = function () {
      *
      * @return array $apimethods
      */
-    var getApiMethods = function () {
+    var getApiMethods = function() {
         var httpmethods = {
             GET: [
                 "account/settings",
@@ -460,7 +452,7 @@ var Codebird = function () {
      * @return mixed The API reply encoded in the set return_format
      */
 
-    var __call = function (fn, params, callback, app_only_auth) {
+    var __call = function(fn, params, callback, app_only_auth) {
         if (typeof params === "undefined") {
             params = {};
         }
@@ -474,15 +466,15 @@ var Codebird = function () {
                 app_only_auth = callback;
             }
         } else if (typeof callback === "undefined") {
-            callback = function () {};
+            callback = function() {};
         }
         switch (fn) {
-        case "oauth_authenticate":
-        case "oauth_authorize":
-            return this[fn](params, callback);
+            case "oauth_authenticate":
+            case "oauth_authorize":
+                return this[fn](params, callback);
 
-        case "oauth2_token":
-            return this[fn](callback);
+            case "oauth2_token":
+                return this[fn](callback);
         }
         // reset token when requesting a new token (causes 401 for signature error on 2nd+ requests)
         if (fn === "oauth_requestToken") {
@@ -562,7 +554,7 @@ var Codebird = function () {
      *
      * @return string The OAuth authenticate URL
      */
-    var oauth_authenticate = function (params, callback) {
+    var oauth_authenticate = function(params, callback) {
         if (typeof params.force_login === "undefined") {
             params.force_login = null;
         }
@@ -588,7 +580,7 @@ var Codebird = function () {
      *
      * @return string The OAuth authorize URL
      */
-    var oauth_authorize = function (params, callback) {
+    var oauth_authorize = function(params, callback) {
         if (typeof params.force_login === "undefined") {
             params.force_login = null;
         }
@@ -615,13 +607,13 @@ var Codebird = function () {
      * @return string The OAuth bearer token
      */
 
-    var oauth2_token = function (callback) {
+    var oauth2_token = function(callback) {
         if (_oauth_consumer_key === null) {
             console.warn("To obtain a bearer token, the consumer key must be set.");
         }
 
         if (typeof callback === "undefined") {
-            callback = function () {};
+            callback = function() {};
         }
 
         var post_fields = "grant_type=client_credentials";
@@ -645,7 +637,7 @@ var Codebird = function () {
             "Basic " + _base64_encode(_oauth_consumer_key + ":" + _oauth_consumer_secret)
         );
 
-        xml.onreadystatechange = function () {
+        xml.onreadystatechange = function() {
             if (xml.readyState >= 4) {
                 var httpstatus = 12027;
                 try {
@@ -678,7 +670,7 @@ var Codebird = function () {
      *
      * @return mixed The encoded data
      */
-    var _url = function (data) {
+    var _url = function(data) {
         if ((/boolean|number|string/).test(typeof data)) {
             return encodeURIComponent(data).replace(/!/g, "%21").replace(/'/g, "%27").replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/\*/g, "%2A");
         } else {
@@ -700,7 +692,7 @@ var Codebird = function () {
      *
      * @return string The hash
      */
-    var _sha1 = function () {
+    var _sha1 = function() {
         function n(e, b) {
             e[b >> 5] |= 128 << 24 - b % 32;
             e[(b + 64 >> 9 << 4) + 15] = b;
@@ -748,7 +740,7 @@ var Codebird = function () {
             return b;
         }
         var g = 8;
-        return function (e) {
+        return function(e) {
             var b = _url(_oauth_consumer_secret) + "&" + (null !== _oauth_token_secret ?
                 _url(_oauth_token_secret) : "");
             if (_oauth_consumer_secret === null) {
@@ -768,8 +760,8 @@ var Codebird = function () {
             c = "";
             for (a = 0; a < 4 * b.length; a += 3) {
                 for (d = (b[a >> 2] >> 8 * (3 - a % 4) & 255) << 16 | (b[a + 1 >> 2] >>
-                    8 * (3 - (a + 1) % 4) & 255) << 8 | b[a + 2 >> 2] >> 8 * (3 -
-                    (a + 2) % 4) & 255, e = 0; 4 > e; e++) {
+                        8 * (3 - (a + 1) % 4) & 255) << 8 | b[a + 2 >> 2] >> 8 * (3 -
+                        (a + 2) % 4) & 255, e = 0; 4 > e; e++) {
                     c = 8 * a + 6 * e > 32 * b.length ? c + "=" : c +
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
                         .charAt(d >> 6 * (3 - e) & 63);
@@ -795,7 +787,7 @@ var Codebird = function () {
      *
      * @return string The base64 representation
      */
-    var _base64_encode = function (a) {
+    var _base64_encode = function(a) {
         var d, e, f, b, g = 0,
             h = 0,
             i = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -837,7 +829,7 @@ var Codebird = function () {
      *
      * @return string The HTTP query
      */
-    var _http_build_query = function (e, f, b) {
+    var _http_build_query = function(e, f, b) {
         function g(c, a, d) {
             var b, e = [];
             if (a === true) {
@@ -863,12 +855,12 @@ var Codebird = function () {
             }
         }
         var d, c, h = [];
-        if (! b) {
+        if (!b) {
             b = "&";
         }
         for (c in e) {
             d = e[c];
-            if (f && ! isNaN(c)) {
+            if (f && !isNaN(c)) {
                 c = String(f) + c;
             }
             d = g(c, d, b);
@@ -886,7 +878,7 @@ var Codebird = function () {
      *
      * @return string The random string
      */
-    var _nonce = function (length) {
+    var _nonce = function(length) {
         if (typeof length === "undefined") {
             length = 10;
             //1856431163
@@ -909,14 +901,15 @@ var Codebird = function () {
      *
      * @return array The sorted keys
      */
-    var _ksort = function (input_arr) {
-        var keys = [], sorter, k;
+    var _ksort = function(input_arr) {
+        var keys = [],
+            sorter, k;
 
-        sorter = function (a, b) {
+        sorter = function(a, b) {
             var a_float = parseFloat(a),
-            b_float = parseFloat(b),
-            a_numeric = a_float + "" === a,
-            b_numeric = b_float + "" === b;
+                b_float = parseFloat(b),
+                a_numeric = a_float + "" === a,
+                b_numeric = b_float + "" === b;
             if (a_numeric && b_numeric) {
                 return a_float > b_float ? 1 : a_float < b_float ? -1 : 0;
             } else if (a_numeric && !b_numeric) {
@@ -944,7 +937,7 @@ var Codebird = function () {
      *
      * @return object clone The cloned object
      */
-    var _clone = function (obj) {
+    var _clone = function(obj) {
         var clone = {};
         for (var i in obj) {
             if (typeof(obj[i]) === "object") {
@@ -966,7 +959,7 @@ var Codebird = function () {
      *
      * @return string Authorization HTTP header
      */
-    var _sign = function (httpmethod, method, params, append_to_get) {
+    var _sign = function(httpmethod, method, params, append_to_get) {
         if (typeof params === "undefined") {
             params = {};
         }
@@ -977,10 +970,10 @@ var Codebird = function () {
             console.warn("To generate a signature, the consumer key must be set.");
         }
         var sign_params = {
-            consumer_key:     _oauth_consumer_key,
-            version:          "1.0",
-            timestamp:        Math.round(new Date().getTime() / 1000),
-            nonce:            _nonce(),
+            consumer_key: _oauth_consumer_key,
+            version: "1.0",
+            timestamp: Math.round(new Date().getTime() / 1000),
+            nonce: _nonce(),
             signature_method: "HMAC-SHA1"
         };
         var sign_base_params = {};
@@ -1004,9 +997,9 @@ var Codebird = function () {
             value = sign_base_params[key];
             sign_base_string += key + "=" + _url(value) + "&";
         }
-                        
+
         sign_base_string = sign_base_string.substring(0, sign_base_string.length - 1);
-        var signature    = _sha1(httpmethod + "&" + _url(method) + "&" + _url(sign_base_string));
+        var signature = _sha1(httpmethod + "&" + _url(method) + "&" + _url(sign_base_string));
 
         //console.log(httpmethod + "&" + _url(method) + "&" + _url(sign_base_string));
 
@@ -1015,7 +1008,7 @@ var Codebird = function () {
         keys = _ksort(params);
         var authorization = "";
         if (append_to_get) {
-            for(i = 0; i < keys.length; i++) {
+            for (i = 0; i < keys.length; i++) {
                 key = keys[i];
                 value = params[key];
                 authorization += key + "=" + _url(value) + "&";
@@ -1039,14 +1032,14 @@ var Codebird = function () {
      *
      * @return string The HTTP method that should be used
      */
-    var _detectMethod = function (method, params) {
+    var _detectMethod = function(method, params) {
         // multi-HTTP method endpoints
         switch (method) {
-        case "account/settings":
-        case "account/login_verification_enrollment":
-        case "account/login_verification_request":
-            method = params.length ? method + "__post" : method;
-            break;
+            case "account/settings":
+            case "account/login_verification_enrollment":
+            case "account/login_verification_request":
+                method = params.length ? method + "__post" : method;
+                break;
         }
 
         var apimethods = getApiMethods();
@@ -1065,7 +1058,7 @@ var Codebird = function () {
      *
      * @return bool Whether the method should be sent as multipart
      */
-    var _detectMultipart = function (method) {
+    var _detectMultipart = function(method) {
         var multiparts = [
             // Tweets
             "statuses/update_with_media",
@@ -1086,9 +1079,9 @@ var Codebird = function () {
      *
      * @return null|string The built multipart request body
      */
-    var _buildMultipart = function (method, params) {
+    var _buildMultipart = function(method, params) {
         // well, files will only work in multipart methods
-        if (! _detectMultipart(method)) {
+        if (!_detectMultipart(method)) {
             return;
         }
 
@@ -1121,8 +1114,7 @@ var Codebird = function () {
         var multipart_request = "";
         for (var key in params) {
             multipart_request +=
-                "--" + multipart_border + "\r\n"
-                + "Content-Disposition: form-data; name=\"" + key + "\"";
+                "--" + multipart_border + "\r\n" + "Content-Disposition: form-data; name=\"" + key + "\"";
             if (possible_files.indexOf(key) > -1) {
                 multipart_request +=
                     "\r\nContent-Transfer-Encoding: base64";
@@ -1141,7 +1133,7 @@ var Codebird = function () {
      *
      * @return bool Whether the method is defined in internal API
      */
-    var _detectInternal = function (method) {
+    var _detectInternal = function(method) {
         var internals = [
             "users/recommendations"
         ];
@@ -1155,7 +1147,7 @@ var Codebird = function () {
      *
      * @return bool Whether the method is defined in media API
      */
-    var _detectMedia = function (method) {
+    var _detectMedia = function(method) {
         var medias = [
             "media/upload"
         ];
@@ -1169,7 +1161,7 @@ var Codebird = function () {
      *
      * @return bool Whether the method is defined in old API
      */
-    var _detectOld = function (method) {
+    var _detectOld = function(method) {
         var olds = [
             "account/push_destinations/device"
         ];
@@ -1183,7 +1175,7 @@ var Codebird = function () {
      *
      * @return string The URL to send the request to
      */
-    var _getEndpoint = function (method) {
+    var _getEndpoint = function(method) {
         var url;
         if (method.substring(0, 5) === "oauth") {
             url = _endpoint_oauth + method;
@@ -1202,32 +1194,23 @@ var Codebird = function () {
      *
      * @return object The XMLHttpRequest object instance
      */
-    var _getXmlRequestObject = function () {
+    var _getXmlRequestObject = function() {
         var xml = null;
         // first, try the W3-standard object
-        if (typeof window === "object"
-            && window
-            && typeof window.XMLHttpRequest !== "undefined"
-        ) {
+        if (typeof window === "object" && window && typeof window.XMLHttpRequest !== "undefined") {
             xml = new window.XMLHttpRequest();
-        // then, try Titanium framework object
-        } else if (typeof Ti === "object"
-            && Ti
-            && typeof Ti.Network.createHTTPClient !== "undefined"
-        ) {
+            // then, try Titanium framework object
+        } else if (typeof Ti === "object" && Ti && typeof Ti.Network.createHTTPClient !== "undefined") {
             xml = Ti.Network.createHTTPClient();
-        // are we in an old Internet Explorer?
-        } else if (typeof ActiveXObject !== "undefined"
-        ) {
+            // are we in an old Internet Explorer?
+        } else if (typeof ActiveXObject !== "undefined") {
             try {
                 xml = new ActiveXObject("Microsoft.XMLHTTP");
             } catch (e) {
                 console.error("ActiveXObject object not defined.");
             }
-        // now, consider RequireJS and/or Node.js objects
-        } else if (typeof require === "function"
-            && require
-        ) {
+            // now, consider RequireJS and/or Node.js objects
+        } else if (typeof require === "function" && require) {
             // look for xmlhttprequest module
             try {
                 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -1259,7 +1242,7 @@ var Codebird = function () {
      * @return mixed The API reply, encoded in the set return_format
      */
 
-    var _callApi = function (httpmethod, method, params, multipart, app_only_auth, internal, callback) {
+    var _callApi = function(httpmethod, method, params, multipart, app_only_auth, internal, callback) {
         if (typeof params === "undefined") {
             params = {};
         }
@@ -1270,28 +1253,28 @@ var Codebird = function () {
             app_only_auth = false;
         }
         if (typeof callback !== "function") {
-            callback = function () {};
+            callback = function() {};
         }
         if (internal) {
-            params.adc            = "phone";
+            params.adc = "phone";
             params.application_id = 333903271;
         }
 
-        var url           = _getEndpoint(method);
+        var url = _getEndpoint(method);
         var authorization = null;
         var post_fields;
-        
-        
-        if(httpmethod == 'GET') {
-            
+
+
+        if (httpmethod == 'GET') {
+
             var url_with_params = url;
             if (JSON.stringify(params) !== "{}") {
                 url_with_params += "?" + _http_build_query(params);
             }
-            if (! app_only_auth) {
+            if (!app_only_auth) {
                 authorization = _sign(httpmethod, url, params);
             }
-            
+
             // append auth params to GET url for IE7-9, to send via JSONP
             if (_use_jsonp) {
                 //TODO:check main codebird logic
@@ -1304,20 +1287,20 @@ var Codebird = function () {
                     _endpoint_proxy
                 );
             }
-            
+
             console.log(httpmethod);
             console.log(authorization);
             console.log(params);
-            console.log(url_with_params);  
-            
+            console.log(url_with_params);
+
             return Parse.Cloud.httpRequest({
                 url: url_with_params,
-                headers: {                      
-                    'Authorization':  authorization,                      
+                headers: {
+                    'Authorization': authorization,
                 },
                 success: function(httpResponse) {
                     console.log(httpResponse.text);
-                callback(httpResponse);
+                    callback(httpResponse);
 
                 },
                 error: function(httpResponse) {
@@ -1326,26 +1309,26 @@ var Codebird = function () {
 
                 }
             });
-            
+
         } else {
-            
+
             if (_use_jsonp) {
                 console.warn("Sending POST requests is not supported for IE7-9.");
                 return;
             }
-            
+
             if (multipart) {
-                if (! app_only_auth) {
+                if (!app_only_auth) {
                     authorization = _sign(httpmethod, url, {});
                 }
                 params = _buildMultipart(method, params);
             } else {
-                if (! app_only_auth) {
+                if (!app_only_auth) {
                     authorization = _sign(httpmethod, url, params);
                 }
                 params = _http_build_query(params);
             }
-            
+
             //var authorization = _sign('POST', url, {}, true);                
             var post_fields = params;
 
@@ -1358,25 +1341,25 @@ var Codebird = function () {
                     _endpoint_proxy
                 );
             }
-                
-            if(multipart){
-                
+
+            if (multipart) {
+
                 console.log('multipart');
                 console.log(httpmethod);
                 console.log(authorization);
                 console.log(post_fields);
-                console.log(url);        
-                
+                console.log(url);
+
                 return Parse.Cloud.httpRequest({
                     method: httpmethod,
                     url: url,
                     headers: {
                         'Content-Type': 'multipart/form-data; boundary=',
-                        'Authorization':  authorization,
-                        'Expect' : ''
+                        'Authorization': authorization,
+                        'Expect': ''
                     },
                     body: post_fields,
-                    success: function(httpResponse) {      
+                    success: function(httpResponse) {
                         callback(httpResponse);
                         console.log(httpResponse.text);
                     },
@@ -1385,37 +1368,54 @@ var Codebird = function () {
                         console.error('Request failed with response code ' + httpResponse.status);
                     }
                 });
-                
+
             } else {
-                                
+
                 console.log(httpmethod);
                 console.log(authorization);
                 console.log(post_fields);
-                console.log(url); 
-                
-                return Parse.Cloud.httpRequest({
-                    method: httpmethod,
-                    url: url,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization':  authorization,
-                    },
-                    body: post_fields,
-                    success: function(httpResponse) {
-                        console.log(httpResponse.text);
-                                                           callback( httpResponse.text );
+                console.log(url);
 
-                    },
-                    error: function(httpResponse) {
-                        console.log(httpResponse);
-                        console.error('Request failed with response code ' + httpResponse.status);
-                                                     callback( httpResponse.text );
+                var request = require("request");
 
-                    }
-                });                
-            
+                return request.post({
+                            url: url,
+                            body: post_fields,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Authorization': authorization,
+                            }
+                        },
+                        function(err, httpResponse, body) {
+
+                            console.log('here')
+
+                            callback(body);
+
+                        })
+                    /*Parse.Cloud.httpRequest({
+                                        method: httpmethod,
+                                        url: url,
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'Authorization':  authorization,
+                                        },
+                                        body: post_fields,
+                                        success: function(httpResponse) {
+                                            console.log(httpResponse.text);
+                                                                               callback( httpResponse.text );
+
+                                        },
+                                        error: function(httpResponse) {
+                                            console.log(httpResponse);
+                                            console.error('Request failed with response code ' + httpResponse.status);
+                                                                         callback( httpResponse.text );
+
+                                        }
+                                    });  */
+
             }
-                        
+
         }
     };
 
@@ -1426,7 +1426,7 @@ var Codebird = function () {
      *
      * @return array|object The parsed reply
      */
-    var _parseApiReply = function (reply) {
+    var _parseApiReply = function(reply) {
         if (typeof reply !== "string" || reply === "") {
             return {};
         }
@@ -1443,7 +1443,7 @@ var Codebird = function () {
                 // since this only happens for errors,
                 // don't perform a full decoding
                 parsed.request = reply.match(/<request>(.*)<\/request>/)[1];
-                parsed.error   = reply.match(/<error>(.*)<\/error>/)[1];
+                parsed.error = reply.match(/<error>(.*)<\/error>/)[1];
             } else {
                 // assume query format
                 var elements = reply.split("&");

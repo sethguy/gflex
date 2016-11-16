@@ -2306,7 +2306,7 @@ app.get('/twitsign/:uid', function(req, res) {
     cb.__call(
         "oauth_requestToken", { oauth_callback: relLink + "twitauthcall" },
         function(reply, rate, err) {
-            console.log(' call callback fun');
+            console.log(' call callback fun',reply);
 
             if (err) {
                 console.log("error response or timeout exceeded" + err.error);
