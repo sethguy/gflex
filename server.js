@@ -44,9 +44,9 @@ var Signupurl = relLink + "?signup";
 //var databaseUri = 'mongodb://127.0.0.1:27017/newgreen';
 //db.auth('admin','SLIQk4Kja2Tn');
 
-//var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
+var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 
-var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
+//var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
 
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
@@ -261,7 +261,6 @@ var sense = function(table, terms, ops, calli) {
                 calli(msg);
 
             });
-
 
         }
 
@@ -962,7 +961,6 @@ app.post('/appPassword_reset', function(req, res) {
                 user = msg.docs[0];
 
                 bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
-
 
                     user.PasswordResetToken = null;
                     delete user.PasswordResetToken
@@ -1737,12 +1735,10 @@ app.post('/newbisug', function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-
-
     mongoMsg(getby('Business', { "place_id": req.body.place_id }, {}, function(msg) {
 
-
         if (msg.docs.length > 0 && req.body.place_id && req.body.place_id.length>0) {
+            
             res.json({
                 msg: "Already an existing business"
             });

@@ -206,7 +206,9 @@ function getbifromfields() {
             //bi.ohours.weekday_text = JSONbi.ohours.weekday_text)
 
     }
-    bi.geo = JSON.parse(get('adfgeo').value);
+
+    if(get('adfgeo').value && get('adfgeo').value.length>5)bi.geo = JSON.parse(get('adfgeo').value);
+    
     bi.place_id = get('adfplace_id').value;
 
     console.log(JSON.stringify(bi));
