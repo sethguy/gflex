@@ -144,7 +144,6 @@ function searchfarmsbyname(ele) {
 
                 }
 
-
                 if (word === ele.value) {
                     console.log('all clear');
                     get('fazultscon').inn("");
@@ -252,7 +251,6 @@ function firefarmselection(fa) {
     fillfarminfo(fa);
 
     setbuysfrom(fa);
-
 
 } //firebizselection
 

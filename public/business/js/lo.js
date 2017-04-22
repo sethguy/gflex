@@ -37,21 +37,10 @@ function hidelodiv() {
 
 
 function logout() {
-
-    get('adminbutton').prop('onmousedown', null);
-
-    var urlstring = PARSE_BASE_URL + "/" + logoutUrl;
+    get('adminbutton').prop('onmousedown', null);   
     get('adiv').bizlist = null;
-    console.log(urlstring);
-
     setCookie('user', null, 1);
-
-    postwithkeys(urlstring, function(stuff) {
-
         window.location.reload();
-
-    });
-
 } //logout
 
 function loginwithuser(user) {

@@ -27,6 +27,9 @@ var cb = new Codebird();
 var request = require("request");
 var saltRounds = 10;
 
+var npmAsync = require("async");
+
+
 var nodemailer = require('nodemailer');
 
 var mountPath = '/parse';
@@ -1737,8 +1740,8 @@ app.post('/newbisug', function(req, res) {
 
     mongoMsg(getby('Business', { "place_id": req.body.place_id }, {}, function(msg) {
 
-        if (msg.docs.length > 0 && req.body.place_id && req.body.place_id.length>0) {
-            
+        if (msg.docs.length > 0 && req.body.place_id && req.body.place_id.length > 0) {
+
             res.json({
                 msg: "Already an existing business"
             });
@@ -2305,7 +2308,7 @@ app.get('/twitsign/:uid', function(req, res) {
     cb.__call(
         "oauth_requestToken", { oauth_callback: relLink + "twitauthcall" },
         function(reply, rate, err) {
-            console.log(' call callback fun',reply);
+            console.log(' call callback fun', reply);
 
             if (err) {
                 console.log("error response or timeout exceeded" + err.error);
@@ -4165,10 +4168,31 @@ function actioncode(bo) {
     if (bo) return 1;
 
     return 0;
-} //action code 
+} //action code s
 
 
 app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
+
+    /*
+    sCheck at the end if the farm buys relations is 
+
+    (1) being edit or created
+
+    OR
+
+    (2) if being edited (dose it have any more farm products checked in the relationship)
+
+    when (1)
+
+    add the categories from farms to busines 
+
+    when (2)
+
+    remove the categories of the farm from the business
+
+    then re add all categories  from farms of  business
+
+    */
 
     console.log('sendfaupdate')
         //alert(req.query.bid);
@@ -4183,6 +4207,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
     var terms = { 'business._id': req.params.bid, 'farm._id': req.params.fid };
 
+
     mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
         console.log(JSON.stringify(msg.docs));
@@ -4194,30 +4219,30 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
             var found = docs[0];
 
-            console.log("   big find :: " + JSON.stringify(docs[0]));
+            console.log("big find :: " + JSON.stringify(docs[0]));
 
             for (var i = 0; i < prolist.length; i++) {
                 var pro = prolist[i];
-                console.log(" proloop 1 " + pro.name + "  : " + pro.value)
-                    //found.set(pro.name,pro.value);
+                console.log(" proloop 1 " + pro.name + "  : " + pro.value);
+                //found.set(pro.name,pro.value);
                 found[pro.name] = pro.value;
-
             }; //pro loop
+
             console.log('foundbuys rel', found)
 
             var fndbuys_id = found._id;
 
             delete found._id;
 
-
             updateDocumentbyid(msg.db, 'BuysFrom', fndbuys_id, found, function(sertresult) {
 
                 found._id = fndbuys_id;
 
+                updateBusinessCategoriesFromFarmUpdate(prolist, req.param('bid'), req.param('fid'))
+
                 res.json({ 'msg': 'Farm updated', 'rel': found });
 
             }); //updatedocuments
-
 
         } //if found at least one
         else {
@@ -4240,9 +4265,10 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
                 _id: req.param('fid')
             };
 
-
             for (var i = 0; i < prolist.length; i++) {
+
                 var pro = prolist[i];
+
                 console.log("  proloop 2 " + pro.name + "  : " + pro.value)
 
                 buysFrom[pro.name] = pro.value;
@@ -4250,6 +4276,8 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
             }; //pro loop
 
             sertobj('BuysFrom', buysFrom, function(msg) {
+
+                updateBusinessCategoriesFromFarmUpdate(prolist, req.param('bid'), req.param('fid'))
 
                 res.json({ 'msg': 'Farm updated', 'rel': msg.result });
 
@@ -4259,18 +4287,141 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
     }));
     ///STOP STOP
+}); //sendfarmupdate
+
+var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, farmId) {
+
+        console.log("the goods", {
+
+            updateList,
+            businessID,
+            farmId
+
+        })
+        var fcats = [
+
+            {
+
+                'name': 'Free Range',
+                'imgoff': 'freerange@2x.png',
+                'imgon': 'freerange_highlighted@2x.png',
+                'qstring': 'free_range'
+            },
 
 
-}); // sendfarmupdate
+            {
 
+                'name': 'Grass Fed',
+                'imgoff': 'grassfed@2x.png',
+                'imgon': 'grassfed_highlighted@2x.png',
+                'qstring': 'grass_fed'
+            },
+
+
+            {
+
+                'name': 'Drug Free Meats',
+                'imgoff': 'hormonefree@2x.png',
+                'imgon': 'hormonefree_highlighted@2X.png',
+                'qstring': 'drug_free'
+            },
+
+            {
+
+                'name': 'Organic',
+                'imgoff': 'organic@2x.png',
+                'imgon': 'organic_highlighted@2x.png',
+                'qstring': 'organic'
+            },
+
+            {
+
+                'name': 'Sustainable Seafood',
+                'imgoff': 'seafood@2x.png',
+                'imgon': 'seafood_highlighted@2x.png',
+                'qstring': "sustainable_seafood"
+            },
+
+
+        ];
+
+        npmAsync.waterfall([
+
+                function( callback ) {
+
+                    var asyncResultsPack = {
+
+                        farmResult: {},
+                        updateBusinessResult: {},
+                        updateBusinessSet:{}
+
+                    }
+
+                    var farmsTerms = { "_id": new ObjectId(farmId) }
+
+                    mongoMsg(
+
+                        getby('Farm', farmsTerms, {}, function(msg) {
+
+                            if (msg.err) {
+                                return callback(new Error("failed getting something:" + err.message));
+                            }
+
+                            if (!msg.docs || msg.docs.length == 0) {
+                                return callback(new Error(" no farm found "));
+                            }
+
+                            var farm = msg.docs[0]
+
+                            var catMap = fcats.filter((catItem) => farm[catItem.qstring]).map((catItem) => catItem.qstring)
+
+                            asyncResultsPack.farmResult = {
+
+                                farm,
+                                catMap
+
+                            }
+
+                            callback(null, asyncResultsPack);
+
+                        }));
+
+
+                },
+                function(asyncResultsPack, callback) {
+
+                    var updatebusinessFilter = { "_id": new ObjectId(businessID) }
+
+                    asyncResultsPack.farmResult.catMap.forEach((catItemName) => asyncResultsPack.updateBusinessSet[catItemName] = true)
+
+                    console.log("updateBusinessSet", asyncResultsPack.updateBusinessSet)
+
+                    mongoMsg(updatemany('Business', updatebusinessFilter, asyncResultsPack.updateBusinessSet , function(msg) {
+
+                         if (msg.err) {
+                             return callback(new Error("failed getting something:" + err.message));
+                         }
+
+                         asyncResultsPack.updateBusinessResult = msg;
+
+                         callback(null, asyncResultsPack);
+
+                     }));
+
+                }
+
+            ], function(err, asyncResultsPack) {
+
+                console.log("done", asyncResultsPack)
+
+            }) // donefunction
+
+    } //updateBusinessCategoriesFromFarmUpdate
 
 function lstrip(word) {
     if (word.indexOf(",") > -1) word = word.substring(0, word.lastIndexOf(","));
     return word;
 }
-
-
-
 
 /********************************************************************************************************/
 
