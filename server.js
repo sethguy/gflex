@@ -4386,7 +4386,6 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                         }));
 
-
                 },
                 function(asyncResultsPack, callback) {
 
