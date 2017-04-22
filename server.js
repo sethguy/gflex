@@ -4373,7 +4373,7 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                             var farm = msg.docs[0]
 
-                            var catMap = fcats.filter((catItem) => farm[catItem.qstring]).map((catItem) => catItem.qstring)
+                            var catMap = fcats.filter(function(catItem){ return farm[catItem.qstring] }).map( function(catItem) { return catItem.qstring } )
 
                             asyncResultsPack.farmResult = {
 
@@ -4391,7 +4391,7 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                     var updatebusinessFilter = { "_id": new ObjectId(businessID) }
 
-                    asyncResultsPack.farmResult.catMap.forEach((catItemName) => asyncResultsPack.updateBusinessSet[catItemName] = true)
+                    asyncResultsPack.farmResult.catMap.forEach(function(catItemName){  asyncResultsPack.updateBusinessSet[catItemName] = true  })
 
                     console.log("updateBusinessSet", asyncResultsPack.updateBusinessSet)
 
