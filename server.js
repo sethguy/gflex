@@ -4293,9 +4293,9 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
         console.log("the goods", {
 
-            updateList,
-            businessID,
-            farmId
+            updateList:updateList,
+            businessID:businessID,
+            farmId:farmId
 
         })
         var fcats = [
@@ -4377,8 +4377,8 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                             asyncResultsPack.farmResult = {
 
-                                farm,
-                                catMap
+                                farm:farm,
+                                catMap:catMap
 
                             }
 
