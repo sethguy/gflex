@@ -194,16 +194,9 @@ function getbifromfields() {
 
     console.log("here" + get('daytextcon').ohours)
 
-
-
     if (get('daytextcon').ohours) {
 
         bi.hourList = get('daytextcon').ohours;
-
-        //bi.ohours.periods = JSON.parse(bi.ohours.periods)
-
-        console.log(bi.ohours.weekday_text)
-            //bi.ohours.weekday_text = JSONbi.ohours.weekday_text)
 
     }
 
