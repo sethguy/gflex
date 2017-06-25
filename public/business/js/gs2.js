@@ -93,7 +93,7 @@ var pushPlace = function(place) {
 
         if (place.opening_hours.weekday_text) {
 
-            get('daytextcon').props({ 'ohours': place.weekday_text }).pendray(place.opening_hours.weekday_text, function(weekday_text) {
+            get('daytextcon').props({ 'ohours': place.opening_hours.weekday_text }).pendray(place.opening_hours.weekday_text, function(weekday_text) {
 
                 return el('p').inn( weekday_text );
 

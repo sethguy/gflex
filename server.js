@@ -16,6 +16,10 @@ var bcrypt = require('bcryptjs');
 var randtoken = require('rand-token');
 var mandrillApiKey = 'r3VbHExcpNGbq-m2j1TP0Q';
 
+
+var json2xls = require('json2xls');
+
+
 var querystring = require('querystring');
 var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
@@ -92,7 +96,6 @@ var mongoMsg = function(calli) {
 
     }); //mongo connect
 
-
 };
 
 var updatemany = function(table, filter, set, callback) {
@@ -136,26 +139,6 @@ var sertobj = function(table, obj, callback) {
         }
 
     } //sertobj
-
-
-
-
-// Client-keys like the javascript key or the .NET key are not necessary with parse-server
-// If you wish you require them, you can set them as options in the initialization above:
-// javascriptKey, restAPIKey, dotNetKey, clientKey
-
-var app = express();
-
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
-    extended: true
-}));
-//app.use(mountPath, api);
-
-// Parse Server plays nicely with the rest of your web routes
-
 
 var getby = function(table, terms, ops, calli) {
 
@@ -217,6 +200,22 @@ var getbySort = function(table, terms, ops, sort, calli) {
     } //getby
 
 
+// Client-keys like the javascript key or the .NET key are not necessary with parse-server
+// If you wish you require them, you can set them as options in the initialization above:
+// javascriptKey, restAPIKey, dotNetKey, clientKey
+
+var app = express();
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+    extended: true
+}));
+//app.use(mountPath, api);
+
+
+
 var findby = function(db, table, terms, ops, calli) {
 
         db.collection(table).find(terms).toArray(function(err, docs) {
@@ -268,6 +267,22 @@ var sense = function(table, terms, ops, calli) {
         }
 
     } //getby
+
+app.use(json2xls.middleware);
+
+app.get('/exportBusinessToExcell', function(req, res) {
+
+    mongoMsg(getby("Business", {}, {}, function(msg) {
+
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        //fs.writeFileSync('data.xls', xls, 'binary');
+
+        res.xls('data.xlsx', msg.docs);
+
+    }));
+
+});
 
 app.get('/mailtest/:toemail', function(req, res) {
 
@@ -3933,7 +3948,9 @@ app.post('/sendRequestAccessEmail', function(req, res) {
 
 
         var emailMsg = "Thank you for your interest in the Greenease Business software. Note that this is a free service for those chefs, restaurateurs, and buyers who support local farms. " +
+            
             "\n\n" + "You will be contacted shortly regarding your access request" + "\n\n" +
+
             "Locally yours,\n\n" +
 
             "The Greenease Team\n\n" +
@@ -4293,9 +4310,9 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
         console.log("the goods", {
 
-            updateList:updateList,
-            businessID:businessID,
-            farmId:farmId
+            updateList: updateList,
+            businessID: businessID,
+            farmId: farmId
 
         })
         var fcats = [
@@ -4347,13 +4364,13 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
         npmAsync.waterfall([
 
-                function( callback ) {
+                function(callback) {
 
                     var asyncResultsPack = {
 
                         farmResult: {},
                         updateBusinessResult: {},
-                        updateBusinessSet:{}
+                        updateBusinessSet: {}
 
                     }
 
@@ -4373,12 +4390,16 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                             var farm = msg.docs[0]
 
-                            var catMap = fcats.filter(function(catItem){ return farm[catItem.qstring] }).map( function(catItem) { return catItem.qstring } )
+                            var catMap = fcats.filter(function(catItem) {
+                                return farm[catItem.qstring]
+                            }).map(function(catItem) {
+                                return catItem.qstring
+                            })
 
                             asyncResultsPack.farmResult = {
 
-                                farm:farm,
-                                catMap:catMap
+                                farm: farm,
+                                catMap: catMap
 
                             }
 
@@ -4391,21 +4412,21 @@ var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, fa
 
                     var updatebusinessFilter = { "_id": new ObjectId(businessID) }
 
-                    asyncResultsPack.farmResult.catMap.forEach(function(catItemName){  asyncResultsPack.updateBusinessSet[catItemName] = true  })
+                    asyncResultsPack.farmResult.catMap.forEach(function(catItemName) { asyncResultsPack.updateBusinessSet[catItemName] = true })
 
                     console.log("updateBusinessSet", asyncResultsPack.updateBusinessSet)
 
-                    mongoMsg(updatemany('Business', updatebusinessFilter, asyncResultsPack.updateBusinessSet , function(msg) {
+                    mongoMsg(updatemany('Business', updatebusinessFilter, asyncResultsPack.updateBusinessSet, function(msg) {
 
-                         if (msg.err) {
-                             return callback(new Error("failed getting something:" + err.message));
-                         }
+                        if (msg.err) {
+                            return callback(new Error("failed getting something:" + err.message));
+                        }
 
-                         asyncResultsPack.updateBusinessResult = msg;
+                        asyncResultsPack.updateBusinessResult = msg;
 
-                         callback(null, asyncResultsPack);
+                        callback(null, asyncResultsPack);
 
-                     }));
+                    }));
 
                 }
 
