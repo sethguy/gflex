@@ -7,7 +7,7 @@ var MongoClient = Mongo.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var path = require('path');
 var grid = require('gridfs-stream');
-var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
     process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
