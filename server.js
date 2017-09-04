@@ -19,7 +19,6 @@ var mandrillApiKey = 'r3VbHExcpNGbq-m2j1TP0Q';
 
 var json2xls = require('json2xls');
 
-
 var querystring = require('querystring');
 var _ = require('underscore');
 var Buffer = require('buffer').Buffer;
