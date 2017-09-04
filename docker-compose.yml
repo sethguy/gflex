@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+
+  node:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - nodeapp-network
+      
+networks:
+  nodeapp-network:
+    driver: bridge

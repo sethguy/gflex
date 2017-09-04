@@ -9,7 +9,7 @@ var path = require('path');
 var grid = require('gridfs-stream');
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT ||
-    process.env.OPENSHIFT_INTERNAL_PORT || 8000;
+    process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
 var bcrypt = require('bcryptjs');
 
@@ -4446,6 +4446,6 @@ function lstrip(word) {
 /********************************************************************************************************/
 
 
-app.listen(port, ip, function() {
+app.listen(port,ip, function() {
     console.log('parse-server-example running on port ' + port + '.');
 });
