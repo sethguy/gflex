@@ -32,7 +32,6 @@ var saltRounds = 10;
 
 var npmAsync = require("async");
 
-
 var nodemailer = require('nodemailer');
 
 var mountPath = '/parse';
@@ -52,7 +51,7 @@ var Signupurl = relLink + "?signup";
 
 //var databaseUri = 'mongodb://127.0.0.1:27017/gflex';
 
-var databaseUri = 'mongodb://127.4.226.2:27017/gflex';
+var databaseUri = 'mongodb://mongodb:27017/gflex';
 
 if (!databaseUri) {
     console.log('DATABASE_URI not specified, falling back to localhost.');
@@ -88,7 +87,7 @@ var updateDocumentbyid = function(db, table, id, set, callback) {
 var mongoMsg = function(calli) {
     // Use connect method to connect to the Server
     MongoClient.connect(databaseUri, function(err, db) {
-        if (err) throw err;
+        //if (err) throw err;
         //console.log("Connected correctly to server");
 
         calli({ db: db, err: err, warns: [] }); //insert method
@@ -318,7 +317,7 @@ app.get('/flight', function(req, res) {
 
 
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.send("");
+    res.send("lava3");
 
 
 });
@@ -3064,6 +3063,30 @@ app.get('/bizsearch/:term', function(req, res) {
         res.json(msg.docs);
 
     })); // getby
+
+}); //"/bizsearch"
+
+app.get('/side', function(req, res) {
+
+  
+        
+mongoMsg(function(stuff){
+
+res.json({
+   keys: Object.keys(stuff.db),
+   err:stuff.err,
+   domain:stuff.db.domain,
+   sercon:Object.keys(stuff.db.serverConfig)
+});
+
+
+
+}
+
+
+
+    )
+
 
 }); //"/bizsearch"
 

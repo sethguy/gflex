@@ -36,3 +36,6 @@ ENTRYPOINT ["forever", "server.js"]
 #docker build . -t greenease:0.0.0
 
 #docker run greenease:0.0.0 -d -p 8080:8080 
+#docker run -d --net=host --name greenease_node_app -p 8080:8080 greenease:0.0.0 
+#docker push 262704340563.dkr.ecr.us-east-1.amazonaws.com/greenease-test:latest
+#docker tag greenease-test:latest 262704340563.dkr.ecr.us-east-1.amazonaws.com/greenease-test:latest
