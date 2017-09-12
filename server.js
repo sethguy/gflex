@@ -3069,23 +3069,7 @@ app.get('/bizsearch/:term', function(req, res) {
 app.get('/side', function(req, res) {
 
   
-        
-mongoMsg(function(stuff){
-
-res.json({
-   keys: Object.keys(stuff.db),
-   err:stuff.err,
-   domain:stuff.db.domain,
-   sercon:Object.keys(stuff.db.serverConfig)
-});
-
-
-
-}
-
-
-
-    )
+        res.json("those days are donw");
 
 
 }); //"/bizsearch"
