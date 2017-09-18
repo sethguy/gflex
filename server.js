@@ -16,7 +16,6 @@ var bcrypt = require('bcryptjs');
 var randtoken = require('rand-token');
 var mandrillApiKey = 'r3VbHExcpNGbq-m2j1TP0Q';
 
-
 var json2xls = require('json2xls');
 
 var querystring = require('querystring');
@@ -118,92 +117,85 @@ var updatemany = function(table, filter, set, callback) {
 
 var sertobj = function(table, obj, callback) {
 
-        return function(msg) {
+    return function(msg) {
 
-            // Get the documents collection
-            var collection = msg.db.collection(table);
+        // Get the documents collection
+        var collection = msg.db.collection(table);
 
-            collection.save(obj, function(err, result) {
+        collection.save(obj, function(err, result) {
 
-                msg.result = result;
+            msg.result = result;
 
-                msg.err = err;
+            msg.err = err;
 
-                callback(msg);
+            callback(msg);
 
-                //msg.db.close();
-            });
+            //msg.db.close();
+        });
 
-        }
+    }
 
-    } //sertobj
+} //sertobj
 
 var getby = function(table, terms, ops, calli) {
 
-        return function(msg) {
+    return function(msg) {
 
-            msg.db.collection(table).find(terms).toArray(function(err, docs) {
+        msg.db.collection(table).find(terms).toArray(function(err, docs) {
 
-                msg.docs = docs;
+            msg.docs = docs;
 
-                msg.err = err;
+            msg.err = err;
 
-                calli(msg);
+            calli(msg);
 
-            });
+        });
 
+    }
 
-        }
-
-    } //getby
-
+} //getby
 
 var removeby = function(table, terms, ops, calli) {
 
-        return function(msg) {
+    return function(msg) {
 
-            msg.db.collection(table).removeMany(terms, function(err, docs) {
+        msg.db.collection(table).removeMany(terms, function(err, docs) {
 
-                msg.docs = docs;
+            msg.docs = docs;
 
-                msg.err = err;
+            msg.err = err;
 
-                calli(msg);
+            calli(msg);
 
-            });
+        });
 
+    }
 
-        }
-
-    } //getby
-
+} //getby
 
 var getbySort = function(table, terms, ops, sort, calli) {
 
-        return function(msg) {
+    return function(msg) {
 
-            msg.db.collection(table).find(terms).sort(sort).toArray(function(err, docs) {
+        msg.db.collection(table).find(terms).sort(sort).toArray(function(err, docs) {
 
-                msg.docs = docs;
+            msg.docs = docs;
 
-                msg.err = err;
+            msg.err = err;
 
-                calli(msg);
+            calli(msg);
 
-            });
+        });
 
+    }
 
-        }
-
-    } //getby
-
+} //getby
 
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 var app = express();
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -212,59 +204,55 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 }));
 //app.use(mountPath, api);
 
-
-
 var findby = function(db, table, terms, ops, calli) {
 
-        db.collection(table).find(terms).toArray(function(err, docs) {
+    db.collection(table).find(terms).toArray(function(err, docs) {
 
-            calli(docs, err);
+        calli(docs, err);
 
-        });
+    });
 
-    } //getby
-
+} //getby
 
 var updatebyid = function(db, table, id, set, call) {
-        // Get the documents collection
+    // Get the documents collection
 
-        return function(msg) {
-                var collection = db.collection(table);
-                // Update document where a is 2, set b equal to 1
-                collection.updateOne({ _id: new ObjectId(id) }
+    return function(msg) {
+        var collection = db.collection(table);
+        // Update document where a is 2, set b equal to 1
+        collection.updateOne({ _id: new ObjectId(id) }
 
-                    , { $set: set },
-                    function(err, result) {
+            , { $set: set },
+            function(err, result) {
 
-                        msg.result;
-                        msg.err = err;
-
-                        calli(msg);
-
-                    });
-
-            } // return funtion
-
-    } // update By id
-
-
-var sense = function(table, terms, ops, calli) {
-
-        return function(msg) {
-
-            msg.db.collection(table).find(terms).sort({ 'business': 1 }).limit(1).toArray(function(err, docs) {
-
-                msg.docs = docs;
-
+                msg.result;
                 msg.err = err;
 
                 calli(msg);
 
             });
 
-        }
+    } // return funtion
 
-    } //getby
+} // update By id
+
+var sense = function(table, terms, ops, calli) {
+
+    return function(msg) {
+
+        msg.db.collection(table).find(terms).sort({ 'business': 1 }).limit(1).toArray(function(err, docs) {
+
+            msg.docs = docs;
+
+            msg.err = err;
+
+            calli(msg);
+
+        });
+
+    }
+
+} //getby
 
 app.use(json2xls.middleware);
 
@@ -285,7 +273,7 @@ app.get('/exportBusinessToExcell', function(req, res) {
 app.get('/mailtest/:toemail', function(req, res) {
 
     var toemail = req.params.toemail
-        // create reusable transporter object using the default SMTP transport
+    // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
     // setup e-mail data with unicode symbols
@@ -315,10 +303,8 @@ app.get('/mailtest/:toemail', function(req, res) {
 
 app.get('/flight', function(req, res) {
 
-
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.send("lava3");
-
 
 });
 
@@ -336,7 +322,6 @@ app.get('/spactions', function(req, res) {
     }));
 
 });
-
 
 app.get('/spactions/:id', function(req, res) {
 
@@ -378,7 +363,6 @@ app.get('/side/:terms', function(req, res) {
 
 });
 
-
 app.get('/createDayHoursList', function(req, res) {
 
     mongoMsg(getby('Business', {}, {}, function(msg) {
@@ -398,7 +382,6 @@ app.get('/createDayHoursList', function(req, res) {
                     bi.hourList = bi.ohours.weekday_text;
 
                 } else if (bi.ohours.weekday_text.length < 7) {
-
 
                 } else {
 
@@ -423,52 +406,47 @@ app.get('/MigrateUserBusiness', function(req, res) {
 
     var query = {
 
-
     };
 
     mongoMsg(getby('userbusiness', query, {}, function(msg) {
 
-            console.log()
+        console.log()
 
-            ublinks = msg.docs;
+        ublinks = msg.docs;
 
-            var count = 0;
+        var count = 0;
 
-            ublinks.forEach(function(link) {
+        ublinks.forEach(function(link) {
 
-                    var biQuery = {
-                        objectId: link.bid
-                    };
+            var biQuery = {
+                objectId: link.bid
+            };
 
-                    getby('Business', biQuery, {}, function(msg) {
+            getby('Business', biQuery, {}, function(msg) {
 
-                        if (msg.docs && msg.docs.length > 0) {
+                if (msg.docs && msg.docs.length > 0) {
 
-                            link.bid = msg.docs[0]._id.valueOf();
+                    link.bid = msg.docs[0]._id.valueOf();
 
-                            sertobj('userbusiness', link, function(msg) {
+                    sertobj('userbusiness', link, function(msg) {
 
-                                count++;
+                        count++;
 
-                                console.log(link);
+                        console.log(link);
 
-                                console.log(ublinks.length, count)
-
-                            })(msg)
-
-                        }
+                        console.log(ublinks.length, count)
 
                     })(msg)
 
-                }) // ublink each
+                }
 
-        })) // 
+            })(msg)
+
+        }) // ublink each
+
+    })) // 
 
 }); // MigrateUserBusiness
-
-
-
-
 
 app.get('/MigrateFixpurhis', function(req, res) {
 
@@ -478,92 +456,92 @@ app.get('/MigrateFixpurhis', function(req, res) {
 
         var findnfix = function(purhis) {
 
-                // var buys = msg.docs[i];
+            // var buys = msg.docs[i];
 
-                var farm = purhis.farm;
-                var biz = purhis.business;
-                // console.log( "" ); 
-                // console.log( biz.objectId+"  and  "+farm.objectId  ); 
-                // msg.rpt = {
-                var start = {
-                        buysid: purhis._id,
-                        bizid: biz.objectId,
-                        farmid: farm.objectId
+            var farm = purhis.farm;
+            var biz = purhis.business;
+            // console.log( "" ); 
+            // console.log( biz.objectId+"  and  "+farm.objectId  ); 
+            // msg.rpt = {
+            var start = {
+                buysid: purhis._id,
+                bizid: biz.objectId,
+                farmid: farm.objectId
+            }
+            //}
+            var bizterms = {
+
+                objectId: biz.objectId
+
+            }
+
+            var farmterms = {
+
+                objectId: farm.objectId
+
+            }
+
+            findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
+
+                var bi = docs[0];
+
+                if (bi) {
+                    bi_id = bi._id.valueOf() + '';
+                    console.log("at bi farm id" + bi_id)
+                    purhis.business._id = bi_id;
+                }
+
+                findby(msg.db, 'Farm', farmterms, {}, function(docs, err) {
+                    var farm = docs[0];
+                    if (farm) {
+                        fa_id = farm._id.valueOf() + "";
+                        console.log("at flat farm id" + bi_id)
+
+                        purhis.farm._id = fa_id;
+
+                        console.log(JSON.stringify(purhis))
+
                     }
-                    //}
-                var bizterms = {
+                    var id = purhis._id
+                    delete purhis._id;
+                    updateDocumentbyid(msg.db, 'PurchaseHistory', id, purhis, function(result, err) {
+                        /*
+                            console.log("")
+                            console.log( JSON.stringify(start) );
+                            console.log("")
+                           if(farm) fa_id= farm._id.valueOf();
+                            if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
+                            console.log("")
+                            if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
+                            console.log("")
+                             //console.log(result)
+                        */
+                    });
 
-                    objectId: biz.objectId
+                }) // farm quiery
+            }) //bussiness query
 
-                }
-
-                var farmterms = {
-
-                    objectId: farm.objectId
-
-                }
-
-                findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
-
-                        var bi = docs[0];
-
-                        if (bi) {
-                            bi_id = bi._id.valueOf() + '';
-                            console.log("at bi farm id" + bi_id)
-                            purhis.business._id = bi_id;
-                        }
-
-                        findby(msg.db, 'Farm', farmterms, {}, function(docs, err) {
-                                var farm = docs[0];
-                                if (farm) {
-                                    fa_id = farm._id.valueOf() + "";
-                                    console.log("at flat farm id" + bi_id)
-
-                                    purhis.farm._id = fa_id;
-
-                                    console.log(JSON.stringify(purhis))
-
-                                }
-                                var id = purhis._id
-                                delete purhis._id;
-                                updateDocumentbyid(msg.db, 'PurchaseHistory', id, purhis, function(result, err) {
-                                    /*
-                                        console.log("")
-                                        console.log( JSON.stringify(start) );
-                                        console.log("")
-                                       if(farm) fa_id= farm._id.valueOf();
-                                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
-                                        console.log("")
-                                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
-                                        console.log("")
-                                         //console.log(result)
-                                    */
-                                });
-
-                            }) // farm quiery
-                    }) //bussiness query
-
-            } //findnfix
+        } //findnfix
 
         findby(msg.db, 'PurchaseHistory', {}, {}, function(docs, err) {
 
-                console.log(docs.length + "all docs length");
-                //console.log(msg.docs +"all docs");
+            console.log(docs.length + "all docs length");
+            //console.log(msg.docs +"all docs");
 
-                for (var i = 0; i < docs.length; i++) {
+            for (var i = 0; i < docs.length; i++) {
 
-                    //var str = JSON.stringify( msg.docs[ i ] );
-                    findnfix(docs[i])
+                //var str = JSON.stringify( msg.docs[ i ] );
+                findnfix(docs[i])
 
-                }; // buys loop
+            }; // buys loop
 
-                senddone({
+            senddone({
 
-                    l: docs.length
+                l: docs.length
 
-                });
+            });
 
-            }) // buysfrom query
+        }) // buysfrom query
     });
 
     var senddone = function(obj) {
@@ -574,94 +552,93 @@ app.get('/MigrateFixpurhis', function(req, res) {
 
 });
 
-
 app.get('/MigrateUpdateGeoHoods', function(req, res) {
 
-        mongoMsg(getby('neighborhood', { geo: { $exists: true } }, {}, function(msg) {
+    mongoMsg(getby('neighborhood', { geo: { $exists: true } }, {}, function(msg) {
 
-            //console.log(msg.docs)
+        //console.log(msg.docs)
 
-            neighborhood = msg.docs
+        neighborhood = msg.docs
 
-            console.log(neighborhood.length + " :: find buys length");
-            count = 0;
-            neighborhood.forEach(function(hood) {
+        console.log(neighborhood.length + " :: find buys length");
+        count = 0;
+        neighborhood.forEach(function(hood) {
 
-                    hood.geoPoint = { type: "Point", coordinates: [hood.geo.longitude, hood.geo.latitude] }
+            hood.geoPoint = { type: "Point", coordinates: [hood.geo.longitude, hood.geo.latitude] }
 
-                    delete hood.geo;
+            delete hood.geo;
 
-                    var id = hood._id;
+            var id = hood._id;
 
-                    delete hood._id;
+            delete hood._id;
 
-                    //console.log(hood);
-                    console.log((id + "").length);
+            //console.log(hood);
+            console.log((id + "").length);
 
-                    if ((id + "").length > 15) {
+            if ((id + "").length > 15) {
 
-                        updateDocumentbyid(msg.db, 'neighborhood', id, hood, function(res, err) {
+                updateDocumentbyid(msg.db, 'neighborhood', id, hood, function(res, err) {
 
-                            count++;
+                    count++;
 
-                            if (err) console.log(err)
+                    if (err) console.log(err)
 
-                            console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + neighborhood.length);
+                    console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + neighborhood.length);
 
-                        })
+                })
 
-                    }
+            }
 
-                }) //neighborhood foreach
+        }) //neighborhood foreach
 
-        })); // getby
+    })); // getby
 
-    }) //
+}) //
 
 app.get('/MigrateUpdateGeoBusiness', function(req, res) {
 
-        mongoMsg(getby('Business', { geo: { $exists: true } }, {}, function(msg) {
+    mongoMsg(getby('Business', { geo: { $exists: true } }, {}, function(msg) {
 
-            //console.log(msg.docs)
+        //console.log(msg.docs)
 
-            Business = msg.docs
+        Business = msg.docs
 
-            console.log(Business.length + " :: find buys length");
+        console.log(Business.length + " :: find buys length");
 
-            count = 0;
+        count = 0;
 
-            Business.forEach(function(bi) {
+        Business.forEach(function(bi) {
 
-                    bi.geoPoint = { type: "Point", coordinates: [bi.geo.longitude, bi.geo.latitude] }
+            bi.geoPoint = { type: "Point", coordinates: [bi.geo.longitude, bi.geo.latitude] }
 
-                    delete bi.geo;
+            delete bi.geo;
 
-                    var id = bi._id;
+            var id = bi._id;
 
-                    delete bi._id;
+            delete bi._id;
 
-                    //console.log(bi);
-                    console.log((id + "").length);
+            //console.log(bi);
+            console.log((id + "").length);
 
-                    if ((id + "").length > 15) {
+            if ((id + "").length > 15) {
 
-                        updateDocumentbyid(msg.db, 'Business', id, bi, function(res, err) {
+                updateDocumentbyid(msg.db, 'Business', id, bi, function(res, err) {
 
-                            count++;
+                    count++;
 
-                            if (err) console.log(err)
+                    if (err) console.log(err)
 
-                            console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + Business.length);
+                    console.log(JSON.stringify(res) + 'should be ', count + '   vs ' + Business.length);
 
-                        })
+                })
 
-                    }
+            }
 
-                }) //Business foreach
+        }) //Business foreach
 
-        })); // getby
+    })); // getby
 
-    }) //
+}) //
 
 app.get('/MigrateFixBuysFrom', function(req, res) {
 
@@ -671,88 +648,88 @@ app.get('/MigrateFixBuysFrom', function(req, res) {
 
         var findnfix = function(buys) {
 
-                // var buys = msg.docs[i];
+            // var buys = msg.docs[i];
 
-                var farm = buys.farm;
-                var biz = buys.business;
-                // console.log( "" ); 
-                // console.log( biz.objectId+"  and  "+farm.objectId  ); 
-                // msg.rpt = {
-                var start = {
-                        buysid: buys._id,
-                        bizid: biz.objectId,
-                        farmid: farm.objectId
+            var farm = buys.farm;
+            var biz = buys.business;
+            // console.log( "" ); 
+            // console.log( biz.objectId+"  and  "+farm.objectId  ); 
+            // msg.rpt = {
+            var start = {
+                buysid: buys._id,
+                bizid: biz.objectId,
+                farmid: farm.objectId
+            }
+            //}
+            var bizterms = {
+
+                objectId: biz.objectId
+
+            }
+
+            var farmterms = {
+
+                objectId: farm.objectId
+
+            }
+
+            findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
+                var bi = docs[0];
+                if (bi) {
+                    bi_id = bi._id.valueOf() + '';
+                    console.log("at bi farm id" + bi_id)
+                    buys.business._id = bi_id;
+                }
+
+                findby(msg.db, 'Farm', farmterms, {}, function(docs, err) {
+                    var farm = docs[0];
+                    if (farm) {
+                        fa_id = farm._id.valueOf() + "";
+                        console.log("at flat farm id" + bi_id)
+
+                        buys.farm._id = fa_id;
+
+                        console.log(JSON.stringify(buys))
+
                     }
-                    //}
-                var bizterms = {
+                    var id = buys._id
+                    delete buys._id;
+                    updateDocumentbyid(msg.db, 'BuysFrom', id, buys, function(result, err) {
+                        /*console.log("")
+                        console.log( JSON.stringify(start) );
+                        console.log("")
+                        if(farm) fa_id= farm._id.valueOf();
+                        if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
+                        console.log("")
+                        if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
+                        console.log("")
+                        //console.log(result) */
+                    });
 
-                    objectId: biz.objectId
+                }) // farm quiery
+            }) //bussiness query
 
-                }
-
-                var farmterms = {
-
-                    objectId: farm.objectId
-
-                }
-
-                findby(msg.db, 'Business', bizterms, {}, function(docs, err) {
-                        var bi = docs[0];
-                        if (bi) {
-                            bi_id = bi._id.valueOf() + '';
-                            console.log("at bi farm id" + bi_id)
-                            buys.business._id = bi_id;
-                        }
-
-                        findby(msg.db, 'Farm', farmterms, {}, function(docs, err) {
-                                var farm = docs[0];
-                                if (farm) {
-                                    fa_id = farm._id.valueOf() + "";
-                                    console.log("at flat farm id" + bi_id)
-
-                                    buys.farm._id = fa_id;
-
-                                    console.log(JSON.stringify(buys))
-
-                                }
-                                var id = buys._id
-                                delete buys._id;
-                                updateDocumentbyid(msg.db, 'BuysFrom', id, buys, function(result, err) {
-                                    /*console.log("")
-                                    console.log( JSON.stringify(start) );
-                                    console.log("")
-                                    if(farm) fa_id= farm._id.valueOf();
-                                    if(bi) console.log(bi.business+"  :: "+bi.objectId+"  ::22 "+bi_id )
-                                    console.log("")
-                                    if(farm) console.log(farm.name+"  :: "+farm.objectId+"  :22: "+fa_id )
-                                    console.log("")
-                                    //console.log(result) */
-                                });
-
-                            }) // farm quiery
-                    }) //bussiness query
-
-            } //findnfix
+        } //findnfix
 
         findby(msg.db, 'BuysFrom', {}, {}, function(docs, err) {
 
-                console.log(docs.length + "all docs length");
-                //console.log(msg.docs +"all docs");
+            console.log(docs.length + "all docs length");
+            //console.log(msg.docs +"all docs");
 
-                for (var i = 0; i < docs.length; i++) {
+            for (var i = 0; i < docs.length; i++) {
 
-                    //var str = JSON.stringify( msg.docs[ i ] );
-                    findnfix(docs[i])
+                //var str = JSON.stringify( msg.docs[ i ] );
+                findnfix(docs[i])
 
-                }; // buys loop
+            }; // buys loop
 
-                senddone({
+            senddone({
 
-                    l: docs.length
+                l: docs.length
 
-                });
+            });
 
-            }) // buysfrom query
+        }) // buysfrom query
     });
 
     var senddone = function(obj) {
@@ -763,13 +740,11 @@ app.get('/MigrateFixBuysFrom', function(req, res) {
 
 });
 
-
 app.get('/', function(req, res) {
 
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(fs.readFileSync('./index.html'));
 });
-
 
 app.get('/gtwit', function(req, res) {
 
@@ -789,7 +764,6 @@ app.get('/appPasswordReset', function(req, res) {
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(fs.readFileSync('./appForgot.html'));
 });
-
 
 app.get('/biPasswordReset', function(req, res) {
 
@@ -856,236 +830,229 @@ app.post('/biForgot', function(req, res) {
 
     }))
 
-
 });
 
 app.post('/biPassword_reset', function(req, res) {
 
-        console.log("next:" + JSON.stringify(req.body));
+    console.log("next:" + JSON.stringify(req.body));
 
-        query = {
-            PasswordResetToken: req.body.token
+    query = {
+        PasswordResetToken: req.body.token
+    }
+
+    mongoMsg(getby('User', query, {}, function(msg) {
+
+        if (msg.docs.length > 0) {
+
+            user = msg.docs[0];
+
+            bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
+
+                user.PasswordResetToken = null;
+                delete user.PasswordResetToken
+
+                user.bcryptPassword = hash
+
+                sertobj('User', user, function(msg) {
+
+                    console.log(msg);
+
+                    res.setHeader('Content-Type', 'text/html');
+                    res.redirect('/biPasswordReset?success=true');
+                })(msg)
+
+            });
+
+        } else {
+
+            res.json({ msg: 'invalid token ' })
         }
 
-        mongoMsg(getby('User', query, {}, function(msg) {
-
-            if (msg.docs.length > 0) {
-
-                user = msg.docs[0];
-
-                bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
-
-                    user.PasswordResetToken = null;
-                    delete user.PasswordResetToken
-
-                    user.bcryptPassword = hash
-
-                    sertobj('User', user, function(msg) {
-
-                        console.log(msg);
-
-                        res.setHeader('Content-Type', 'text/html');
-                        res.redirect('/biPasswordReset?success=true');
-                    })(msg)
-
-                });
-
-            } else {
-
-                res.json({ msg: 'invalid token ' })
-            }
-
-        }))
-    }) ///password_reset
-
+    }))
+}) ///password_reset
 
 app.post('/newMobileUser', function(req, res) {
 
-        console.log(req)
+    console.log(req)
 
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-        console.log("next:" + JSON.stringify(req.body));
+    console.log("next:" + JSON.stringify(req.body));
 
+    query = {
+        $or: [
+            { username: req.body.username },
+            { email: req.body.email }
+        ]
+    }
 
-        query = {
-            $or: [
-                { username: req.body.username },
-                { email: req.body.email }
-            ]
-        }
+    mongoMsg(getby('mobileUsers', query, {}, function(msg) {
 
+        console.log(msg.docs.length)
 
-        mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+        if (msg.docs.length == 0) {
 
-            console.log(msg.docs.length)
+            bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
 
-            if (msg.docs.length == 0) {
-
-                bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-
-                    user = {
-                        username: req.body.username,
-                        createdAt: new Date().getTime(),
-                        email: req.body.email,
-                        bcryptPassword: hash
-                    }
-                    console.log(user)
-                    sertobj('mobileUsers', user, function(msg) {
-                        console.log('sertrespone');
-
-                        console.log(msg);
-
-                        //res.setHeader('Content-Type', 'text/html');
-                        // res.redirect('/appPasswordReset');
-
-                        var newuser = msg.result.ops[0];
-
-                        if (newuser.bcryptPassword) {
-
-                            newuser.bcryptPassword = null;
-                            delete newuser.bcryptPassword
-                        }
-                        res.json({ msg: 'user added ', user: newuser })
-
-                    })(msg)
-
-                });
-
-            } else {
-
-                res.json({ msg: 'email or username already in system' })
-
-            }
-
-        }))
-    }) ///new mobile user
-
-app.post('/appPassword_reset', function(req, res) {
-
-        console.log("next:" + JSON.stringify(req.body));
-
-        query = {
-            PasswordResetToken: req.body.token
-        }
-
-        mongoMsg(getby('mobileUsers', query, {}, function(msg) {
-
-            if (msg.docs.length > 0) {
-
-                user = msg.docs[0];
-
-                bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
-
-                    user.PasswordResetToken = null;
-                    delete user.PasswordResetToken
-
-                    user.bcryptPassword = hash
-
-                    sertobj('mobileUsers', user, function(msg) {
-
-                        console.log(msg);
-
-                        res.setHeader('Content-Type', 'text/html');
-                        res.redirect('/appPasswordReset');
-                    })(msg)
-
-                });
-
-            } else {
-
-                res.json({ msg: 'invalid token ' })
-            }
-
-        }))
-    }) ///password_reset
-
-
-app.get('/appForgot/:email', function(req, res) {
-
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        var email = req.params.email;
-
-        mongoMsg(getby('mobileUsers', { email: email }, {}, function(msg) {
-
-            if (msg.docs.length > 0) {
-
-                user = msg.docs[0];
-
-                user.PasswordResetToken = randtoken.generate(16);
-
+                user = {
+                    username: req.body.username,
+                    createdAt: new Date().getTime(),
+                    email: req.body.email,
+                    bcryptPassword: hash
+                }
+                console.log(user)
                 sertobj('mobileUsers', user, function(msg) {
+                    console.log('sertrespone');
 
-                    // console.log('sert token  forgot', msg.result)
+                    console.log(msg);
 
-                    var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+                    //res.setHeader('Content-Type', 'text/html');
+                    // res.redirect('/appPasswordReset');
 
-                    // setup e-mail data with unicode symbol
+                    var newuser = msg.result.ops[0];
 
-                    resetEmailLink = relLink + 'appPasswordReset?token=' + user.PasswordResetToken + '&username=' + user.username
+                    if (newuser.bcryptPassword) {
 
-                    var forgotEmailText = 'Sorry to hear you forgot your password. Please click here to reset your password and start eating local today!  \n' + resetEmailLink;
-
-                    var mailOptions = {
-                        from: '" Greenease " <info@greenease.co>', // sender address
-                        to: email, // list of receivers
-                        subject: 'Greenease Password Reset', // Subject line
-                        text: forgotEmailText, // plaintext body
-
-                    };
-
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, function(error, info) {
-                        if (error) {
-                            res.json(error);
-
-                            return console.log(error);
-                        }
-                        console.log('Message sent: ' + info.response);
-
-                        if (info.rejected.length == 0) {
-
-                            res.json({ info: info, msg: 'Email sent to ' + email });
-
-                        }
-
-                    });
+                        newuser.bcryptPassword = null;
+                        delete newuser.bcryptPassword
+                    }
+                    res.json({ msg: 'user added ', user: newuser })
 
                 })(msg)
 
-            } else {
+            });
 
-                res.json({ msg: 'Email Not Found in our system ' });
+        } else {
 
-            }
+            res.json({ msg: 'email or username already in system' })
 
-        }))
+        }
 
-    }) //appforgot
+    }))
+}) ///new mobile user
 
+app.post('/appPassword_reset', function(req, res) {
+
+    console.log("next:" + JSON.stringify(req.body));
+
+    query = {
+        PasswordResetToken: req.body.token
+    }
+
+    mongoMsg(getby('mobileUsers', query, {}, function(msg) {
+
+        if (msg.docs.length > 0) {
+
+            user = msg.docs[0];
+
+            bcrypt.hash(req.body.new_password, saltRounds, function(err, hash) {
+
+                user.PasswordResetToken = null;
+                delete user.PasswordResetToken
+
+                user.bcryptPassword = hash
+
+                sertobj('mobileUsers', user, function(msg) {
+
+                    console.log(msg);
+
+                    res.setHeader('Content-Type', 'text/html');
+                    res.redirect('/appPasswordReset');
+                })(msg)
+
+            });
+
+        } else {
+
+            res.json({ msg: 'invalid token ' })
+        }
+
+    }))
+}) ///password_reset
+
+app.get('/appForgot/:email', function(req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    var email = req.params.email;
+
+    mongoMsg(getby('mobileUsers', { email: email }, {}, function(msg) {
+
+        if (msg.docs.length > 0) {
+
+            user = msg.docs[0];
+
+            user.PasswordResetToken = randtoken.generate(16);
+
+            sertobj('mobileUsers', user, function(msg) {
+
+                // console.log('sert token  forgot', msg.result)
+
+                var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
+
+                // setup e-mail data with unicode symbol
+
+                resetEmailLink = relLink + 'appPasswordReset?token=' + user.PasswordResetToken + '&username=' + user.username
+
+                var forgotEmailText = 'Sorry to hear you forgot your password. Please click here to reset your password and start eating local today!  \n' + resetEmailLink;
+
+                var mailOptions = {
+                    from: '" Greenease " <info@greenease.co>', // sender address
+                    to: email, // list of receivers
+                    subject: 'Greenease Password Reset', // Subject line
+                    text: forgotEmailText, // plaintext body
+
+                };
+
+                // send mail with defined transport object
+                transporter.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        res.json(error);
+
+                        return console.log(error);
+                    }
+                    console.log('Message sent: ' + info.response);
+
+                    if (info.rejected.length == 0) {
+
+                        res.json({ info: info, msg: 'Email sent to ' + email });
+
+                    }
+
+                });
+
+            })(msg)
+
+        } else {
+
+            res.json({ msg: 'Email Not Found in our system ' });
+
+        }
+
+    }))
+
+}) //appforgot
 
 var inmany = function(colname, ray, calli) {
 
-        return function(db) {
+    return function(db) {
 
-                var col = db.collection(colname);
+        var col = db.collection(colname);
 
-                col.insertMany(ray, function(err, r) {
+        col.insertMany(ray, function(err, r) {
 
-                    if (err) console.log(err);
+            if (err) console.log(err);
 
-                    console.log(r);
+            console.log(r);
 
-                    calli(r);
+            calli(r);
 
-                }); // collection insert
+        }); // collection insert
 
-            } // ret
+    } // ret
 
-    } //in   many
-
+} //in   many
 
 app.get('/icons', function(req, res) {
 
@@ -1107,7 +1074,6 @@ app.get('/icons', function(req, res) {
 
 }); //readngoo
 
-
 var goStream = function(file) {
 
     var streamer = fs.createReadStream('./newlist/gcon.png');
@@ -1125,9 +1091,7 @@ var goStream = function(file) {
         writeStream.end();
     });
 
-
 }
-
 
 app.get('/readngoMobileData', function(req, res) {
 
@@ -1171,14 +1135,14 @@ app.get('/readngoMobileData', function(req, res) {
 
         var inmany = function(col, ray) {
 
-                col.insertMany(ray, function(err, r) {
+            col.insertMany(ray, function(err, r) {
 
-                    if (err) console.log(err);
-                    console.log(r);
+                if (err) console.log(err);
+                console.log(r);
 
-                }); // collection insert
+            }); // collection insert
 
-            } //in   many
+        } //in   many
 
     }); // FS FILE READ
 
@@ -1204,7 +1168,6 @@ app.get('/MigrateMobileFavorites', function(req, res) {
                  "createdAt": "2016-01-12T22:48:45.142Z",
                  "uid": "HecRr5Uc88",
              }*/
-
 
             getby('Business', { mobileAppObjectId: rid }, {}, function(msg) {
                 if (msg.docs && msg.docs.length > 0) {
@@ -1284,7 +1247,6 @@ app.get('/MigrateSpecialsAddGeo', function(req, res) {
     res.json('go');
 });
 
-
 app.get('/readngo', function(req, res) {
 
     fs.readdir('./gdata', function(err, files) {
@@ -1293,10 +1255,8 @@ app.get('/readngo', function(req, res) {
 
         MongoClient.connect(databaseUri, function(err, db) {
 
-
             if (err) console.log(err);
             for (var i = 0; i < files.length; i++) {
-
 
                 if (files[i].indexOf('DS') == -1) {
 
@@ -1322,22 +1282,20 @@ app.get('/readngo', function(req, res) {
 
         var inmany = function(col, ray) {
 
-                col.insertMany(ray, function(err, r) {
+            col.insertMany(ray, function(err, r) {
 
-                    if (err) console.log(err);
-                    console.log(r);
+                if (err) console.log(err);
+                console.log(r);
 
-                }); // collection insert
+            }); // collection insert
 
-            } //in   many
+        } //in   many
 
     }); // FS FILE READ
 
 }); //readngoo
 
-
 /**********************************************************************************************************/
-
 
 /**
  * GitHub specific details, including application id and secret
@@ -1348,7 +1306,6 @@ var googleClientSecret = '0p5XWtDwdBbdDStyZ6gNC56h';
 /**
  * Endpoint values from https://developers.google.com/accounts/docs/OpenIDConnect#confirmxsrftoken
  */
-
 
 app.post('/editfarm', function(req, res) {
 
@@ -1390,9 +1347,7 @@ app.post('/editfarm', function(req, res) {
 
     }
 
-
 }); //get newbiz
-
 
 app.get('/appface/:fbId/:acc', function(req, res) {
 
@@ -1404,60 +1359,57 @@ app.get('/appface/:fbId/:acc', function(req, res) {
 
     mongoMsg(getby('mobileUsers', query, {}, function(msg) {
 
-            var results = msg.docs;
+        var results = msg.docs;
 
-            if (results.length > 0) {
+        if (results.length > 0) {
 
-                var user = results[0];
+            var user = results[0];
 
-                user['fbacc'] = req.params.acc;
+            user['fbacc'] = req.params.acc;
 
-                sertobj('mobileUsers', user, function(msg) {
+            sertobj('mobileUsers', user, function(msg) {
 
-                    svuser = msg.result;
+                svuser = msg.result;
 
-                    user.bcryptPassword = null;
+                user.bcryptPassword = null;
 
-                    delete user.bcryptPassword;
+                delete user.bcryptPassword;
 
-                    res.json(user);
+                res.json(user);
 
-                })(msg)
+            })(msg)
 
-                console.log('user')
+            console.log('user')
 
+        } else {
 
-            } else {
+            console.log('new user')
 
-                console.log('new user')
+            var user = {};
 
-                var user = {};
+            user["username"] = req.params.fbId;
+            user['fbId'] = req.params.fbId;
+            user['fbacc'] = req.params.acc;
 
-                user["username"] = req.params.fbId;
-                user['fbId'] = req.params.fbId;
-                user['fbacc'] = req.params.acc;
+            sertobj('mobileUsers', user, function(msg) {
 
-                sertobj('mobileUsers', user, function(msg) {
+                svuser = msg.result.ops[0];
 
-                    svuser = msg.result.ops[0];
+                svuser.bcryptPassword = null;
 
-                    svuser.bcryptPassword = null;
+                delete svuser.bcryptPassword;
 
-                    delete svuser.bcryptPassword;
+                res.json(svuser);
 
-                    res.json(svuser);
+            })(msg)
 
-                })(msg)
+        }
 
-
-            }
-
-        })) // find user by fbId
+    })) // find user by fbId
 
     ///res.json(httpResponse.text);
 
 }); //get newbiz
-
 
 app.get('/ckUserForSpAction/:ckSet', function(req, res) {
 
@@ -1495,14 +1447,12 @@ app.get('/specialAction/:spAction', function(req, res) {
 
 }); // specialAction
 
-
 app.get('/deleteSpecial/:id', function(req, res) {
 
     //res.header("Access-Control-Allow-Origin", "*");
     //  res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     console.log(req.params.id)
-
 
     mongoMsg(removeby('specials', { _id: new ObjectId(req.params.id) }, null, function(msg) {
 
@@ -1512,22 +1462,19 @@ app.get('/deleteSpecial/:id', function(req, res) {
 
 }); // specialAction
 
-
-
-
 var saveSpecial = function(special, callback) {
 
-        var stuff = {};
+    var stuff = {};
 
-        mongoMsg(sertobj('specials', special, function(msg) {
+    mongoMsg(sertobj('specials', special, function(msg) {
 
-            console.log('saved specials ', msg)
+        console.log('saved specials ', msg)
 
-            callback({ msg: ' special saved ' });
+        callback({ msg: ' special saved ' });
 
-        })); //
+    })); //
 
-    } // saveSpecial
+} // saveSpecial
 
 app.get('/specialMachine/:spec', function(req, res) {
 
@@ -1566,11 +1513,9 @@ app.get('/getLatestSpecials/:lat/:lng', function(req, res) {
             }
         }*/
 
-
     getNear(req, function(closeBi) {
 
         var busis = closeBi.ray;
-
 
         query = {
 
@@ -1586,7 +1531,6 @@ app.get('/getLatestSpecials/:lat/:lng', function(req, res) {
 
         };
 
-
         console.log('llok', query)
         mongoMsg(getbySort('specials', query, {}, { updatedAt: 1 }, function(msg) {
 
@@ -1594,13 +1538,11 @@ app.get('/getLatestSpecials/:lat/:lng', function(req, res) {
 
         }));
 
-
     }); // get near
 
     // query.descending('updatedAt');
 
 });
-
 
 app.get('/getbibyId/:id', function(req, res) {
 
@@ -1616,7 +1558,6 @@ app.get('/getbibyId/:id', function(req, res) {
     })); // getby
 
 }); //"/getbusiness"
-
 
 app.get('/removebisug/:bio', function(req, res) {
 
@@ -1641,9 +1582,7 @@ app.get('/removebisug/:bio', function(req, res) {
 
 }); // new bi sug
 
-
 app.get('/getbisugs', function(req, res) {
-
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -1718,7 +1657,6 @@ app.get('/setbisugtoverified/:bio', function(req, res) {
 
     })); // getby
 
-
     /*
 
     newbi.save(bio, {
@@ -1744,7 +1682,6 @@ app.get('/setbisugtoverified/:bio', function(req, res) {
 
 */
 }); // new bi sug
-
 
 app.post('/newbisug', function(req, res) {
 
@@ -1842,17 +1779,17 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
     var getby = function(table, terms, ops, calli) {
 
-            return function(db) {
+        return function(db) {
 
-                db.collection(table).find(terms).toArray(function(err, docs) {
+            db.collection(table).find(terms).toArray(function(err, docs) {
 
-                    calli(docs, err);
+                calli(docs, err);
 
-                });
+            });
 
-            }
+        }
 
-        } //getappface
+    } //getappface
 
     mongogetdb(
 
@@ -1903,7 +1840,6 @@ app.get('/getMobileLogin/:user', function(req, res) {
 
 }); //getMobileLogin
 
-
 app.get('/getlogin/:user', function(req, res) {
 
     var user = JSON.parse(req.param('user'));
@@ -1912,17 +1848,17 @@ app.get('/getlogin/:user', function(req, res) {
 
     var getby = function(table, terms, ops, calli) {
 
-            return function(db) {
+        return function(db) {
 
-                db.collection(table).find(terms).toArray(function(err, docs) {
+            db.collection(table).find(terms).toArray(function(err, docs) {
 
-                    calli(docs, err);
+                calli(docs, err);
 
-                });
+            });
 
-            }
+        }
 
-        } //getby
+    } //getby
 
     mongogetdb(
 
@@ -1939,7 +1875,6 @@ app.get('/getlogin/:user', function(req, res) {
                         res.json(
 
                             docs[0]
-
 
                         );
 
@@ -1973,10 +1908,6 @@ app.get('/getlogin/:user', function(req, res) {
 
 }); //getlogin
 
-
-
-
-
 app.get('/getzines', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -1992,16 +1923,12 @@ app.get('/getzines', function(req, res) {
 
 }); //getzines
 
-
-
-
 app.get('/isfav/:uid/:bid', function(req, res) {
 
     query = {
         uid: req.params.uid,
         bid: req.params.bid
     }
-
 
     mongoMsg(getby('userfavs', query, {}, function(msg) {
 
@@ -2017,7 +1944,6 @@ app.get('/isfav/:uid/:bid', function(req, res) {
     }))
 
 }); //lookforbiz
-
 
 app.get('/rmfav/:uid/:bid', function(req, res) {
 
@@ -2036,49 +1962,46 @@ app.get('/rmfav/:uid/:bid', function(req, res) {
 
 }); //rmfav
 
-
 app.get('/adduserfav/:uid/:bid', function(req, res) {
 
     var add = function() {
 
-            query = {
-                _id: new ObjectId(req.params.bid)
-            };
+        query = {
+            _id: new ObjectId(req.params.bid)
+        };
 
-            mongoMsg(getby('Business', query, {}, function(msg) {
+        mongoMsg(getby('Business', query, {}, function(msg) {
 
-                if (msg.docs.length > 0) {
+            if (msg.docs.length > 0) {
 
-                    fndbiz = msg.docs[0];
-                    console.log("found biz" + JSON.stringify(fndbiz));
+                fndbiz = msg.docs[0];
+                console.log("found biz" + JSON.stringify(fndbiz));
 
-                    var bi = {
-                        _id: req.params.bid,
-                        'business': fndbiz['business'],
+                var bi = {
+                    _id: req.params.bid,
+                    'business': fndbiz['business'],
 
-                        'cuisine': fndbiz['cuisine'],
+                    'cuisine': fndbiz['cuisine'],
 
-                        'address': fndbiz['address']
-                    }
+                    'address': fndbiz['address']
+                }
 
-                    mongoMsg(sertobj('userfavs', { 'uid': req.params.uid, 'bid': req.params.bid, 'business': bi, 'biname': fndbiz['business'] }, function(msg) {
-                        console.log(msg)
+                mongoMsg(sertobj('userfavs', { 'uid': req.params.uid, 'bid': req.params.bid, 'business': bi, 'biname': fndbiz['business'] }, function(msg) {
+                    console.log(msg)
 
-                        res.json({ 'msg': 'added to favorites!' });
+                    res.json({ 'msg': 'added to favorites!' });
 
-                    }));
+                }));
 
+            } else {
 
-                } else {
+                res.json({ 'error': ' no bi found' });
 
-                    res.json({ 'error': ' no bi found' });
+            } // no bi found
 
-                } // no bi found
+        }));
 
-            }));
-
-        } // add
-
+    } // add
 
     query = {
         uid: req.params.uid,
@@ -2102,7 +2025,6 @@ app.get('/adduserfav/:uid/:bid', function(req, res) {
     }))
 
 }); //adduserfav
-
 
 app.get('/getuserfav/:uid', function(req, res) {
 
@@ -2149,31 +2071,27 @@ app.get('/getuserfav/:uid', function(req, res) {
 
 }); //getuserfav
 
-
-
 var getnonce = function() {
 
-        var bet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-        var string = "";
-        for (i = 0; i < 42; i++) {
+    var bet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    var string = "";
+    for (i = 0; i < 42; i++) {
 
-            var r = Math.floor((Math.random() * bet.length));
-            var ad = bet[r];
-            string = string + ad;
-            bet.splice(r, 1);
+        var r = Math.floor((Math.random() * bet.length));
+        var ad = bet[r];
+        string = string + ad;
+        bet.splice(r, 1);
 
-        }
+    }
 
-        return string;
-    } //getnonce
-
+    return string;
+} //getnonce
 
 app.get('/testnon', function(req, res) {
 
     res.json(getnonce());
 
 }); //lookforbiz
-
 
 app.get('/posttotwit/:datas', function(req, res) {
 
@@ -2238,9 +2156,7 @@ app.get('/posttotwit/:datas', function(req, res) {
 
 }); //twitpost
 
-
 app.get('/gettwitplaces/:lat/:lng', function(req, res) {
-
 
     var lat = req.params.lat; // 38.9208675; //
     var lng = req.params.lng; // -76.9850326; //
@@ -2251,7 +2167,6 @@ app.get('/gettwitplaces/:lat/:lng', function(req, res) {
 
     var oauth_consumer_key = "W8UcYW2IcvcCjp7k99w9DS8p8";
 
-
     cb.setConsumerKey(oauth_consumer_key, consumerSecret);
 
     var oauth_token = '4828122839-EtGzvWp3QRCyPFLtQbFn66fgWMkzmXN5LKk0PxF';
@@ -2259,7 +2174,6 @@ app.get('/gettwitplaces/:lat/:lng', function(req, res) {
     var oauth_token_secret = 'dIpTAGV94HHzihXclfO3MLOCsWkvAmgUL2NR7Phjttkmw';
 
     //  cb.setToken( oauth_token ,  oauth_token_secret );
-
 
     cb.__call(
         "geo_search", { 'lat': lat, 'long': lng },
@@ -2280,9 +2194,7 @@ app.get('/gettwitplaces/:lat/:lng', function(req, res) {
         }
     );
 
-
 }); //twitsign
-
 
 app.get('/twitsign/:uid', function(req, res) {
 
@@ -2296,20 +2208,16 @@ app.get('/twitsign/:uid', function(req, res) {
     var Consumer_Key = "W8UcYW2IcvcCjp7k99w9DS8p8";
     var Consumer_Secret = "Ze159ercwZlpjdmM1nFQ7YVJsuf6YBksPk3RmbLDVfUxVb3m2f";
 
-
     var urlLink = 'https://api.twitter.com/oauth/request_token';
 
     // var postSummary = request.params.status;
     //var status = oauth.percentEncode(postSummary);
     var consumerSecret = "Ze159ercwZlpjdmM1nFQ7YVJsuf6YBksPk3RmbLDVfUxVb3m2f";
 
-
     var oauth_consumer_key = "W8UcYW2IcvcCjp7k99w9DS8p8";
-
 
     //var tokenSecret = "<your_secret_token_here>";
     //       var oauth_token = "<your_oauth_token_here>";
-
 
     //   var nonce = oauth.nonce(32);
     var ts = Math.floor(new Date().getTime() / 1000);
@@ -2350,7 +2258,6 @@ app.get('/twitsign/:uid', function(req, res) {
 
                 console.log('twitsign query', query)
 
-
                 mongoMsg(getby('mobileUsers', query, {}, function(msg) {
 
                     var authob = params;
@@ -2359,9 +2266,7 @@ app.get('/twitsign/:uid', function(req, res) {
 
                     var fnduser = msg.docs[0];
 
-
                     console.log('twitsign fnd user ', fnduser)
-
 
                     fnduser['twitauth'] = authob;
 
@@ -2379,7 +2284,6 @@ app.get('/twitsign/:uid', function(req, res) {
         }
     );
 
-
 }); //twitsign
 
 app.get('/twitauthcall', function(req, res) {
@@ -2390,11 +2294,9 @@ app.get('/twitauthcall', function(req, res) {
     var oauth_nonce = getnonce();
     //xhr.setRequestHeader('Authorization','OAuth oauth_consumer_key="HdFdA3C3pzTBzbHvPMPw", oauth_nonce="4148fa6e3dca3c3d22a8315dfb4ea5bb", oauth_signature="uDZP2scUz6FUKwFie4FtCtJfdNE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp= "1359955650", oauth_token, "1127121421-aPHZHQ5BCUoqfHER2UYhQYUEm0zPEMr9xJYizXl", oauth_version="1.0"');
 
-
     var Consumer_Key = "W8UcYW2IcvcCjp7k99w9DS8p8";
     var Consumer_Secret = "Ze159ercwZlpjdmM1nFQ7YVJsuf6YBksPk3RmbLDVfUxVb3m2f";
     // res.json(  req.query );
-
 
     if (typeof req.query.oauth_verifier !== "undefined") {
         // assign stored request token parameters to codebird here
@@ -2412,13 +2314,11 @@ app.get('/twitauthcall', function(req, res) {
 
             console.log('twit auth call fnd user ', fnduser)
 
-
             var result = fnduser.twitauth;
 
             result.uid = fnduser.uid;
 
             cb.setToken(result.oauth_token, result.oauth_token_secret);
-
 
             cb.__call(
                 "oauth_accessToken", {
@@ -2455,7 +2355,6 @@ app.get('/twitauthcall', function(req, res) {
 
                     console.log('twit auth call fnd user 222 ', fnduser)
 
-
                     sertobj('mobileUsers', fnduser, function(msg) {
 
                         res.redirect('grva://twitauthcomplete/');
@@ -2483,17 +2382,12 @@ app.get('/twitauthcall', function(req, res) {
 
 }); //lookforbiz
 
-
-
-
-
 app.get('/setfarmvis/:buy_id/:value', function(req, res) {
     //HZL12APiR3/2LGuAOwamN/true
 
     var buy_id = req.params.buy_id;
 
     console.log("buy_id" + buy_id);
-
 
     var msg = "farm is now public";
 
@@ -2539,17 +2433,12 @@ app.get('/setfarmvis/:buy_id/:value', function(req, res) {
 
     })); // getby
 
-
 }); //getusers
-
 
 function setres(msg, stuff) {
 
     return { 'msg': msg, 'stuff': stuff };
 }
-
-
-
 
 app.get('/quickfix', function(req, res) {
     // get user relations base on uid
@@ -2578,7 +2467,6 @@ app.get('/quickfix', function(req, res) {
     }))
 
 }); // crm user for email
-
 
 app.get('/getlinkedbybid/:bid', function(req, res) {
     // get user relations base on uid
@@ -2635,7 +2523,6 @@ app.get('/getlinked/:email', function(req, res) {
             return link._id;
         }))
 
-
         var businessQuery = {
 
             _id: {
@@ -2647,43 +2534,36 @@ app.get('/getlinked/:email', function(req, res) {
 
         }
 
-
         mongoMsg(getby('Business', businessQuery, {}, function(msg) {
-                /* fndBis.
+            /* fndBis.
 
-                links.map(function(link){
+            links.map(function(link){
 
-                    return{rel,}
+                return{rel,}
 
-                })*/
+            })*/
 
+            fndBis = msg.docs;
+            res.json(fndBis.map(function(bi) {
 
-                fndBis = msg.docs;
-                res.json(fndBis.map(function(bi) {
+                return { bi: bi }
 
-                    return { bi: bi }
+            }));
 
-                }));
-
-
-            })) //
+        })) //
 
     }));
 }); // crm user for email
 
-
 //getfabyname
-
 
 app.get('/widgPage', function(req, res) {
     res.set('Content-Type', 'text/html');
     res.send(fs.readFileSync('./Widgpage.html'));
 });
 
-
 app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
     // ne45W7MzvZ/2LGuAOwamN
-
 
     var email = req.param('email');
     var bid = req.param('bid');
@@ -2731,7 +2611,6 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
 
     })); // getby
 
-
     function cklink(user) {
 
         console.log("at cklink  user id is" + user._id);
@@ -2761,7 +2640,6 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
 
     } //cklink 
 
-
     function paid(paiddate) {
 
         if (!paiddate) return false;
@@ -2777,9 +2655,7 @@ app.get('/getwidgetlink/:email/:bid/:pic', function(req, res) {
         return false;
     } //paid
 
-
 }); // crm user for email
-
 
 app.get('/getfabyname/:term', function(req, res) {
     var term = req.param('term');
@@ -2795,9 +2671,6 @@ app.get('/getfabyname/:term', function(req, res) {
     })); // getby
 
 }); // crm user for email
-
-
-
 
 app.get('/newuserbusiness/:bid/:email', function(req, res) {
     // The current user is now set to user.
@@ -2873,9 +2746,7 @@ app.get('/newuserbusiness/:bid/:email', function(req, res) {
 
     } //make user biz sub function
 
-
 }); //"/newuser business"
-
 
 app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
 
@@ -2919,7 +2790,6 @@ app.get('/unlinkuserbusiness/:bid/:email', function(req, res) {
 
 }); //"/unlink userbusiness rel  get"
 
-
 app.get('/catsearch', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -2957,66 +2827,63 @@ app.get('/catsearch', function(req, res) {
 
     })); // getby
 
-
 }); //catsearch
-
 
 var getNear = function(req, calli) {
 
-        var lat = req.param('lat');
-        var lng = req.param('lng');
+    var lat = req.param('lat');
+    var lng = req.param('lng');
 
-        var query = {
-            geoPoint: {
-                $near: {
-                    $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
-                    $maxDistance: (1609.34) * 5
-                }
-            },
-            'removed': { $ne: true }
+    var query = {
+        geoPoint: {
+            $near: {
+                $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+                $maxDistance: (1609.34) * 5
+            }
+        },
+        'removed': { $ne: true }
+    }
+
+    console.log('query :', query);
+
+    mongoMsg(getby('Business', query, {}, function(msg) {
+
+        // if(msg.err) res.json(msg.err);
+
+        var back = {};
+        back.top = { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] };
+
+        back.ray = [];
+        if (msg.docs) {
+            var po = msg.docs;
+
+            for (var i = 0; i < po.length; i++) {
+                var p = po[i];
+
+                var geo = p['geoPoint'];
+
+                var meters = geolib.getDistance({ latitude: parseFloat(lat), longitude: parseFloat(lng) }, { latitude: geo.coordinates[1], longitude: geo.coordinates[0] });
+
+                var num = meters / (1609.34);
+                var thing = {};
+
+                thing.num = num;
+                thing.bi = p;
+                //thing.geo = geo;
+                //thing.address = p.get('address');
+
+                back.ray.push(thing)
+
+            };
+
+            calli(back);
         }
 
-        console.log('query :', query);
+    })); // getby
 
-        mongoMsg(getby('Business', query, {}, function(msg) {
+    // Final list of objects
 
-            // if(msg.err) res.json(msg.err);
-
-            var back = {};
-            back.top = { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] };
-
-            back.ray = [];
-            if (msg.docs) {
-                var po = msg.docs;
-
-                for (var i = 0; i < po.length; i++) {
-                    var p = po[i];
-
-                    var geo = p['geoPoint'];
-
-                    var meters = geolib.getDistance({ latitude: parseFloat(lat), longitude: parseFloat(lng) }, { latitude: geo.coordinates[1], longitude: geo.coordinates[0] });
-
-                    var num = meters / (1609.34);
-                    var thing = {};
-
-                    thing.num = num;
-                    thing.bi = p;
-                    //thing.geo = geo;
-                    //thing.address = p.get('address');
-
-                    back.ray.push(thing)
-
-                };
-
-                calli(back);
-            }
-
-        })); // getby
-
-        // Final list of objects
-
-    } // get near function;
-
+} // get near function;
 
 app.get('/getnear/:lat/:lng', function(req, res) {
 
@@ -3027,13 +2894,6 @@ app.get('/getnear/:lat/:lng', function(req, res) {
     });
 
 });
-
-
-
-
-
-
-
 
 app.get('/fasearch/:term', function(req, res) {
 
@@ -3068,12 +2928,9 @@ app.get('/bizsearch/:term', function(req, res) {
 
 app.get('/side', function(req, res) {
 
-  
-        res.json("those days are donw");
-
+    res.json("those days are donw");
 
 }); //"/bizsearch"
-
 
 app.get('/getclosehoods/:lat/:lng', function(req, res) {
 
@@ -3102,7 +2959,6 @@ app.get('/getclosehoods/:lat/:lng', function(req, res) {
 
 }); // get close hoods
 
-
 app.get('/getbibypoint/:lat/:lng/:dist', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -3130,7 +2986,6 @@ app.get('/getbibypoint/:lat/:lng/:dist', function(req, res) {
         }));
 
 }); // get biby point 
-
 
 app.get('/getbibypoint/:lat/:lng', function(req, res) {
 
@@ -3192,7 +3047,6 @@ app.get('/getbibypointsa/:lat/:lng', function(req, res) {
 
 }); // get close hoods
 
-
 app.get('/faceauth/:token', function(req, res) {
 
     var tok = req.params.token;
@@ -3233,7 +3087,6 @@ app.post('/facepost', function(req, res) {
 
 }); // facepost
 
-
 app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
 
     var cterm = req.params.cterm;
@@ -3261,11 +3114,7 @@ app.get('/getbibycuisine/:cterm/:lat/:lng', function(req, res) {
 
     }))
 
-
 }); //"/getbusiness"
-
-
-
 
 app.get('/getSpecialsByBid/:bid', function(req, res) {
 
@@ -3285,24 +3134,23 @@ app.get('/getSpecialsByBid/:bid', function(req, res) {
 
 }); //getSpecialsByBid
 
-
 app.get('/ckses/:id', function(req, res) {
 
     var id = req.params.id;
 
     var mongoget = function(table, terms, ops, calli) {
 
-            return function(db) {
+        return function(db) {
 
-                db.collection(table).find(terms).toArray(function(err, docs) {
+            db.collection(table).find(terms).toArray(function(err, docs) {
 
-                    calli(docs, err);
+                calli(docs, err);
 
-                });
+            });
 
-            }
+        }
 
-        } //getby
+    } //getby
 
     mongogetdb(mongoget('User', { "_id": new ObjectId(id) }, { bcryptPassword: 0 }, function(docs, err) {
 
@@ -3313,9 +3161,6 @@ app.get('/ckses/:id', function(req, res) {
     }));
 
 });
-
-
-
 
 /*
 {
@@ -3379,7 +3224,6 @@ app.post('/gipnl2', function(req, res) {
 
     var uid = item_name.replace("Greenease_Widget_", "");
 
-
     if (item_name.indexOf("Greenease_Widget_") > -1 && business === "sellseth@gamil.com" && payment_status === "verified") {
 
     }
@@ -3433,10 +3277,6 @@ app.post('/gipnl2', function(req, res) {
 
 }); //gipnl 2 
 
-
-
-
-
 app.get('/purhis2/:bid/:sort', function(req, res) {
     //alert(req.query.bid);
 
@@ -3447,7 +3287,6 @@ app.get('/purhis2/:bid/:sort', function(req, res) {
     var terms = {};
 
     terms[sorter.by] = (sorter.di == 0) ? 1 : -1
-
 
     var purhisTerms = { 'business._id': bid };
 
@@ -3478,38 +3317,35 @@ app.get('/purhis2/:bid/:sort', function(req, res) {
 
         mongoMsg(getby('Farm', farmterms, {}, function(msg) {
 
-                //console.log(JSON.stringify(msg.docs)+"at purhis/:bid farms")
+            //console.log(JSON.stringify(msg.docs)+"at purhis/:bid farms")
 
-                var farms = msg.docs;
+            var farms = msg.docs;
 
-                for (var i = 0; i < phres.length; i++) {
-                    // This does not require a network access.
+            for (var i = 0; i < phres.length; i++) {
+                // This does not require a network access.
 
-                    //var theFarm = farms[i];
+                //var theFarm = farms[i];
 
-                    for (var j = 0; j < farms.length; j++) {
+                for (var j = 0; j < farms.length; j++) {
 
+                    if (farms[j]._id == phres[i].farm._id) {
 
-                        if (farms[j]._id == phres[i].farm._id) {
-
-                            phres[i].farm = farms[j];
-
-                        }
+                        phres[i].farm = farms[j];
 
                     }
 
-                    // console.log(post);
                 }
 
-                res.json(phres);
+                // console.log(post);
+            }
 
-            })) // getby
+            res.json(phres);
+
+        })) // getby
 
     })); //mongomsg
 
-
 }); // purhis table pull
-
 
 app.get('/getFarms/:bid', function(req, res) {
 
@@ -3609,7 +3445,6 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
     console.log('userbusinessTerms', userbusinessTerms)
 
     mongoMsg(getby('userbusiness', userbusinessTerms, {}, function(msg) {
-
 
         var links = msg.docs;
 
@@ -3737,7 +3572,6 @@ app.get('/showFarms/:uid/:bid', function(req, res) {
 
 }); // show farms method for widget view
 
-
 var ADMINEMAIL = function(email) {
 
     return email == 'vanessa@greenease.co' || email == 'vanessa@vferragut@msn.com' || email == 'isethguy@gmail.com'
@@ -3747,7 +3581,6 @@ var ADMINEMAIL = function(email) {
 /**
  * Route for business owner logins
  */
-
 
 /**
  * Login with GitHub route.
@@ -3765,9 +3598,6 @@ var ADMINEMAIL = function(email) {
  *
  * Will not work a second time by design because the role is already created
  */
-
-
-
 
 app.post('/usersignup', function(req, res) {
 
@@ -3843,7 +3673,6 @@ app.post('/usersignup', function(req, res) {
 
                     }); // bcrypt hashing
 
-
                 } else {
 
                     res.json({ msg: ' no links found !' })
@@ -3862,8 +3691,6 @@ app.post('/usersignup', function(req, res) {
 
 }); //usersignup
 
-
-
 app.get('/ckforUser/:email', function(req, res) {
 
     var query = {
@@ -3878,7 +3705,6 @@ app.get('/ckforUser/:email', function(req, res) {
 
         if (results.length == 0) {
 
-
             sendintro(req, res);
 
         } else {
@@ -3887,17 +3713,13 @@ app.get('/ckforUser/:email', function(req, res) {
 
             // delelte results[0].bcryptPassword;
 
-
             res.json(results);
-
 
         } // if user is or not there 
 
     }));
 
 }); // ckforUser 
-
-
 
 app.post('/sendRequestAccessEmail', function(req, res) {
 
@@ -3917,13 +3739,11 @@ app.post('/sendRequestAccessEmail', function(req, res) {
     // setup e-mail data with unicode symbols
     //var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
 
-
     var emailMsg = bname + " would like to sign up for a greenease business acount\n" +
         " restaurant resname  :" + resname +
         "\n  restaurant email  :" + bemail +
         "\n  restaurant city  :" + city +
         "\n  restaurant onefarm  :" + onefarm
-
 
     var mailOptions = {
         from: '" Greenease " <info@greenease.co>', // sender address
@@ -3946,15 +3766,13 @@ app.post('/sendRequestAccessEmail', function(req, res) {
         //res.json({msg:'thanks for the update',info:info});
         console.log("1st email sent");
 
-
         var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
         // setup e-mail data with unicode symbols
         //var emailMsg = 'user @ username '+user.username+' with id ::'+user._id+' said :: \n\n\n '+ userMsg+'  \n  \n \n   '+'  about '+bi.business+'('+bi._id+') \n \n'+' '+bi.address;
 
-
         var emailMsg = "Thank you for your interest in the Greenease Business software. Note that this is a free service for those chefs, restaurateurs, and buyers who support local farms. " +
-            
+
             "\n\n" + "You will be contacted shortly regarding your access request" + "\n\n" +
 
             "Locally yours,\n\n" +
@@ -3976,13 +3794,11 @@ app.post('/sendRequestAccessEmail', function(req, res) {
         transporter.sendMail(mailOptions, function(error, info) {
             if (error) {
 
-
                 res.json(error);
 
                 return console.log(error);
             }
             console.log('Message sent: ' + info.response);
-
 
             console.log(" 20nd Email sent!");
 
@@ -3990,9 +3806,7 @@ app.post('/sendRequestAccessEmail', function(req, res) {
 
             //  res.json({ msg: 'thanks for the update', info: info });
 
-
         });
-
 
     });
 
@@ -4014,7 +3828,6 @@ app.post('/sendUserUpdate', function(req, res) {
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
 
     // setup e-mail data with unicode symbols
-
 
     var emailMsg = 'user @ username ' + user.username + ' with id ::' + user._id + ' said :: \n\n\n ' + userMsg + '  \n  \n \n   ' + '  about ' + bi.business + '(' + bi._id + ') \n \n' + ' ' + bi.address;
 
@@ -4042,7 +3855,6 @@ app.post('/sendUserUpdate', function(req, res) {
 
 }); // ckforUser 
 
-
 var sendintro = function(req, res) {
 
     var toemail = req.params.email
@@ -4051,12 +3863,14 @@ var sendintro = function(req, res) {
 
     var text = "Hello and welcome to the Greenease Business software - a free service for our chefs, restaurateurs, and buyers who support local farms." + "\n" + "\n" + "To begin, please click here to set your password: " + Signupurl + "/" + toemail + "\n" + "\n" + "After you have created a password you may access Greenease Business in the future at:" + "\n" + "https://business.greenease.co." + "\n" + "\n" + "Instructions:" + "\n" + "\n" + "Once you are logged in you\'ll be able to access the Greenease database and start adding your farms and purveyors. " + "\n" + "On the left hand side start typing in a farm name. When the farm box up box opens, select that category check box you\'re buying, hit \"save,\" and \"ok.\" " + "\n" + "You may also add notes to your update if you like. " + "\n" + "To delete a farm again type the farm name in. When the box pops up, de-select that category you have stopped buying." + "\n" + "If you cannot find a farm after typing in the full name, you may request to add the farm. Please allow us 24-48 hours to verify the farm information. " + "\n" + "The History page allows chefs to track their historical farm buying habits. Stay tuned for a way to place additional orders in the future. " + "\n" + "The Widgets Page creates a fun and creative way to display your farms. If you are interested in embedding this image on your own website, you may click on the Pay Pal button and for $9.99 a month Greenease Business will help you communicate and advertise your farms to your own consumers." + "\n" + "All farm updates are populated in real time on the Greenease mobile app." + "\n" + "\n" + "If you have any questions or concerns you may contact the tech team at info@greenease.co."
 
-    +"\n" + "\n" + "Thank you for buying local and being part of our community."
+        +
+        "\n" + "\n" + "Thank you for buying local and being part of our community."
 
-    + "\n" + "\n" + "Locally yours,"
+        +
+        "\n" + "\n" + "Locally yours,"
 
-    + "\n" + "\n" + "The Greenease Team";
-
+        +
+        "\n" + "\n" + "The Greenease Team";
 
     // create reusable transporter object using the default SMTP transport
     var transporter = nodemailer.createTransport('smtps://info@greenease.co:feedmebitch@smtpout.secureserver.net');
@@ -4088,7 +3902,6 @@ var sendintro = function(req, res) {
 
 }
 
-
 app.get('sendintro/:uemail', function(req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -4097,13 +3910,11 @@ app.get('sendintro/:uemail', function(req, res) {
 
 });
 
-
 app.get('/getFarmById/:fid', function(req, res) {
 
     var fid = req.params.fid;
 
     // console.log("getFarmById  ::   " + fid)
-
 
     MongoClient.connect(databaseUri, function(err, db) {
         // Get the collection
@@ -4121,7 +3932,6 @@ app.get('/getFarmById/:fid', function(req, res) {
             })
         }
     });
-
 
 }); // getFarmById
 
@@ -4184,15 +3994,12 @@ app.get('/newphrecs2/:bid/:fid/:pros/:note/:milli', function(req, res) {
 
 }); // add new purhis rec
 
-
-
 function actioncode(bo) {
 
     if (bo) return 1;
 
     return 0;
 } //action code s
-
 
 app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
@@ -4218,7 +4025,7 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
     */
 
     console.log('sendfaupdate')
-        //alert(req.query.bid);
+    //alert(req.query.bid);
 
     var prolist = JSON.parse(req.param('pros'));
 
@@ -4229,7 +4036,6 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
     console.log(req.param('bid') + "   prolist  " + req.param('fid'));
 
     var terms = { 'business._id': req.params.bid, 'farm._id': req.params.fid };
-
 
     mongoMsg(getby('BuysFrom', terms, {}, function(msg) {
 
@@ -4314,135 +4120,132 @@ app.get('/sendfaupdate/:bid/:fid/:pros', function(req, res) {
 
 var updateBusinessCategoriesFromFarmUpdate = function(updateList, businessID, farmId) {
 
-        console.log("the goods", {
+    console.log("the goods", {
 
-            updateList: updateList,
-            businessID: businessID,
-            farmId: farmId
+        updateList: updateList,
+        businessID: businessID,
+        farmId: farmId
 
-        })
-        var fcats = [
+    })
+    var fcats = [
 
-            {
+        {
 
-                'name': 'Free Range',
-                'imgoff': 'freerange@2x.png',
-                'imgon': 'freerange_highlighted@2x.png',
-                'qstring': 'free_range'
-            },
+            'name': 'Free Range',
+            'imgoff': 'freerange@2x.png',
+            'imgon': 'freerange_highlighted@2x.png',
+            'qstring': 'free_range'
+        },
 
+        {
 
-            {
+            'name': 'Grass Fed',
+            'imgoff': 'grassfed@2x.png',
+            'imgon': 'grassfed_highlighted@2x.png',
+            'qstring': 'grass_fed'
+        },
 
-                'name': 'Grass Fed',
-                'imgoff': 'grassfed@2x.png',
-                'imgon': 'grassfed_highlighted@2x.png',
-                'qstring': 'grass_fed'
-            },
+        {
 
+            'name': 'Drug Free Meats',
+            'imgoff': 'hormonefree@2x.png',
+            'imgon': 'hormonefree_highlighted@2X.png',
+            'qstring': 'drug_free'
+        },
 
-            {
+        {
 
-                'name': 'Drug Free Meats',
-                'imgoff': 'hormonefree@2x.png',
-                'imgon': 'hormonefree_highlighted@2X.png',
-                'qstring': 'drug_free'
-            },
+            'name': 'Organic',
+            'imgoff': 'organic@2x.png',
+            'imgon': 'organic_highlighted@2x.png',
+            'qstring': 'organic'
+        },
 
-            {
+        {
 
-                'name': 'Organic',
-                'imgoff': 'organic@2x.png',
-                'imgon': 'organic_highlighted@2x.png',
-                'qstring': 'organic'
-            },
+            'name': 'Sustainable Seafood',
+            'imgoff': 'seafood@2x.png',
+            'imgon': 'seafood_highlighted@2x.png',
+            'qstring': "sustainable_seafood"
+        },
 
-            {
+    ];
 
-                'name': 'Sustainable Seafood',
-                'imgoff': 'seafood@2x.png',
-                'imgon': 'seafood_highlighted@2x.png',
-                'qstring': "sustainable_seafood"
-            },
+    npmAsync.waterfall([
 
+        function(callback) {
 
-        ];
+            var asyncResultsPack = {
 
-        npmAsync.waterfall([
+                farmResult: {},
+                updateBusinessResult: {},
+                updateBusinessSet: {}
 
-                function(callback) {
+            }
 
-                    var asyncResultsPack = {
+            var farmsTerms = { "_id": new ObjectId(farmId) }
 
-                        farmResult: {},
-                        updateBusinessResult: {},
-                        updateBusinessSet: {}
+            mongoMsg(
+
+                getby('Farm', farmsTerms, {}, function(msg) {
+
+                    if (msg.err) {
+                        return callback(new Error("failed getting something:" + err.message));
+                    }
+
+                    if (!msg.docs || msg.docs.length == 0) {
+                        return callback(new Error(" no farm found "));
+                    }
+
+                    var farm = msg.docs[0]
+
+                    var catMap = fcats.filter(function(catItem) {
+                        return farm[catItem.qstring]
+                    }).map(function(catItem) {
+                        return catItem.qstring
+                    })
+
+                    asyncResultsPack.farmResult = {
+
+                        farm: farm,
+                        catMap: catMap
 
                     }
 
-                    var farmsTerms = { "_id": new ObjectId(farmId) }
+                    callback(null, asyncResultsPack);
 
-                    mongoMsg(
+                }));
 
-                        getby('Farm', farmsTerms, {}, function(msg) {
+        },
+        function(asyncResultsPack, callback) {
 
-                            if (msg.err) {
-                                return callback(new Error("failed getting something:" + err.message));
-                            }
+            var updatebusinessFilter = { "_id": new ObjectId(businessID) }
 
-                            if (!msg.docs || msg.docs.length == 0) {
-                                return callback(new Error(" no farm found "));
-                            }
+            asyncResultsPack.farmResult.catMap.forEach(function(catItemName) { asyncResultsPack.updateBusinessSet[catItemName] = true })
 
-                            var farm = msg.docs[0]
+            console.log("updateBusinessSet", asyncResultsPack.updateBusinessSet)
 
-                            var catMap = fcats.filter(function(catItem) {
-                                return farm[catItem.qstring]
-                            }).map(function(catItem) {
-                                return catItem.qstring
-                            })
+            mongoMsg(updatemany('Business', updatebusinessFilter, asyncResultsPack.updateBusinessSet, function(msg) {
 
-                            asyncResultsPack.farmResult = {
-
-                                farm: farm,
-                                catMap: catMap
-
-                            }
-
-                            callback(null, asyncResultsPack);
-
-                        }));
-
-                },
-                function(asyncResultsPack, callback) {
-
-                    var updatebusinessFilter = { "_id": new ObjectId(businessID) }
-
-                    asyncResultsPack.farmResult.catMap.forEach(function(catItemName) { asyncResultsPack.updateBusinessSet[catItemName] = true })
-
-                    console.log("updateBusinessSet", asyncResultsPack.updateBusinessSet)
-
-                    mongoMsg(updatemany('Business', updatebusinessFilter, asyncResultsPack.updateBusinessSet, function(msg) {
-
-                        if (msg.err) {
-                            return callback(new Error("failed getting something:" + err.message));
-                        }
-
-                        asyncResultsPack.updateBusinessResult = msg;
-
-                        callback(null, asyncResultsPack);
-
-                    }));
-
+                if (msg.err) {
+                    return callback(new Error("failed getting something:" + err.message));
                 }
 
-            ], function(err, asyncResultsPack) {
+                asyncResultsPack.updateBusinessResult = msg;
 
-                console.log("done", asyncResultsPack)
+                callback(null, asyncResultsPack);
 
-            }) // donefunction
+            }));
 
-    } //updateBusinessCategoriesFromFarmUpdate
+        }
+
+    ], function(err, asyncResultsPack) {
+
+        console.log("done", asyncResultsPack)
+
+    }) // donefunction
+
+} //updateBusinessCategoriesFromFarmUpdate
 
 function lstrip(word) {
     if (word.indexOf(",") > -1) word = word.substring(0, word.lastIndexOf(","));
@@ -4451,7 +4254,6 @@ function lstrip(word) {
 
 /********************************************************************************************************/
 
-
-app.listen(port,ip, function() {
+app.listen(port, ip, function() {
     console.log('parse-server-example running on port ' + port + '.');
 });
