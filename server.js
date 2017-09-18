@@ -3822,6 +3822,14 @@ app.post('/sendUserUpdate', function(req, res) {
 
     var user = update.user;
 
+    if (!user) {
+        user = {}
+    }
+
+    if (!user._id) {
+        user._id = ""
+    }
+
     var bi = update.bi;
 
     // create reusable transporter object using the default SMTP transport
