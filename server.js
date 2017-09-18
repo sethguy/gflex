@@ -2926,6 +2926,22 @@ app.get('/bizsearch/:term', function(req, res) {
 
 }); //"/bizsearch"
 
+app.get('/biz', function(req, res) {
+
+    var bizTerms = {
+        'removed': { $ne: true }
+    }
+
+    console.log("@bizsearch :: " + JSON.stringify(bizTerms))
+
+    mongoMsg(getby('Business', bizTerms, {}, function(msg) {
+
+        res.json(msg.docs);
+
+    })); // getby
+
+}); //"/bizsearch"
+
 app.get('/side', function(req, res) {
 
     res.json("those days are donw");
